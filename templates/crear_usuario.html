@@ -1,0 +1,357 @@
+{% load static %}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+
+ <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm">
+
+    <div class="container-fluid">
+
+        <a class="navbar-brand fw-bold" href="/">
+            📄 BURÓ SYSTEM
+        </a>
+
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav">
+
+            <span class="navbar-toggler-icon"></span>
+
+        </button>
+
+        <div
+            class="collapse navbar-collapse"
+            id="navbarNav">
+
+            <ul class="navbar-nav ms-4">
+
+                <li class="nav-item">
+                    <a class="nav-link active" href="/">
+                        Generador
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/historial/">
+                        Historial
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        Reportes
+                    </a>
+                </li>
+
+            </ul>
+
+            <div class="ms-auto d-flex align-items-center gap-3">
+
+                <span class="text-dark fw-semibold">
+                    👤 {{ request.user.username }}
+                </span>
+
+            <a
+                href="/logout/"
+                class="btn btn-dark rounded-pill px-4">
+
+                Salir
+
+            </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+<div class="container mt-5">
+
+    <div class="card shadow">
+
+        <div class="card-header bg-dark text-white">
+
+            Crear Usuario
+
+        </div>
+
+        <div class="card-body">
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <div class="mb-3">
+
+                    <label>Usuario</label>
+
+                    <input
+                        type="text"
+                        name="username"
+                        class="form-control">
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label>Contraseña</label>
+
+                    <input
+                        type="password"
+                        name="password"
+                        class="form-control">
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label>Rol</label>
+
+                    <select
+                        name="rol"
+                        class="form-select">
+
+                        <option value="Admin">
+                            Admin
+                        </option>
+
+                        <option value="Analista">
+                            Analista
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <button
+                    class="btn btn-success">
+
+                    Crear Usuario
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <hr class="my-4">
+
+<h4>
+    👥 Usuarios Registrados
+</h4>
+
+<div class="table-responsive">
+
+    <table class="table table-striped table-hover">
+
+        <thead class="table-dark">
+
+            <tr>
+
+                <th>Usuario</th>
+
+                <th>Rol</th>
+
+                <th>Activo</th>
+
+                <th>Acciones</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for usuario in usuarios %}
+
+            <tr>
+
+                <td>
+                    {{ usuario.username }}
+                </td>
+
+                <td>
+
+                    {% for grupo in usuario.groups.all %}
+
+                        {{ grupo.name }}
+
+                    {% empty %}
+
+                        Sin Rol
+
+                    {% endfor %}
+
+                </td>
+
+                <td>
+
+                    {% if usuario.is_active %}
+
+                        <span class="badge bg-success">
+                            Activo
+                        </span>
+
+                    {% else %}
+
+                        <span class="badge bg-danger">
+                            Inactivo
+                        </span>
+
+                    {% endif %}
+
+                </td>
+                <td>
+
+                 <button
+                    class="btn btn-warning btn-sm"
+                    data-bs-toggle="modal"
+                    data-bs-target="#editarModal{{ usuario.id }}">
+
+                    ✏️
+
+                </button>
+
+                    <a
+                        href="/cambiar-password/{{ usuario.id }}/"
+                        class="btn btn-primary btn-sm">
+
+                        🔒
+
+                    </a>
+
+                    {% if usuario.is_active %}
+
+                        <a
+                            href="/toggle-usuario/{{ usuario.id }}/"
+                            class="btn btn-danger btn-sm">
+
+                            ❌
+
+                        </a>
+
+                    {% else %}
+
+                        <a
+                            href="/toggle-usuario/{{ usuario.id }}/"
+                            class="btn btn-success btn-sm">
+
+                            ✅
+
+                        </a>
+
+                    {% endif %}
+
+                </td>
+
+            </tr>
+            <div
+    class="modal fade"
+    id="editarModal{{ usuario.id }}">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <form method="POST"
+                  action="/editar-usuario/{{ usuario.id }}/">
+
+                {% csrf_token %}
+
+                <div class="modal-header">
+
+                    <h5>
+                        Editar Usuario
+                    </h5>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <input
+                        type="text"
+                        name="username"
+                        value="{{ usuario.username }}"
+                        class="form-control">
+
+                        <label class="form-label mt-3">Rol</label>
+
+                            <select
+                                name="rol"
+                                class="form-select">
+
+                                <option
+                                    value="Admin"
+
+                                    {% if usuario.groups.all.0.name == 'Admin' %}
+                                        selected
+                                    {% endif %}>
+
+                                    Admin
+
+                                </option>
+
+                                <option
+                                    value="Analista"
+
+                                    {% if usuario.groups.all.0.name == 'Analista' %}
+                                        selected
+                                    {% endif %}>
+
+                                    Analista
+
+                                </option>
+
+                            </select>
+                            <label class="form-label mt-3">
+
+                                Nueva contraseña
+
+                            </label>
+
+                            <input
+                                type="password"
+                                name="password"
+                                class="form-control"
+                                placeholder="Dejar vacío para no cambiar">
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button
+                        class="btn btn-success">
+
+                        Guardar
+
+                    </button>
+
+                        </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+
+
+</div>
+
+</div>

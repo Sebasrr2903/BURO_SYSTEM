@@ -1,0 +1,240 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Generador de Plantillas BURO</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="{% static 'CSS/style.css' %}">
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm">
+
+    <div class="container-fluid">
+
+      <a class="navbar-brand fw-bold" href="/">
+        📄 BURÓ SYSTEM
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+
+        <span class="navbar-toggler-icon"></span>
+
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+
+        <ul class="navbar-nav ms-4">
+
+          <li class="nav-item">
+            <a class="nav-link active" href="/">
+              Generador
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="/historial/">
+              Historial
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              Reportes
+            </a>
+          </li>
+          <li class="nav-item">
+            {% if request.user.groups.all.0.name == 'Admin' %}
+
+            <a class="nav-link" href="/crear-usuario/">
+              👤 Usuarios
+            </a>
+
+            {% endif %}
+          </li>
+
+
+        </ul>
+
+        <div class="ms-auto d-flex align-items-center gap-3">
+
+          <span class="text-dark fw-semibold">
+            👤 {{ request.user.username }}
+          </span>
+
+             <a
+                    href="/logout/"
+                    class="btn btn-dark rounded-pill px-4">
+
+                    Salir
+
+            </a>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </nav>
+
+
+  <br> <!-- Tu formulario y generador de plantillas -->
+
+  <div class="flex-container">
+    <!-- Índice lateral -->
+    <div class="indice-lateral">
+      <h3>📌 Acceso Rápido</h3>
+      <label><input type="checkbox" id="toggleFavoritos" checked onchange="renderIndice()"> Mostrar solo
+        favoritos</label>
+      <ul>
+
+        <strong>✅ Procede</strong>
+        <ul style="text-align: center;" id="listaProcede"></ul>
+
+        <strong>⛔ No Procede</strong>
+        <ul style="text-align: center;" id="listaNoProcede"></ul>
+
+        <li><strong>🚫 Rechazos <button onclick="toggleSeccion('rechazosLista')">mostrar\ocultar</button>
+          </strong>
+
+
+          <ul id="rechazosLista" style="text-align: center;">
+            <li><button onclick="accesoRapido('Rechazo de ND')">Rechazo de ND</button></li>
+            <li><button onclick="accesoRapido('Rechazo por Cédula Alterado')">Rechazo por Cédula Alterado</button></li>
+            <li><button onclick="accesoRapido('Rechazo por Cédula No Legible')">Rechazo por Cédula</button></li>
+            <li><button onclick="accesoRapido('SIN CÉDULA')">Sin Cédula</button></li>
+            <li><button
+                onclick="accesoRapido('NO COINCIDE (cuando la información de la plantilla no coincide con la fotografía)')">NO
+                COINCIDE</button></li>
+            <li><button onclick="accesoRapido('CÉDULA AMBAS CARAS')">CÉDULA AMBAS CARAS</button></li>
+            <li><button onclick="accesoRapido('CONTROL DE ALTAS')">CONTROL DE ALTAS</button></li>
+            <li><button onclick="accesoRapido('FECHA SIN FORMATO')">FECHA SIN FORMATO</button></li>
+            <li><button onclick="accesoRapido('SIN INFOMACIÓN')">SIN INFORMACIÓN</button></li>
+            <li><button onclick="accesoRapido('CONTACTO')">CONTACTO</button></li>
+            <li><button onclick="accesoRapido('SIN REGISTROS')">SIN REGISTROS</button></li>
+            <li><button onclick="accesoRapido('DOCUMENTO VENCIDO')">DOCUMENTO VENCIDO</button></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Generador de plantillas -->
+
+    <div class="container">
+
+      <h2>📄 Generador de Plantillas BURÓ</h2>
+
+
+      <label for="plantilla">Seleccionar Plantilla:</label>
+      <select id="plantilla"></select>
+      <label for="gestion">Numero de gestion:</label>
+      <input type="text" id="gestion" placeholder="Ej:239393" oninput="this.value = this.value.toUpperCase();">
+
+      <div id="formulario" style="display: none;">
+        <label for="nombre">Nombre del Cliente:</label>
+        <input type="text" id="nombre" placeholder="Ej: JUAN PÉREZ" oninput="this.value = this.value.toUpperCase();">
+
+        <label for="cedula">Cédula:</label>
+        <input type="text" id="cedula" placeholder="Ej: 123456789">
+
+        <div id="montoInput" style="display: none;">
+          <label for="monto">Monto (¢):</label>
+          <input type="text" id="monto" placeholder="Ej: 25,000.00">
+
+        </div>
+
+        <div id="checkboxes" class="checkbox-section" style="display: none;" style="align-items: center;">
+          <label>
+            <input type="radio" name="condicion" id="finaciamiento"> Financiamiento abierto.
+          </label>
+          <label>
+            <input type="radio" name="condicion" id="suspendido"> Suspendido
+          </label>
+          <label>
+            <input type="radio" name="condicion" id="sinCumplirAno">Facturas no Cumple año antigüedad
+          </label>
+          <label>
+            <input type="radio" name="condicion" id="menos2750"> Normal
+          </label>
+        </div>
+
+
+        <div id="writteOffCampos" style="display: none;">
+          <label for="fecha_activacion">Fecha de activación:</label>
+          <input type="text" id="fecha_activacion" placeholder="Ej: 3/7/2013">
+
+          <label for="fecha_expiracion">Fecha de expiración:</label>
+          <input type="text" id="fecha_expiracion" placeholder="Ej: 3/7/2015">
+
+          <label for="fecha_desactivacion">Fecha de desactivación:</label>
+          <input type="text" id="fecha_desactivacion" placeholder="Ej: 21/11/2013">
+
+          <label for="terminal">Terminal ligado:</label>
+          <input type="text" id="terminal" placeholder="Ej: SAMSUNG GALAXY S III ONYX BLACK">
+        </div>
+
+        <div id="campoFecha" style="display: none;">
+          <label for="fecha">Fecha de Nota de Crédito:</label>
+          <input type="date" id="fecha">
+        </div>
+      </div>
+
+
+
+      <button id="new" onclick="generarPlantilla(), copiarTexto()">🧾 Generar Plantilla/📋Copiar texto</button>
+
+      <label for="resultado">Texto Generado:</label>
+      <textarea id="resultado"></textarea>
+
+      <button id="new" onclick="copiarTexto()">📋 Copiar al portapapeles</button>
+      <button id="ocultar" onclick="toggleCalculadora()">🧮 Mostrar/Ocultar Calculadora</button>
+
+    </div>
+
+
+
+
+    <div class="calculadora">
+      <h3>🧮 Calculadora</h3>
+      <h6>"Esta calculadora puedes agregar los cero pagos con comas"</h6>
+      <input type="text" id="calcDisplay">
+      <div class="botones">
+        <button id="buttonCalcu" onclick="appendCalc('7')">7</button>
+        <button id="buttonCalcu" onclick="appendCalc('8')">8</button>
+        <button id="buttonCalcu" onclick="appendCalc('9')">9</button>
+        <button id="buttonCalcu" onclick="appendCalc('/')">÷</button>
+        <button id="buttonCalcu" onclick="appendCalc('4')">4</button>
+        <button id="buttonCalcu" onclick="appendCalc('5')">5</button>
+        <button id="buttonCalcu" onclick="appendCalc('6')">6</button>
+        <button id="buttonCalcu" onclick="appendCalc('*')">×</button>
+        <button id="buttonCalcu" onclick="appendCalc('1')">1</button>
+        <button id="buttonCalcu" onclick="appendCalc('2')">2</button>
+        <button id="buttonCalcu" onclick="appendCalc('3')">3</button>
+        <button id="buttonCalcu" onclick="appendCalc('-')">−</button>
+        <button id="buttonCalcu" onclick="appendCalc('0')">0</button>
+        <button id="buttonCalcu" onclick="appendCalc('.')">.</button>
+        <button id="buttonCalcu" onclick="calculate()">=</button>
+        <button id="buttonCalcu" onclick="appendCalc('+')">+</button>
+        <button id="buttonCalcu" onclick="clearCalc()" style="grid-column: span 4;">C</button>
+      </div>
+    </div>
+  </div>
+
+
+  <script src="{% static 'javascript/backend.js' %}"></script>
+  <footer style="text-align: center;">
+    <p>&copy; 2025 Sebastian Rodriguez Rodriguez. Hecho en Costa Rica.</p>
+
+  </footer>
+
+
+</body>
+
+</html>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
