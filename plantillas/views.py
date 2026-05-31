@@ -66,6 +66,7 @@ def historial(request):
         {
             'registros': registros,
             'total': total,
+            "rechazados": rechazados,
             'procede': procede,
             'no_procede': no_procede,
             'busqueda': busqueda
