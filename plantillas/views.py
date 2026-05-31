@@ -55,10 +55,14 @@ def historial(request):
         )
 
     total = registros.count()
+   
 
     procede = registros.filter(resultado="PROCEDE").count()
 
     no_procede = registros.filter(resultado="NO PROCEDE").count()
+
+    rechazados = registros.exclude(resultado="PROCEDE").count()
+
 
     return render(
         request,
@@ -66,9 +70,9 @@ def historial(request):
         {
             'registros': registros,
             'total': total,
-            "rechazados": rechazados,
             'procede': procede,
             'no_procede': no_procede,
+            'rechazados': rechazados,
             'busqueda': busqueda
         }
     )
