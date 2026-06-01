@@ -138,18 +138,18 @@
       <label for="plantilla">Seleccionar Plantilla:</label>
       <select id="plantilla"></select>
       <label for="gestion">Numero de gestion:</label>
-      <input type="text" id="gestion" placeholder="Ej:239393" oninput="this.value = this.value.toUpperCase();">
+      <input type="text" id="gestion" placeholder="Ej:239393" oninput="this.value = this.value.toUpperCase();"   required>
 
       <div id="formulario" style="display: none;">
         <label for="nombre">Nombre del Cliente:</label>
-        <input type="text" id="nombre" placeholder="Ej: JUAN PÉREZ" oninput="this.value = this.value.toUpperCase();">
+        <input type="text" id="nombre" placeholder="Ej: JUAN PÉREZ" oninput="this.value = this.value.toUpperCase();" required>
 
         <label for="cedula">Cédula:</label>
-        <input type="text" id="cedula" placeholder="Ej: 123456789">
+        <input type="text" id="cedula" placeholder="Ej: 123456789"  required>
 
         <div id="montoInput" style="display: none;">
           <label for="monto">Monto (¢):</label>
-          <input type="text" id="monto" placeholder="Ej: 25,000.00">
+          <input type="text" id="monto" placeholder="Ej: 25,000.00" oninput="formatMonto(this)" required>
 
         </div>
 
