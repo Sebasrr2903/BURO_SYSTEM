@@ -201,6 +201,41 @@
             const fecha_expiracion = document.getElementById("fecha_expiracion").value.trim();
             const fecha_desactivacion = document.getElementById("fecha_desactivacion").value.trim();
 
+              document.getElementById("errorGestion").classList.add("d-none");
+              document.getElementById("errorNombre").classList.add("d-none");
+              document.getElementById("errorCedula").classList.add("d-none");
+
+              let hayError = false;
+
+              if (!gestion) {
+                  document.getElementById("errorGestion").classList.remove("d-none");
+                  document.getElementById("gestion").classList.add("is-invalid");
+                  hayError = true;
+              } else {
+                  document.getElementById("gestion").classList.remove("is-invalid");
+              }
+
+              if (!nombre) {
+                  document.getElementById("errorNombre").classList.remove("d-none");
+                  document.getElementById("nombre").classList.add("is-invalid");
+                  hayError = true;
+              } else {
+                  document.getElementById("nombre").classList.remove("is-invalid");
+              }
+
+              if (!cedula) {
+                  document.getElementById("errorCedula").classList.remove("d-none");
+                  document.getElementById("cedula").classList.add("is-invalid");
+                  hayError = true;
+              } else {
+                  document.getElementById("cedula").classList.remove("is-invalid");
+              }
+
+              if (hayError) {
+                  return;
+              }
+
+
             let fechaInput = document.getElementById("fecha").value.trim();
             let fecha = "";
             if (fechaInput) {

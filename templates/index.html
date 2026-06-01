@@ -8,11 +8,9 @@
   <title>Generador de Plantillas BURO</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
-  
 
-<link
-    rel="stylesheet"
-    href="{% static 'css/style.css' %}">
+
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
 </head>
 
@@ -71,13 +69,11 @@
             👤 {{ request.user.username }}
           </span>
 
-             <a
-                    href="/logout/"
-                    class="btn btn-dark rounded-pill px-4">
+          <a href="/logout/" class="btn btn-dark rounded-pill px-4">
 
-                    Salir
+            Salir
 
-            </a>
+          </a>
 
         </div>
 
@@ -138,14 +134,21 @@
       <label for="plantilla">Seleccionar Plantilla:</label>
       <select id="plantilla"></select>
       <label for="gestion">Numero de gestion:</label>
-      <input type="text" id="gestion" placeholder="Ej:239393" oninput="this.value = this.value.toUpperCase();"   required>
+      <input type="text" id="gestion" placeholder="Ej:239393" oninput="this.value = this.value.toUpperCase();" required>
+      <div id="errorGestion" class="invalid-feedback d-none"> Campo obligatorio </div>
+
 
       <div id="formulario" style="display: none;">
         <label for="nombre">Nombre del Cliente:</label>
-        <input type="text" id="nombre" placeholder="Ej: JUAN PÉREZ" oninput="this.value = this.value.toUpperCase();" required>
-
+        <input type="text" id="nombre" placeholder="Ej: JUAN PÉREZ" oninput="this.value = this.value.toUpperCase();"
+          required>
+        <div id="errorNombre" class="invalid-feedback d-none"> Campo obligatorio </div>
         <label for="cedula">Cédula:</label>
-        <input type="text" id="cedula" placeholder="Ej: 123456789"  required>
+        <input type="text" id="cedula" placeholder="Ej: 123456789" required>
+        <div id="errorCedula" class="invalid-feedback d-none"> Campo obligatorio </div>
+
+
+
 
         <div id="montoInput" style="display: none;">
           <label for="monto">Monto (¢):</label>

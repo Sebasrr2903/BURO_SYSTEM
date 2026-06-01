@@ -8,6 +8,12 @@ urlpatterns = [
     views.limpiar_historial,
     name='limpiar_historial'
 ),
+
+path(
+    'limpiar-por-fecha/',
+    views.limpiar_por_fecha,
+    name='limpiar_por_fecha'
+),
     path(
         'historial/',
         views.historial,

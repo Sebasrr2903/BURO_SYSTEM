@@ -2,9 +2,10 @@
 
 <!DOCTYPE html>
 <html>
+
 <head>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 
 
     <title>Historial</title>
@@ -12,26 +13,63 @@
 
 
 </head>
+
 <body>
- <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm">
-  
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm">
 
-    <div class="container-fluid">
 
-        <a class="navbar-brand fw-bold" href="/">
-            📄 BURÓ SYSTEM
-        </a>
+        <div class="container-fluid">
 
-        <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNav">
+            <a class="navbar-brand fw-bold" href="/">
+                📄 BURÓ SYSTEM
+            </a>
 
-            <span class="navbar-toggler-icon"></span>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
 
-        </button>
-<div class="modal fade" id="limpiarModal">
+                <span class="navbar-toggler-icon"></span>
+
+            </button>
+            <div class="modal fade" id="limpiarModal">
+
+                <div class="modal-dialog">
+
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+
+                            <h5 class="modal-title">
+                                Confirmar eliminación
+                            </h5>
+
+                        </div>
+
+                        <div class="modal-body">
+
+                            ¿Desea eliminar TODOS los registros?
+
+                        </div>
+
+                        <div class="modal-footer">
+
+                            <button class="btn btn-secondary" data-bs-dismiss="modal">
+
+                                Cancelar
+
+                            </button>
+
+                            <a href="/limpiar-historial/" class="btn btn-danger">
+
+                                Eliminar Todo
+
+                            </a>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="modal fade" id="limpiarFechaModal">
 
     <div class="modal-dialog">
 
@@ -39,134 +77,181 @@
 
             <div class="modal-header">
 
-                <h5 class="modal-title">
-                    Confirmar eliminación
+                <h5>
+                    Eliminar por rango de fechas
                 </h5>
 
             </div>
 
-            <div class="modal-body">
+            <form action="/limpiar-por-fecha/" method="GET">
 
-                ¿Desea eliminar TODOS los registros?
+                <div class="modal-body">
 
-            </div>
+                    <label>Desde</label>
 
-            <div class="modal-footer">
+                    <input
+                        type="date"
+                        name="fecha_inicio"
+                        class="form-control mb-3"
+                        required>
 
-                <button
-                    class="btn btn-secondary"
-                    data-bs-dismiss="modal">
+                    <label>Hasta</label>
 
-                    Cancelar
+                    <input
+                        type="date"
+                        name="fecha_fin"
+                        class="form-control"
+                        required>
 
-                </button>
+                </div>
 
-                <a
-                    href="/historial/"
-                    class="btn btn-danger">
+                <div class="modal-footer">
 
-                    Eliminar Todo
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
 
-                </a>
+                        Cancelar
 
-            </div>
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn btn-danger">
+
+                        Eliminar
+
+                    </button>
+
+                </div>
+
+            </form>
 
         </div>
 
     </div>
 
 </div>
-        <div
-            class="collapse navbar-collapse"
-            id="navbarNav">
+            <div class="collapse navbar-collapse" id="navbarNav">
 
-            <ul class="navbar-nav ms-4">
+                <ul class="navbar-nav ms-4">
 
-                <li class="nav-item">
-                    <a class="nav-link active" href="/">
-                        Generador
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">
+                            Generador
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/historial/">
+                            Historial
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            Reportes
+                        </a>
+                    </li>
+
+                </ul>
+
+                <div class="ms-auto d-flex align-items-center gap-3">
+
+                    <span class="text-dark fw-semibold">
+                        👤 {{ request.user.username }}
+                    </span>
+
+                    <a href="/logout/" class="btn btn-dark rounded-pill px-4">
+
+                        Salir
+
                     </a>
-                </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="/historial/">
-                        Historial
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        Reportes
-                    </a>
-                </li>
-
-            </ul>
-
-            <div class="ms-auto d-flex align-items-center gap-3">
-
-                <span class="text-dark fw-semibold">
-                    👤 {{ request.user.username }}
-                </span>
-
-             <a
-                    href="/logout/"
-                    class="btn btn-dark rounded-pill px-4">
-
-                    Salir
-
-            </a>
+                </div>
 
             </div>
 
         </div>
 
-    </div>
+    </nav>
 
-</nav>
+    <br>
 
-<br>
-  
-<div class="container mt-4">
+    <div class="container mt-4">
 
-    <div class="card shadow">
+        <div class="card shadow">
 
-        <div class="card-header bg-dark text-white">
+            <div class="card-header bg-dark text-white">
 
-            <h4 class="mb-0">
-                📋 Historial de Plantillas
-            </h4>
-         {% if request.user.groups.all.0.name == 'Admin' %}
-         <br>
-              <button
-                class="btn btn-danger"
-                data-bs-toggle="modal"
-                data-bs-target="#limpiarModal">
+                <h4 class="mb-0">
+                    📋 Historial de Plantillas
+                </h4>
+                {% if request.user.groups.all.0.name == 'Admin' %}
+                <br>
+                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#limpiarModal">
 
-                🗑️ Limpiar Historial
+                    🗑️ Limpiar Historial
 
-            </button>
-        {% endif %}
+                </button>
+                <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#limpiarFechaModal">
 
-        </div>
+                    🗓️ Eliminar por Fecha
+
+                </button>
 
 
+                {% endif %}
 
-        <div class="card-body">
+            </div>
 
-            <div class="row mb-4 align-items-center">
 
-                <div class="col-md-4">
 
-                    <input
-                        type="text"
-                        class="form-control"
-                        id="busqueda"
-                        placeholder="🔍 Buscar por gestión, cliente o cédula">
+            <div class="card-body">
 
-                </div>
+                <form method="GET">
 
+                    <div class="row mb-4 align-items-center">
+
+
+                        <div class="row">
+                            <div class="col-md-4">
+
+                                <input type="text" class="form-control" id="busqueda"
+                                    placeholder="🔍 Buscar por gestión, cliente o cédula">
+
+                            </div>
+
+                            <div class="col-md-4">
+
+                                <input type="date" class="form-control" name="fecha_inicio" value="{{ fecha_inicio }}">
+
+                            </div>
+
+                            <div class="col-md-4">
+
+                                <input type="date" class="form-control" name="fecha_fin" value="{{ fecha_fin }}">
+
+                            </div>
+
+                            <br>
+                            <div class="col-md-2">
+                                <br>
+                                <button type="submit" class="btn btn-primary w-100">
+
+                                    Filtrar
+
+                                </button>
+
+
+                            </div>
+                        </div>
+
+                </form>
+                <br>
                 <div class="col-md-8">
-
+                    <br>
                     <div class="row">
 
                         <div class="col">
@@ -201,7 +286,7 @@
                             </div>
 
                         </div>
-                         <div class="col">
+                        <div class="col">
 
                             <div class="card border-danger text-center">
                                 <div class="card-body p-2">
@@ -211,8 +296,8 @@
                             </div>
 
                         </div>
-                        
-                        
+
+
 
                     </div>
 
@@ -221,122 +306,109 @@
             </div>
         </div>
 
-            <div class="table-responsive">
+        <div class="table-responsive">
 
-                <table class="table table-striped table-hover align-middle">
+            <table class="table table-striped table-hover align-middle">
 
-                    <thead class="table-dark">
+                <thead class="table-dark">
 
-                        <tr>
+                    <tr>
 
-                            <th>Fecha</th>
-                            <th>Usuario</th>
-                            <th>Gestión</th>
-                            <th>Cliente</th>
-                            <th>Cédula</th>
-                            <th>Resultado</th>
-                            <th>Ver respuesta</th>
-                            <th>Copiar respuesta</th>
+                        <th>Fecha</th>
+                        <th>Usuario</th>
+                        <th>Gestión</th>
+                        <th>Cliente</th>
+                        <th>Cédula</th>
+                        <th>Resultado</th>
+                        <th>Ver respuesta</th>
+                        <th>Copiar respuesta</th>
 
-                        </tr>
+                    </tr>
 
-                    </thead>
+                </thead>
 
-                    <tbody>
+                <tbody>
 
-                        {% for item in registros %}
+                    {% for item in registros %}
 
-                        <tr>
+                    <tr>
 
-                            <td>{{ item.fecha|date:"d/m/Y H:i" }}</td>
-                            
-                            <td>{{ item.usuario }}</td>
+                        <td>{{ item.fecha|date:"d/m/Y H:i" }}</td>
+
+                        <td>{{ item.usuario }}</td>
 
 
-                            <td>{{ item.gestion }}</td>
+                        <td>{{ item.gestion }}</td>
 
-                            <td>{{ item.nombre_cliente }}</td>
+                        <td>{{ item.nombre_cliente }}</td>
 
-                            <td>{{ item.cedula }}</td>
+                        <td>{{ item.cedula }}</td>
 
-                            <td>
+                        <td>
 
-                                {% if item.resultado == "PROCEDE" %}
-                                    <span class="badge bg-success">
-                                        {{ item.resultado }}
-                                    </span>
-                                {% else %}
-                                    <span class="badge bg-danger">
-                                        {{ item.resultado }}
-                                    </span>
-                                {% endif %}
+                            {% if item.resultado == "PROCEDE" %}
+                            <span class="badge bg-success">
+                                {{ item.resultado }}
+                            </span>
+                            {% else %}
+                            <span class="badge bg-danger">
+                                {{ item.resultado }}
+                            </span>
+                            {% endif %}
 
-                            </td>
+                        </td>
 
-                            <td>
+                        <td>
 
-                                <button
-                                    class="btn btn-primary btn-sm"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#modal{{ item.id }}">
+                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                data-bs-target="#modal{{ item.id }}">
 
-                                    👁 Ver
+                                👁 Ver
 
-                                </button>
+                            </button>
 
-                            </td>
-                             <td>
+                        </td>
+                        <td>
 
-                                 <button
-                                        class="btn btn-success mt-3"
-                                        onclick="copiarRespuesta('respuesta{{ item.id }}')">
+                            <button class="btn btn-success mt-3" onclick="copiarRespuesta('respuesta{{ item.id }}')">
 
-                                        📋 Copiar Respuesta
+                                📋 Copiar Respuesta
 
-                                    </button>
+                            </button>
 
-                            </td>
+                        </td>
 
-                        </tr>
+                    </tr>
 
-                        <!-- Modal -->
+                    <!-- Modal -->
 
-                        <div
-                            class="modal fade"
-                            id="modal{{ item.id }}"
-                            tabindex="-1">
+                    <div class="modal fade" id="modal{{ item.id }}" tabindex="-1">
 
-                            <div class="modal-dialog modal-lg">
+                        <div class="modal-dialog modal-lg">
 
-                                <div class="modal-content">
+                            <div class="modal-content">
 
-                                    <div class="modal-header">
+                                <div class="modal-header">
 
-                                        <h5 class="modal-title">
-                                            Respuesta Generada
-                                        </h5>
+                                    <h5 class="modal-title">
+                                        Respuesta Generada
+                                    </h5>
 
-                                        <button
-                                            type="button"
-                                            class="btn-close"
-                                            data-bs-dismiss="modal">
-                                        </button>
-
-                                    </div>
-
-                                  <div class="modal-body">
-
-                                    <pre id="respuesta{{ item.id }}">{{ item.respuesta }}</pre>
-
-                                    <button
-                                        class="btn btn-success mt-3"
-                                        onclick="copiarRespuesta('respuesta{{ item.id }}')">
-
-                                        📋 Copiar Respuesta
-
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal">
                                     </button>
 
                                 </div>
+
+                                <div class="modal-body">
+
+                                    <pre id="respuesta{{ item.id }}">{{ item.respuesta }}</pre>
+
+                                    <button class="btn btn-success mt-3"
+                                        onclick="copiarRespuesta('respuesta{{ item.id }}')">
+
+                                        📋 Copiar Respuesta
+
+                                    </button>
 
                                 </div>
 
@@ -344,60 +416,63 @@
 
                         </div>
 
-                        {% endfor %}
+                    </div>
 
-                    </tbody>
+                    {% endfor %}
 
-                </table>
+                </tbody>
 
-            </div>
+            </table>
 
         </div>
 
     </div>
 
-</div>
+    </div>
+
+    </div>
 
 </body>
+
 </html>
 
 <script>
-   
-
-document
-.getElementById("busqueda")
-.addEventListener("keyup", function() {
-
-    let valor = this.value.toLowerCase();
-
-    let filas = document.querySelectorAll("tbody tr");
-
-    filas.forEach(fila => {
-
-        let texto =
-            fila.innerText.toLowerCase();
-
-        fila.style.display =
-            texto.includes(valor)
-            ? ""
-            : "none";
-
-    });
-
-});
 
 
+    document
+        .getElementById("busqueda")
+        .addEventListener("keyup", function () {
 
-function copiarRespuesta(id) {
+            let valor = this.value.toLowerCase();
 
-    const texto =
-        document.getElementById(id).innerText;
+            let filas = document.querySelectorAll("tbody tr");
 
-    navigator.clipboard.writeText(texto)
-        .then(() => {
-            alert("Respuesta copiada al portapapeles");
+            filas.forEach(fila => {
+
+                let texto =
+                    fila.innerText.toLowerCase();
+
+                fila.style.display =
+                    texto.includes(valor)
+                        ? ""
+                        : "none";
+
+            });
+
         });
 
-}
+
+
+    function copiarRespuesta(id) {
+
+        const texto =
+            document.getElementById(id).innerText;
+
+        navigator.clipboard.writeText(texto)
+            .then(() => {
+                alert("Respuesta copiada al portapapeles");
+            });
+
+    }
 
 </script>
