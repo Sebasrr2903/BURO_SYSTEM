@@ -8,6 +8,11 @@ urlpatterns = [
     views.limpiar_historial,
     name='limpiar_historial'
 ),
+path(
+    'exportar-excel/',
+    views.exportar_excel,
+    name='exportar_excel'
+),
 
 path(
     'limpiar-por-fecha/',

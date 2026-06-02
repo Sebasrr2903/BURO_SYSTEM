@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
+from openpyxl import Workbook
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime
@@ -39,7 +40,8 @@ def guardar_plantilla(request):
 
 
 from django.db.models import Q
-from datetime import datetime
+from django.core.paginator import Paginator
+
 
 @login_required
 def historial(request):
@@ -59,18 +61,35 @@ def historial(request):
         )
 
     if fecha_inicio:
-        registros = registros.filter(fecha__date__gte=fecha_inicio)
+        registros = registros.filter(
+            fecha__date__gte=fecha_inicio
+        )
 
     if fecha_fin:
-        registros = registros.filter(fecha__date__lte=fecha_fin)
+        registros = registros.filter(
+            fecha__date__lte=fecha_fin
+        )
 
     total = registros.count()
 
-    procede = registros.filter(resultado="PROCEDE").count()
+    procede = registros.filter(
+        resultado="PROCEDE"
+    ).count()
 
-    no_procede = registros.filter(resultado="NO PROCEDE").count()
+    no_procede = registros.filter(
+        resultado="NO PROCEDE"
+    ).count()
 
-    rechazados = registros.exclude(resultado="PROCEDE").count()
+    rechazados = registros.exclude(
+        resultado="PROCEDE"
+    ).count()
+
+    # PAGINACIÓN AL FINAL
+    paginator = Paginator(registros, 10)
+
+    page_number = request.GET.get('page')
+
+    registros = paginator.get_page(page_number)
 
     return render(
         request,
@@ -86,6 +105,63 @@ def historial(request):
             'fecha_fin': fecha_fin,
         }
     )
+
+@login_required
+def exportar_excel(request):
+
+    wb = Workbook()
+    ws = wb.active
+
+    ws.title = "Historial"
+
+    ws.append([
+        "Fecha",
+        "Usuario",
+        "Gestión",
+        "Cliente",
+        "Cédula",
+        "Resultado"
+    ])
+
+    registros = PlantillaGenerada.objects.all().order_by('-fecha')
+
+    fecha_inicio = request.GET.get('fecha_inicio')
+    fecha_fin = request.GET.get('fecha_fin')
+
+    if fecha_inicio:
+        registros = registros.filter(
+            fecha__date__gte=fecha_inicio
+        )
+
+    if fecha_fin:
+        registros = registros.filter(
+            fecha__date__lte=fecha_fin
+        )
+
+    for registro in registros:
+
+        ws.append([
+            registro.fecha.strftime("%d/%m/%Y %H:%M"),
+            registro.usuario.username if registro.usuario else "",
+            registro.gestion,
+            registro.nombre_cliente,
+            registro.cedula,
+            registro.resultado
+        ])
+
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+
+    response[
+        'Content-Disposition'
+    ] = 'attachment; filename=historial.xlsx'
+
+    wb.save(response)
+
+    return response
+
+
 
 @login_required
 def limpiar_historial(request):

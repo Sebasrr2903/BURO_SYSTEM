@@ -200,6 +200,13 @@
 
                 </button>
                 -->
+                <a
+    href="{% url 'exportar_excel' %}?fecha_inicio={{ fecha_inicio|default:'' }}&fecha_fin={{ fecha_fin|default:'' }}"
+    class="btn btn-success">
+
+    📊 Exportar Excel
+
+</a>
                 <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#limpiarFechaModal">
 
                     🗓️ Eliminar por Fecha
@@ -428,6 +435,35 @@
                 </tbody>
 
             </table>
+            <nav class="mt-3">
+    <ul class="pagination justify-content-center">
+
+        {% if registros.has_previous %}
+            <li class="page-item">
+                <a class="page-link"
+                   href="?page={{ registros.previous_page_number }}">
+                    Anterior
+                </a>
+            </li>
+        {% endif %}
+
+        <li class="page-item active">
+            <span class="page-link">
+                {{ registros.number }}
+            </span>
+        </li>
+
+        {% if registros.has_next %}
+            <li class="page-item">
+                <a class="page-link"
+                   href="?page={{ registros.next_page_number }}">
+                    Siguiente
+                </a>
+            </li>
+        {% endif %}
+
+    </ul>
+</nav>
 
         </div>
 

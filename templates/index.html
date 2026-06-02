@@ -12,6 +12,7 @@
 
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
+
 </head>
 
 <body>
@@ -134,17 +135,17 @@
       <label for="plantilla">Seleccionar Plantilla:</label>
       <select id="plantilla"></select>
       <label for="gestion">Numero de gestion:</label>
-      <input type="text" id="gestion" placeholder="Ej:239393" oninput="this.value = this.value.toUpperCase();" required>
+      <input type="text" id="gestion" placeholder="Ej:239393" oninput="this.value = this.value.toUpperCase();" >
       <div id="errorGestion" class="invalid-feedback d-none"> Campo obligatorio </div>
 
 
       <div id="formulario" style="display: none;">
         <label for="nombre">Nombre del Cliente:</label>
         <input type="text" id="nombre" placeholder="Ej: JUAN PÉREZ" oninput="this.value = this.value.toUpperCase();"
-          required>
+          >
         <div id="errorNombre" class="invalid-feedback d-none"> Campo obligatorio </div>
         <label for="cedula">Cédula:</label>
-        <input type="text" id="cedula" placeholder="Ej: 123456789" required>
+        <input type="text" id="cedula" placeholder="Ej: 123456789" >
         <div id="errorCedula" class="invalid-feedback d-none"> Campo obligatorio </div>
 
 
@@ -241,8 +242,12 @@
   </footer>
 
 
+
 </body>
 
 </html>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+  
