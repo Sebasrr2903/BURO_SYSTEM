@@ -200,8 +200,7 @@ function generarPlantilla() {
   const fecha_activacion = document.getElementById("fecha_activacion").value.trim();
   const fecha_expiracion = document.getElementById("fecha_expiracion").value.trim();
   const fecha_desactivacion = document.getElementById("fecha_desactivacion").value.trim();
-  const distribuidor = document.getElementById("distribuidor").value.trim().toUpperCase();
-
+//const distribuidor = document.getElementById("distribuidor").value.trim().toUpperCase();
 
 
   document.getElementById("errorGestion").classList.add("d-none");

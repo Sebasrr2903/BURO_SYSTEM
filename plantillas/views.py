@@ -80,9 +80,9 @@ def historial(request):
     no_procede = registros.filter(
         resultado="NO PROCEDE"
     ).count()
-
+    
     rechazados = registros.exclude(
-        resultado="PROCEDE"
+    resultado__in=["PROCEDE", "NO PROCEDE"]
     ).count()
 
     # PAGINACIÓN AL FINAL
