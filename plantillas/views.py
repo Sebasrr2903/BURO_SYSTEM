@@ -232,8 +232,8 @@ def eliminar_usuario(request, user_id):
 
     # Evitar borrarse a sí mismo
     if usuario == request.user:
-        return redirect('/usuarios/')
+        return redirect('/crear-usuario/')
 
     usuario.delete()
 
-    return redirect('/usuarios/')
+    return redirect('/crear-usuario/')

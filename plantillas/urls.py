@@ -13,6 +13,7 @@ path(
     views.exportar_excel,
     name='exportar_excel'
 ),
+
 path(
     'eliminar-usuario/<int:user_id>/',
     views.eliminar_usuario,
