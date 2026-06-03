@@ -27,6 +27,7 @@ def guardar_plantilla(request):
         PlantillaGenerada.objects.create(
             usuario=request.user,
             gestion=data.get("gestion"),
+           # distribuidor=data.get("distribuidor"),
             cedula=data.get("cedula"),
             nombre_cliente=data.get("nombre_cliente"),
             nombre_plantilla=data.get("nombre_plantilla"),

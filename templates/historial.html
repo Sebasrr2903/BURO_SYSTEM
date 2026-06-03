@@ -230,8 +230,15 @@
                         <div class="row">
                             <div class="col-md-4">
 
-                                <input type="text" class="form-control" id="busqueda"
-                                    placeholder="🔍 Buscar por gestión, cliente o cédula">
+                            <input
+                                type="text"
+                                class="form-control"
+                                name="q"
+                                value="{{ busqueda|default:'' }}"
+                                placeholder="🔍 Buscar por gestión, cliente o cédula">
+
+
+                        </form>
 
                             </div>
 
@@ -480,27 +487,6 @@
 <script>
 
 
-    document
-        .getElementById("busqueda")
-        .addEventListener("keyup", function () {
-
-            let valor = this.value.toLowerCase();
-
-            let filas = document.querySelectorAll("tbody tr");
-
-            filas.forEach(fila => {
-
-                let texto =
-                    fila.innerText.toLowerCase();
-
-                fila.style.display =
-                    texto.includes(valor)
-                        ? ""
-                        : "none";
-
-            });
-
-        });
 
 
 
