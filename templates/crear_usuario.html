@@ -227,6 +227,14 @@
                         🔒
 
                     </a>
+                    <a
+                        href="{% url 'eliminar_usuario' usuario.id %}"
+                        class="btn btn-danger btn-sm"
+                        onclick="return confirm('¿Eliminar este usuario?')">
+
+                        ❌
+
+                    </a>
 
                     {% if usuario.is_active %}
 

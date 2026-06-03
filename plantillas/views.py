@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponse, JsonResponse
 from openpyxl import Workbook
 from django.contrib.auth.decorators import login_required
@@ -215,3 +215,25 @@ def limpiar_por_fecha(request):
         ).delete()
 
     return redirect('historial')
+
+@login_required
+def eliminar_usuario(request, user_id):
+
+    if not request.user.groups.filter(
+        name='Admin'
+    ).exists():
+
+        return redirect('/')
+
+    usuario = get_object_or_404(
+        User,
+        id=user_id
+    )
+
+    # Evitar borrarse a sí mismo
+    if usuario == request.user:
+        return redirect('/usuarios/')
+
+    usuario.delete()
+
+    return redirect('/usuarios/')

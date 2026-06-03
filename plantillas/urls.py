@@ -13,12 +13,18 @@ path(
     views.exportar_excel,
     name='exportar_excel'
 ),
+path(
+    'eliminar-usuario/<int:user_id>/',
+    views.eliminar_usuario,
+    name='eliminar_usuario'
+),
 
 path(
     'limpiar-por-fecha/',
     views.limpiar_por_fecha,
     name='limpiar_por_fecha'
 ),
+
     path(
         'historial/',
         views.historial,
