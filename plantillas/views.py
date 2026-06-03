@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime
 from .models import PlantillaGenerada
+from django.contrib.auth.models import User
 import json
 
 from .models import PlantillaGenerada
@@ -50,6 +51,9 @@ def historial(request):
     registros = PlantillaGenerada.objects.all().order_by('-fecha')
 
     busqueda = request.GET.get('q')
+    usuario = request.GET.get('usuario')
+
+    
 
     fecha_inicio = request.GET.get('fecha_inicio')
     fecha_fin = request.GET.get('fecha_fin')
@@ -59,6 +63,11 @@ def historial(request):
             Q(gestion__icontains=busqueda) |
             Q(nombre_cliente__icontains=busqueda) |
             Q(cedula__icontains=busqueda)
+        )
+
+    if usuario:
+             registros = registros.filter(
+             usuario__username=usuario
         )
 
     if fecha_inicio:
@@ -71,6 +80,8 @@ def historial(request):
             fecha__date__lte=fecha_fin
         )
 
+    
+
     total = registros.count()
 
     procede = registros.filter(
@@ -80,7 +91,7 @@ def historial(request):
     no_procede = registros.filter(
         resultado="NO PROCEDE"
     ).count()
-    
+
     rechazados = registros.exclude(
     resultado__in=["PROCEDE", "NO PROCEDE"]
     ).count()
@@ -91,6 +102,8 @@ def historial(request):
     page_number = request.GET.get('page')
 
     registros = paginator.get_page(page_number)
+
+    usuarios = User.objects.order_by('username')
 
     return render(
         request,
@@ -104,6 +117,8 @@ def historial(request):
             'busqueda': busqueda,
             'fecha_inicio': fecha_inicio,
             'fecha_fin': fecha_fin,
+            'usuarios': usuarios,
+            'usuario_seleccionado': usuario,
         }
     )
 

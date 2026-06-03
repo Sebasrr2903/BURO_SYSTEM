@@ -217,113 +217,126 @@
                 {% endif %}
 
             </div>
+<div class="card-body">
 
+    <form method="GET">
 
+        <div class="row g-3 align-items-end">
 
-            <div class="card-body">
+            <div class="col-md-4">
 
-                <form method="GET">
-
-                    <div class="row mb-4 align-items-center">
-
-
-                        <div class="row">
-                            <div class="col-md-4">
-
-                            <input
-                                type="text"
-                                class="form-control"
-                                name="q"
-                                value="{{ busqueda|default:'' }}"
-                                placeholder="🔍 Buscar por gestión, cliente o cédula">
-
-
-                        </form>
-
-                            </div>
-
-                            <div class="col-md-4">
-
-                                <input type="date" class="form-control" name="fecha_inicio" value="{{ fecha_inicio }}">
-
-                            </div>
-
-                            <div class="col-md-4">
-
-                                <input type="date" class="form-control" name="fecha_fin" value="{{ fecha_fin }}">
-
-                            </div>
-
-                            <br>
-                            <div class="col-md-2">
-                                <br>
-                                <button type="submit" class="btn btn-primary w-100">
-
-                                    Filtrar
-
-                                </button>
-
-
-                            </div>
-                        </div>
-
-                </form>
-                <br>
-                <div class="col-md-8">
-                    <br>
-                    <div class="row">
-
-                        <div class="col">
-
-                            <div class="card border-primary text-center">
-                                <div class="card-body p-2">
-                                    <small>Total</small>
-                                    <h5>{{ total }}</h5>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div class="col">
-
-                            <div class="card border-success text-center">
-                                <div class="card-body p-2">
-                                    <small>Procede</small>
-                                    <h5>{{ procede }}</h5>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div class="col">
-
-                            <div class="card border-danger text-center">
-                                <div class="card-body p-2">
-                                    <small>No Procede</small>
-                                    <h5>{{ no_procede }}</h5>
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="col">
-
-                            <div class="card border-danger text-center">
-                                <div class="card-body p-2">
-                                    <small>Rechazados</small>
-                                    <h5>{{ rechazados }}</h5>
-                                </div>
-                            </div>
-
-                        </div>
-
-
-
-                    </div>
-
-                </div>
+                <input
+                    type="text"
+                    class="form-control"
+                    name="q"
+                    value="{{ busqueda|default:'' }}"
+                    placeholder="🔍 Buscar por gestión, cliente o cédula">
 
             </div>
+
+            <div class="col-md-3">
+
+                <input
+                    type="date"
+                    class="form-control"
+                    name="fecha_inicio"
+                    value="{{ fecha_inicio }}">
+
+            </div>
+
+            <div class="col-md-3">
+
+                <input
+                    type="date"
+                    class="form-control"
+                    name="fecha_fin"
+                    value="{{ fecha_fin }}">
+
+            </div>
+
+            <div class="col-md-2">
+
+                <select
+                    name="usuario"
+                    class="form-select">
+
+                    <option value="">
+                        👤 Todos
+                    </option>
+
+                    {% for u in usuarios %}
+                    <option
+                        value="{{ u.username }}"
+                        {% if usuario_seleccionado == u.username %}selected{% endif %}>
+                        {{ u.username }}
+                    </option>
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+            <div class="col-md-2">
+
+                <button
+                    type="submit"
+                    class="btn btn-primary w-100">
+
+                    Filtrar
+
+                </button>
+
+            </div>
+
         </div>
+
+    </form>
+
+    <br>
+
+    <!-- CONTADORES -->
+
+    <div class="row">
+
+        <div class="col">
+            <div class="card border-primary text-center">
+                <div class="card-body p-2">
+                    <small>Total</small>
+                    <h5>{{ total }}</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card border-success text-center">
+                <div class="card-body p-2">
+                    <small>Procede</small>
+                    <h5>{{ procede }}</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card border-danger text-center">
+                <div class="card-body p-2">
+                    <small>No Procede</small>
+                    <h5>{{ no_procede }}</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card border-danger text-center">
+                <div class="card-body p-2">
+                    <small>Rechazados</small>
+                    <h5>{{ rechazados }}</h5>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
 
         <div class="table-responsive">
 
