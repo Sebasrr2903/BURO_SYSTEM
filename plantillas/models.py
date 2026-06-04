@@ -23,6 +23,11 @@ class PlantillaGenerada(models.Model):
 
     resultado = models.CharField(max_length=50)
 
+    distribuidor = models.CharField(
+        max_length=200,
+        default='SIN DISTRIBUIDOR'
+    )
+
     respuesta = models.TextField()
 
     def __str__(self):

@@ -33,6 +33,7 @@ def login_view(request):
     )
 
 
+
 @login_required
 def crear_usuario(request):
 
@@ -53,9 +54,7 @@ def crear_usuario(request):
 
         return redirect('/crear-usuario/')
 
-    usuarios = User.objects.exclude(
-        is_superuser=True
-    ).order_by('username')
+    usuarios = User.objects.all().order_by('username')
 
     return render(
         request,
@@ -64,6 +63,7 @@ def crear_usuario(request):
             'usuarios': usuarios
         }
     )
+
 
 from django.shortcuts import get_object_or_404
 

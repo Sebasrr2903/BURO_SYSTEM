@@ -213,7 +213,7 @@ function generarPlantilla() {
 
 
 
-  if (!distribuidor) {
+ if (!distribuidor) {
 
     document
         .getElementById("errorDistribuidor")
@@ -225,7 +225,7 @@ function generarPlantilla() {
 
     hayError = true;
 
-  } else {
+} else {
 
    document
         .getElementById("distribuidor")
@@ -325,57 +325,14 @@ function generarPlantilla() {
       respuesta: texto
     })
   })
-  
-  .then(response => response.json())
-  .then(data => {
+    .then(response => response.json())
+    .then(data => {
+      console.log("Guardado correctamente", data);
+    })
+    .catch(error => {
+      console.error("Error:", error);
 
-    if (data.existe) {
-
-        let verAnterior = confirm(
-            `⚠️ Esta cédula ya fue gestionada.\n\n` +
-            `Fecha: ${data.fecha}\n` +
-            `Usuario: ${data.usuario}\n` +
-            `Resultado: ${data.resultado}\n\n` +
-            `Aceptar = Ver respuesta anterior\n` +
-            `Cancelar = Generar nueva`
-        );
-
-        if (verAnterior) {
-
-            alert(
-                "RESPUESTA ANTERIOR:\n\n" +
-                data.respuesta
-            );
-
-            return;
-        }
-
-        fetch("/guardar-plantilla/", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                distribuidor: distribuidor,
-                gestion: gestion,
-                cedula: cedula,
-                nombre_cliente: nombre,
-                nombre_plantilla: plantillaKey,
-                resultado: resultado,
-                respuesta: texto,
-                forzar: true
-            })
-        });
-
-        return;
-    }
-
-    console.log("Guardado correctamente", data);
-
-})
-.catch(error => {
-    console.error("Error:", error);
-});
+    });
 }
 
 
@@ -389,6 +346,7 @@ function copiarTexto() {
   document.getElementById("nombre").value = "";
   document.getElementById("gestion").value = "";
   document.getElementById("cedula").value = "";
+  document.getElementById("distribuidor").value = "";
   if (document.getElementById("monto")) document.getElementById("monto").value = "";
 
   if (document.getElementById("fecha_activacion")) document.getElementById("fecha_activacion").value = "";

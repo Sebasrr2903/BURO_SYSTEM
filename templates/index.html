@@ -133,12 +133,12 @@
 
       <label for="plantilla">Seleccionar Plantilla:</label>
       <select id="plantilla"></select>
-<label for="distribuidor">Distribuidor:</label>
+
+     <label for="distribuidor">Distribuidor:</label>
 
 <input
     type="text"
     id="distribuidor"
-    name="distribuidor"
     list="listaDistribuidores"
     placeholder="Ej: PIKI"
     oninput="this.value = this.value.toUpperCase();">
@@ -170,7 +170,6 @@
 <div id="errorDistribuidor" class="invalid-feedback d-none">
     Campo obligatorio
 </div>
-
       <label for="gestion">Numero de gestion:</label>
       <input type="text" id="gestion" placeholder="Ej:239393" oninput="this.value = this.value.toUpperCase();" >
       <div id="errorGestion" class="invalid-feedback d-none"> Campo obligatorio </div>
@@ -178,82 +177,9 @@
 
       <div id="formulario" style="display: none;">
         <label for="nombre">Nombre del Cliente:</label>
-        <input type="text" id="nombre" placeholder="Ej: JUAN PÉREZ" oninput="this.value = this.value.toUpperCase();">
+        <input type="text" id="nombre" placeholder="Ej: JUAN PÉREZ" oninput="this.value = this.value.toUpperCase();"
+          >
         <div id="errorNombre" class="invalid-feedback d-none"> Campo obligatorio </div>
-
-
-
-
-        <div class="modal fade" id="modalCedulaExiste">
-
-    <div class="modal-dialog">
-
-        <div class="modal-content">
-
-            <div class="modal-header bg-warning">
-
-                <h5>
-                    ⚠️ Cédula ya gestionada
-                </h5>
-
-            </div>
-
-            <div class="modal-body">
-
-                <p>
-                    Esta cédula ya fue gestionada.
-                </p>
-
-                <p>
-                    <strong>Fecha:</strong>
-                    <span id="fechaAnterior"></span>
-                </p>
-
-                <p>
-                    <strong>Usuario:</strong>
-                    <span id="usuarioAnterior"></span>
-                </p>
-
-                <p>
-                    <strong>Resultado:</strong>
-                    <span id="resultadoAnterior"></span>
-                </p>
-
-            </div>
-
-            <div class="modal-footer">
-
-                <button
-                    class="btn btn-info"
-                    id="verRespuesta">
-
-                    👁 Ver respuesta anterior
-
-                </button>
-
-                <button
-                    class="btn btn-success"
-                    id="continuarGeneracion">
-
-                    🔄 Generar nueva
-
-                </button>
-
-                <button
-                    class="btn btn-secondary"
-                    data-bs-dismiss="modal">
-
-                    Cancelar
-
-                </button>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
         <label for="cedula">Cédula:</label>
         <input type="text" id="cedula" placeholder="Ej: 123456789" >
         <div id="errorCedula" class="invalid-feedback d-none"> Campo obligatorio </div>
@@ -356,7 +282,6 @@
 </body>
 
 </html>
-
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 
