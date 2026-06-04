@@ -256,23 +256,17 @@
 
             <div class="col-md-2">
 
-                <select
-                    name="usuario"
-                    class="form-select">
-
-                    <option value="">
-                        👤 Todos
-                    </option>
+               {% if es_admin %}
+                <select name="usuario" class="form-select">
+                    <option value="">👤 Todos</option>
 
                     {% for u in usuarios %}
-                    <option
-                        value="{{ u.username }}"
-                        {% if usuario_seleccionado == u.username %}selected{% endif %}>
+                    <option value="{{ u.username }}">
                         {{ u.username }}
                     </option>
                     {% endfor %}
-
                 </select>
+                {% endif %}
 
             </div>
 
@@ -308,37 +302,44 @@
         </div>
 
         <div class="col">
+            <a href="?resultado=PROCEDE " style="text-decoration:none;color:inherit;">
             <div class="card border-success text-center">
                 <div class="card-body p-2">
                     <small>Procede</small>
                     <h5>{{ procede }}</h5>
                 </div>
+            </a>
             </div>
         </div>
 
         <div class="col">
+             <a href="?resultado=NO PROCEDE" style="text-decoration:none;color:inherit;">
             <div class="card border-danger text-center">
                 <div class="card-body p-2">
                     <small>No Procede</small>
                     <h5>{{ no_procede }}</h5>
                 </div>
+            </a>
             </div>
         </div>
 
         <div class="col">
+             <a href="?resultado=RECHAZO" style="text-decoration:none;color:inherit;">
             <div class="card border-danger text-center">
                 <div class="card-body p-2">
                     <small>Rechazados</small>
                     <h5>{{ rechazados }}</h5>
                 </div>
             </div>
+        </a>
         </div>
-
+      
     </div>
 
 </div>
 
-        <div class="table-responsive">
+
+<div class="table-responsive">
 
             <table class="table table-striped table-hover align-middle">
 
@@ -351,9 +352,9 @@
                         <th>Gestión</th>
                         <th>Cliente</th>
                         <th>Cédula</th>
+                        <th>Distribuidor</th>
                         <th>Resultado</th>
                         <th>Ver respuesta</th>
-                        <th>Copiar respuesta</th>
 
                     </tr>
 
@@ -374,7 +375,9 @@
 
                         <td>{{ item.nombre_cliente }}</td>
 
-                        <td>{{ item.cedula }}</td>
+                        <td>{{ item.cedula }}</td>      
+
+                        <td>{{ item.distribuidor }}</td>
 
                         <td>
 
@@ -400,15 +403,7 @@
                             </button>
 
                         </td>
-                        <td>
-
-                            <button class="btn btn-success mt-3" onclick="copiarRespuesta('respuesta{{ item.id }}')">
-
-                                📋 Copiar Respuesta
-
-                            </button>
-
-                        </td>
+        
 
                     </tr>
 

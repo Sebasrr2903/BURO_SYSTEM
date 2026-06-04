@@ -25,10 +25,24 @@ def guardar_plantilla(request):
         print("ENTRE A GUARDAR")
         print(data)
 
+        registro_existente = PlantillaGenerada.objects.filter(
+            cedula=data.get("cedula")
+        ).order_by('-fecha').first()
+
+        if registro_existente and not data.get("forzar"):
+
+            return JsonResponse({
+                "existe": True,
+                "fecha": registro_existente.fecha.strftime("%d/%m/%Y %H:%M"),
+                "usuario": registro_existente.usuario.username,
+                "resultado": registro_existente.resultado,
+                "respuesta": registro_existente.respuesta,
+            })
+
         PlantillaGenerada.objects.create(
             usuario=request.user,
             gestion=data.get("gestion"),
-           # distribuidor=data.get("distribuidor"),
+            distribuidor=data.get("distribuidor"),
             cedula=data.get("cedula"),
             nombre_cliente=data.get("nombre_cliente"),
             nombre_plantilla=data.get("nombre_plantilla"),
@@ -52,8 +66,13 @@ def historial(request):
 
     busqueda = request.GET.get('q')
     usuario = request.GET.get('usuario')
-
+    resultado = request.GET.get('resultado')
     
+    es_admin = request.user.groups.filter(
+        name='Admin'
+    ).exists()
+
+ 
 
     fecha_inicio = request.GET.get('fecha_inicio')
     fecha_fin = request.GET.get('fecha_fin')
@@ -69,6 +88,10 @@ def historial(request):
              registros = registros.filter(
              usuario__username=usuario
         )
+    if resultado:
+             registros = registros.filter(
+             resultado=resultado
+    )
 
     if fecha_inicio:
         registros = registros.filter(
@@ -105,11 +128,24 @@ def historial(request):
 
     usuarios = User.objects.order_by('username')
 
+    if es_admin:
+        usuarios = User.objects.exclude(
+            is_superuser=True
+        ).order_by('username')
+    else:
+        usuarios = User.objects.filter(
+            id=request.user.id
+    )
+
+
+
     return render(
         request,
         'historial.html',
         {
             'registros': registros,
+            'es_admin': es_admin,
+            'resultado_seleccionado': resultado,
             'total': total,
             'procede': procede,
             'no_procede': no_procede,
@@ -136,7 +172,8 @@ def exportar_excel(request):
         "Gestión",
         "Cliente",
         "Cédula",
-        "Resultado"
+        "Resultado",
+        "Respuesta"
     ])
 
     registros = PlantillaGenerada.objects.all().order_by('-fecha')
@@ -162,8 +199,11 @@ def exportar_excel(request):
             registro.gestion,
             registro.nombre_cliente,
             registro.cedula,
-            registro.resultado
+            registro.resultado,
+            registro.respuesta
         ])
+
+    ws.column_dimensions['G'].width = 120
 
     response = HttpResponse(
         content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'

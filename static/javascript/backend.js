@@ -200,20 +200,20 @@ function generarPlantilla() {
   const fecha_activacion = document.getElementById("fecha_activacion").value.trim();
   const fecha_expiracion = document.getElementById("fecha_expiracion").value.trim();
   const fecha_desactivacion = document.getElementById("fecha_desactivacion").value.trim();
-//const distribuidor = document.getElementById("distribuidor").value.trim().toUpperCase();
+  const distribuidor = document.getElementById("distribuidor").value.trim().toUpperCase();
 
 
   document.getElementById("errorGestion").classList.add("d-none");
   document.getElementById("errorNombre").classList.add("d-none");
   document.getElementById("errorCedula").classList.add("d-none");
-  //document.getElementById("errorDistribuidor").classList.add("d-none");
+  document.getElementById("errorDistribuidor").classList.add("d-none");
 
 
   let hayError = false;
 
 
 
- /*if (!distribuidor) {
+  if (!distribuidor) {
 
     document
         .getElementById("errorDistribuidor")
@@ -225,13 +225,13 @@ function generarPlantilla() {
 
     hayError = true;
 
-//} else {
+  } else {
 
    document
         .getElementById("distribuidor")
         .classList.remove("is-invalid");
 
-}*/
+}
   if (!gestion) {
     document.getElementById("errorGestion").classList.remove("d-none");
     document.getElementById("gestion").classList.add("is-invalid");
@@ -316,7 +316,7 @@ function generarPlantilla() {
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      //distribuidor: distribuidor,
+      distribuidor: distribuidor,
       gestion: gestion,
       cedula: cedula,
       nombre_cliente: nombre,
@@ -325,14 +325,57 @@ function generarPlantilla() {
       respuesta: texto
     })
   })
-    .then(response => response.json())
-    .then(data => {
-      console.log("Guardado correctamente", data);
-    })
-    .catch(error => {
-      console.error("Error:", error);
+  
+  .then(response => response.json())
+  .then(data => {
 
-    });
+    if (data.existe) {
+
+        let verAnterior = confirm(
+            `⚠️ Esta cédula ya fue gestionada.\n\n` +
+            `Fecha: ${data.fecha}\n` +
+            `Usuario: ${data.usuario}\n` +
+            `Resultado: ${data.resultado}\n\n` +
+            `Aceptar = Ver respuesta anterior\n` +
+            `Cancelar = Generar nueva`
+        );
+
+        if (verAnterior) {
+
+            alert(
+                "RESPUESTA ANTERIOR:\n\n" +
+                data.respuesta
+            );
+
+            return;
+        }
+
+        fetch("/guardar-plantilla/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                distribuidor: distribuidor,
+                gestion: gestion,
+                cedula: cedula,
+                nombre_cliente: nombre,
+                nombre_plantilla: plantillaKey,
+                resultado: resultado,
+                respuesta: texto,
+                forzar: true
+            })
+        });
+
+        return;
+    }
+
+    console.log("Guardado correctamente", data);
+
+})
+.catch(error => {
+    console.error("Error:", error);
+});
 }
 
 
