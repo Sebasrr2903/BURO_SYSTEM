@@ -56,29 +56,29 @@ const plantillas = {
   "Facturas Pendientes": "Fecha:{fecha}\nHora:{hora}\n\nBuen día,\n\nNo procede visto bueno para venta nueva, cédula {cedula}, nombre del cliente {nombre}, ya que cuenta con facturas pendientes y no hay evidencia de pago o interacciones anteriores que lo respalden.\n\nFacturas pendientes: ¢{monto} {facturasPendientesTexto}\n\nSe adjunta documentación como respaldo de lo mencionado. Si mantienen evidencia que demuestre lo contrario, favor hacerla llegar para validar nuevamente el caso.\n\n\n\nCualquier duda adicional con gusto.\n\n\n¡Nos encantó atenderte el día de hoy!\nSu número de gestión es:{gestion}\nAnte cualquier duda o inconveniente que tengás podés comunicarte a los siguientes medios:\n📱 WhatsApp: 7002 4600\n¡Qué pases un excelente día!",
 
   //RECHAZOS 
-  "Rechazo por Cédula Alterado": "Buen día,\n\n El caso se rechaza debido a sospechas de alteración en el documento de identidad. Les solicitamos enviar un video que permita verificar la autenticidad del documento.\n\nCualquier duda adicional con gusto.\n\n\n¡Nos encantó atenderte el día de hoy!\nSu número de gestión es:{gestion}\nAnte cualquier duda o inconveniente que tengás podés comunicarte a los siguientes medios:\n📱 WhatsApp: 7002 4600\n¡Qué pases un excelente día!.",
+  "Rechazo por Cédula Alterado": "Fecha:{fecha}\nHora:{hora}\n\nBuen día,\n\n El caso se rechaza debido a sospechas de alteración en el documento de identidad.\n\nCualquier duda adicional con gusto.\n\n\n¡Nos encantó atenderte el día de hoy!\nSu número de gestión es:{gestion}\nAnte cualquier duda o inconveniente que tengás podés comunicarte a los siguientes medios:\n📱 WhatsApp: 7002 4600\n¡Qué pases un excelente día!.",
 
-  "Rechazo por Cédula No Legible": "Buen día,\n\nEl caso se rechaza por no adjuntar el documento de identidad legible y claro, fundamental para realizar el trámite.\n\nCualquier duda adicional con gusto.\n\n\n¡Nos encantó atenderte el día de hoy!\nSu número de gestión es:{gestion}\nAnte cualquier duda o inconveniente que tengás podés comunicarte a los siguientes medios:\n📱 WhatsApp: 7002 4600\n¡Qué pases un excelente día!.",
+  "Rechazo por Cédula No Legible": "Fecha:{fecha}\nHora:{hora}\n\nBuen día,\n\nEl caso se rechaza por no adjuntar el documento de identidad legible y claro, fundamental para realizar el trámite.\n\nCualquier duda adicional con gusto.\n\n\n¡Nos encantó atenderte el día de hoy!\nSu número de gestión es:{gestion}\nAnte cualquier duda o inconveniente que tengás podés comunicarte a los siguientes medios:\n📱 WhatsApp: 7002 4600\n¡Qué pases un excelente día!.",
 
-  "Rechazo por Contrato Activo": "Buen día,\n\nNo procede el análisis, el cliente tiene servicios activos. El análisis de buró no aplica para segundas ni terceras ventas, únicamente para clientes desactivados en su totalidad.\n\n\n\nCualquier duda adicional con gusto.\n\n\n¡Nos encantó atenderte el día de hoy!\nSu número de gestión es:{gestion}\nAnte cualquier duda o inconveniente que tengás podés comunicarte a los siguientes medios:\n📱 WhatsApp: 7002 4600\n¡Qué pases un excelente día!",
+  "Rechazo por Contrato Activo": "Fecha:{fecha}\nHora:{hora}\n\nBuen día,\n\nNo procede el análisis, el cliente tiene servicios activos. El análisis de buró no aplica para segundas ni terceras ventas, únicamente para clientes desactivados en su totalidad.\n\n\n\nCualquier duda adicional con gusto.\n\n\n¡Nos encantó atenderte el día de hoy!\nSu número de gestión es:{gestion}\nAnte cualquier duda o inconveniente que tengás podés comunicarte a los siguientes medios:\n📱 WhatsApp: 7002 4600\n¡Qué pases un excelente día!",
 
-  "CÉDULA AMBAS CARAS": " Buen día,\n\nEl caso se rechaza por no adjuntar el documento de identidad por ambas caras, fundamental para realizar el trámite \n\nCualquier duda adicional con gusto.\n\n\n¡Nos encantó atenderte el día de hoy!\nSu número de gestión es:{gestion}\nAnte cualquier duda o inconveniente que tengás podés comunicarte a los siguientes medios:\n📱 WhatsApp: 7002 4600\n¡Qué pases un excelente día!.",
+  "CÉDULA AMBAS CARAS": "Fecha:{fecha}\nHora:{hora}\n\nBuen día,\n\nEl caso se rechaza por no adjuntar el documento de identidad por ambas caras, fundamental para realizar el trámite \n\nCualquier duda adicional con gusto.\n\n\n¡Nos encantó atenderte el día de hoy!\nSu número de gestión es:{gestion}\nAnte cualquier duda o inconveniente que tengás podés comunicarte a los siguientes medios:\n📱 WhatsApp: 7002 4600\n¡Qué pases un excelente día!.",
 
-  "CONTROL DE ALTAS": "Buen día,\n\nNo es posible brindar visto bueno debido a que la identificación del cliente se muestra errónea en el sistema, por favor, enviar el caso a control de altas para su debido análisis y corrección.\n\nCualquier duda adicional con gusto.\n\n\n¡Nos encantó atenderte el día de hoy!\nSu número de gestión es:{gestion}\nAnte cualquier duda o inconveniente que tengás podés comunicarte a los siguientes medios:\n📱 WhatsApp: 7002 4600\n¡Qué pases un excelente día!.",
+  "CONTROL DE ALTAS": "Fecha:{fecha}\nHora:{hora}\n\nBuen día,\n\nNo es posible brindar visto bueno debido a que la identificación del cliente se muestra errónea en el sistema, por favor, enviar el caso a control de altas para su debido análisis y corrección.\n\nCualquier duda adicional con gusto.\n\n\n¡Nos encantó atenderte el día de hoy!\nSu número de gestión es:{gestion}\nAnte cualquier duda o inconveniente que tengás podés comunicarte a los siguientes medios:\n📱 WhatsApp: 7002 4600\n¡Qué pases un excelente día!.",
 
-  "NO COINCIDE (cuando la información de la plantilla no coincide con la fotografía)": "Buen día,\n\nEl caso se rechaza por no coincidir el documento de identidad con la información adjunta.\n\nCualquier duda adicional con gusto.\n\n\n¡Nos encantó atenderte el día de hoy!\nSu número de gestión es:{gestion}\nAnte cualquier duda o inconveniente que tengás podés comunicarte a los siguientes medios:\n📱 WhatsApp: 7002 4600\n¡Qué pases un excelente día!.",
+  "NO COINCIDE (cuando la información de la plantilla no coincide con la fotografía)": "Fecha:{fecha}\nHora:{hora}\n\nBuen día,\n\nEl caso se rechaza por no coincidir el documento de identidad con la información adjunta.\n\nCualquier duda adicional con gusto.\n\n\n¡Nos encantó atenderte el día de hoy!\nSu número de gestión es:{gestion}\nAnte cualquier duda o inconveniente que tengás podés comunicarte a los siguientes medios:\n📱 WhatsApp: 7002 4600\n¡Qué pases un excelente día!.",
 
-  "FECHA SIN FORMATO": "Buen día,\n\nEl caso se rechaza por motivo que el documento presenta alteraciones físicas  y  no coincide con Migracion y Extranjeria. \n\nCualquier duda adicional con gusto.\n\n\n¡Nos encantó atenderte el día de hoy!\nSu número de gestión es:{gestion}\nAnte cualquier duda o inconveniente que tengás podés comunicarte a los siguientes medios:\n📱 WhatsApp: 7002 4600\n¡Qué pases un excelente día!.",
+  "FECHA SIN FORMATO": "Fecha:{fecha}\nHora:{hora}\n\nBuen día,\n\nCompañeros el caso se rechaza por motivo que el documento presenta alteraciones físicas y la fecha de vencimiento no coincide con Migracion y Extranjeria. \n\nCualquier duda adicional con gusto.\n\n\n¡Nos encantó atenderte el día de hoy!\nSu número de gestión es:{gestion}\nAnte cualquier duda o inconveniente que tengás podés comunicarte a los siguientes medios:\n📱 WhatsApp: 7002 4600\n¡Qué pases un excelente día!.",
 
-  "SIN CÉDULA": " Buen día,\n\nEl caso se rechaza por no adjuntar el documento de identidad, fundamental para realizar el trámite.\n\nCualquier duda adicional con gusto.\n\n\n¡Nos encantó atenderte el día de hoy!\nSu número de gestión es:{gestion}\nAnte cualquier duda o inconveniente que tengás podés comunicarte a los siguientes medios:\n📱 WhatsApp: 7002 4600\n¡Qué pases un excelente día!.",
+  "SIN CÉDULA": "Fecha:{fecha}\nHora:{hora}\n\nBuen día,\n\nEl caso se rechaza por no adjuntar el documento de identidad, fundamental para realizar el trámite.\n\nCualquier duda adicional con gusto.\n\n\n¡Nos encantó atenderte el día de hoy!\nSu número de gestión es:{gestion}\nAnte cualquier duda o inconveniente que tengás podés comunicarte a los siguientes medios:\n📱 WhatsApp: 7002 4600\n¡Qué pases un excelente día!.",
 
   "SIN INFOMACIÓN": "Buen día,\n\nEl caso se rechaza por no venir la plantilla completa. Deben completarla y enviarla junto con la cédula del cliente por ambos lados.\n\nBuenas tardes\n\nSu apoyo con la validación del caso \n\nNombre del cliente: xxxxxxxxxxx\n\nCédula del cliente: xxxxxxxxxxx\n\n**Solicitud visto bueno**\n\nAdjuntar documento de identidad por ambos lados (legible) \n\nCorreo de respuesta: máximo 2 direcciones electrónicas\n\nCualquier duda adicional con gusto.\n\n\n¡Nos encantó atenderte el día de hoy!\nSu número de gestión es:{gestion}\nAnte cualquier duda o inconveniente que tengás podés comunicarte a los siguientes medios:\n📱 WhatsApp: 7002 4600\n¡Qué pases un excelente día!.",
 
-  "CONTACTO": "Buen día,\n\nPara brindarle una mejor atención, me brinda por favor su nombre completo y a cuál agente autorizado pertenece\n\nCualquier duda adicional con gusto.\n\n\n¡Nos encantó atenderte el día de hoy!\nSu número de gestión es:{gestion}\nAnte cualquier duda o inconveniente que tengás podés comunicarte a los siguientes medios:\n📱 WhatsApp: 7002 4600\n¡Qué pases un excelente día!.",
+  "CONTACTO": "Fecha:{fecha}\nHora:{hora}\n\nBuen día,\n\nPara brindarle una mejor atención, me brinda por favor su nombre completo y a cuál agente autorizado pertenece\n\nCualquier duda adicional con gusto.\n\n\n¡Nos encantó atenderte el día de hoy!\nSu número de gestión es:{gestion}\nAnte cualquier duda o inconveniente que tengás podés comunicarte a los siguientes medios:\n📱 WhatsApp: 7002 4600\n¡Qué pases un excelente día!.",
 
-  "SIN REGISTROS": "Buen día,\n\nEl análisis no procede ya que el cliente no posee registros con Claro.\n\nCualquier duda adicional con gusto.\n\n\n¡Nos encantó atenderte el día de hoy!\nSu número de gestión es:{gestion}\nAnte cualquier duda o inconveniente que tengás podés comunicarte a los siguientes medios:\n📱 WhatsApp: 7002 4600\n¡Qué pases un excelente día!. ",
+  "SIN REGISTROS": "Fecha:{fecha}\nHora:{hora}\n\nBuen día,\n\nEl análisis no procede ya que el cliente no posee registros con Claro.\n\nCualquier duda adicional con gusto.\n\n\n¡Nos encantó atenderte el día de hoy!\nSu número de gestión es:{gestion}\nAnte cualquier duda o inconveniente que tengás podés comunicarte a los siguientes medios:\n📱 WhatsApp: 7002 4600\n¡Qué pases un excelente día!. ",
 
-  "DOCUMENTO VENCIDO": "Buen día,\n\nEl análisis no procede ya que el documento de identidad no se encuentra vigente, \n\nCualquier duda adicional con gusto.\n\n\n¡Nos encantó atenderte el día de hoy!\nSu número de gestión es:{gestion}\nAnte cualquier duda o inconveniente que tengás podés comunicarte a los siguientes medios:\n📱 WhatsApp: 7002 4600\n¡Qué pases un excelente día!.",
+  "DOCUMENTO VENCIDO": "Fecha:{fecha}\nHora:{hora}\n\nBuen día,\n\nEl análisis no procede ya que el documento de identidad no se encuentra vigente, \n\nCualquier duda adicional con gusto.\n\n\n¡Nos encantó atenderte el día de hoy!\nSu número de gestión es:{gestion}\nAnte cualquier duda o inconveniente que tengás podés comunicarte a los siguientes medios:\n📱 WhatsApp: 7002 4600\n¡Qué pases un excelente día!.",
 
 
 };
@@ -336,6 +336,93 @@ function generarPlantilla() {
 }
 
 
+function recuperarUltimaGestion() {
+
+    fetch("/ultima-gestion/")
+    .then(r => r.json())
+    .then(data => {
+
+        if (!data.success) {
+            return;
+        }
+
+        document.getElementById(
+            "distribuidor"
+        ).value = data.distribuidor;
+
+        document.getElementById(
+            "gestion"
+        ).value = data.gestion;
+
+        document.getElementById(
+            "cedula"
+        ).value = data.cedula;
+
+        document.getElementById(
+            "nombre"
+        ).value = data.nombre_cliente;
+
+        document.getElementById(
+            "plantillaSelect"
+        ).value = data.plantilla;
+
+    });
+
+}
+
+
+function verificarCedula() {
+
+    const cedula =
+        document.getElementById("cedula").value.trim();
+
+    if (!cedula) {
+
+        alert("Digite una cédula.");
+
+        return;
+    }
+
+    fetch(`/verificar-cedula/?cedula=${cedula}`)
+    .then(response => response.json())
+    .then(data => {
+
+        if (!data.existe) {
+
+                  Swal.fire({
+                      icon: "success",
+                      title: "Sin registros",
+                      text: "No existen gestiones para esta cédula.",
+                      confirmButtonText: "Aceptar"
+                  });
+            return;
+        }
+
+        document.getElementById(
+            "modalFecha"
+        ).textContent = data.fecha;
+
+        document.getElementById(
+            "modalUsuario"
+        ).textContent = data.usuario;
+
+        document.getElementById(
+            "modalResultado"
+        ).textContent = data.resultado;
+
+        document.getElementById(
+            "modalRespuesta"
+        ).value = data.respuesta;
+
+        new bootstrap.Modal(
+            document.getElementById(
+                "modalCedulaExiste"
+            )
+        ).show();
+
+    });
+
+}
 
 function copiarTexto() {
   const texto = document.getElementById("resultado");
@@ -360,6 +447,12 @@ function copiarTexto() {
   radios.forEach(r => r.checked = false);
 
 }
+
+
+
+
+
+
 
 // Cargar al iniciar
 window.onload = actualizarLista;

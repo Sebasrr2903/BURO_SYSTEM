@@ -6,11 +6,14 @@
 <head>
   <meta charset="UTF-8">
   <title>Generador de Plantillas BURO</title>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
 
 
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+
 
 </head>
 
@@ -106,8 +109,8 @@
 
           <ul id="rechazosLista" style="text-align: center;">
             <li><button onclick="accesoRapido('Rechazo de ND')">Rechazo de ND</button></li>
-            <li><button onclick="accesoRapido('Rechazo por Cédula Alterado')">Rechazo por Cédula Alterado</button></li>
-            <li><button onclick="accesoRapido('Rechazo por Cédula No Legible')">Rechazo por Cédula</button></li>
+            <li><button onclick="accesoRapido('Rechazo por Cédula Alterado')">Documento Alterado</button></li>
+            <li><button onclick="accesoRapido('Rechazo por Cédula No Legible')">Cédula no Legible</button></li>
             <li><button onclick="accesoRapido('SIN CÉDULA')">Sin Cédula</button></li>
             <li><button
                 onclick="accesoRapido('NO COINCIDE (cuando la información de la plantilla no coincide con la fotografía)')">NO
@@ -129,6 +132,17 @@
     <div class="container">
 
       <h2>📄 Generador de Plantillas BURÓ</h2>
+<button
+    type="button"
+    class="btn btn-warning"
+    onclick="recuperarUltimaGestion()">
+
+    ↩️ Recuperar última gestión
+
+</button>
+
+
+<br/>
 
 
       <label for="plantilla">Seleccionar Plantilla:</label>
@@ -145,26 +159,57 @@
 
 <datalist id="listaDistribuidores">
     <option value="ARMADILLO">
-    <option value="BOSCAN">
-    <option value="CAC AVENIDA 3">
-    <option value="CAC CAÑAS">
     <option value="CAC CARTAGO">
     <option value="CAC CITY MALL">
     <option value="CAC CITY PLAZA">
     <option value="CAC CIUDAD QUESADA">
     <option value="CAC DESAMPARADOS">
-    <option value="CAC GUAPILES">
-    <option value="CAC JACÓ">
+    <option value="CAC GUÁPILES">
     <option value="CAC LIBERIA">
-    <option value="CAC LIMON">
-    <option value="CAC LINCOLN PLAZA">
-    <option value="PIKI">
-    <option value="MOBO">
+    <option value="CAC MULTIPLAZA DEL ESTE">
+    <option value="CAC NICOYA">
+    <option value="CAC PASEO DE LAS FLORES">
+    <option value="CAC PASEO METROPOLI">
+    <option value="CAC PLAZA DEL SOL">
+    <option value="CAC PLAZA REAL">
+    <option value="CAC PLAZA VILLA HERRERA">
+    <option value="CAC PUNTARENAS">
+    <option value="CAC ROHRMOSER">
+    <option value="CAC SAN JOSÉ PRESIDENTE">
+    <option value="CAC TURRIALBA">
+    <option value="CALL ESV">
+    <option value="CASBELSA">
+    <option value="CLC NET">
+    <option value="CONEXIÓN MÓVIL">
+    <option value="DATA ANÁLISIS">
+    <option value="DESAROLLO CELULAR">
+    <option value="DESARROLLO CELULAR">
+    <option value="DIGITAL SAT">
+    <option value="DIMONSSA">
     <option value="GREENCALL">
+    <option value="HJ VEGA">
+    <option value="INCSA">
+    <option value="INTECNO">
+    <option value="JHONNY CELULAR">
+    <option value="JORDI - BO TMK">
+    <option value="KOOLMOVI">
+    <option value="KOOLMÓVIL">
+    <option value="MAXIMIZADO">
+    <option value="MEGARED">
+    <option value="MOBO">
+    <option value="OZONO DIGITAL">
+    <option value="PIKI">
+    <option value="PRISMA">
+    <option value="RECARGAS VIRTUALES">
     <option value="REDCELL">
+    <option value="ROSADO Y AZUL">
     <option value="SALESLAND">
     <option value="SELFIE TECH">
+    <option value="SOLUCIONES CREATIVAS">
+    <option value="STANDARD COMMUNICATIONS">
+    <option value="T&E">
     <option value="TMK AMERICA SERVICE">
+    <option value="N/A">
 </datalist>
 
 <div id="errorDistribuidor" class="invalid-feedback d-none">
@@ -180,9 +225,30 @@
         <input type="text" id="nombre" placeholder="Ej: JUAN PÉREZ" oninput="this.value = this.value.toUpperCase();"
           >
         <div id="errorNombre" class="invalid-feedback d-none"> Campo obligatorio </div>
-        <label for="cedula">Cédula:</label>
-        <input type="text" id="cedula" placeholder="Ej: 123456789" >
-        <div id="errorCedula" class="invalid-feedback d-none"> Campo obligatorio </div>
+
+     <label for="cedula">Cédula:</label>
+
+      <div class="cedula-container">
+
+          <input
+              type="text"
+              id="cedula"
+              placeholder="Ej: 123456789">
+
+          <button
+              type="button"
+              id="btnVerificarCedula"
+              onclick="verificarCedula()">
+
+              🔍 Verificar
+
+          </button>
+
+      </div>
+
+      <div id="errorCedula" class="invalid-feedback d-none">
+          Campo obligatorio
+      </div>
 
 
 
@@ -271,6 +337,99 @@
   </div>
 
 
+  <div class="modal fade" id="modalCedulaExiste" tabindex="-1">
+
+    <div class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+
+            <div class="modal-header bg-warning">
+
+                <h5 class="modal-title">
+                    ⚠️ Cédula ya gestionada
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal">
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <p>
+                    Esta cédula ya fue gestionada anteriormente.
+                </p>
+
+                <hr>
+
+                <p>
+                    <strong>Fecha:</strong>
+                    <span id="modalFecha"></span>
+                </p>
+
+                <p>
+                    <strong>Usuario:</strong>
+                    <span id="modalUsuario"></span>
+                </p>
+
+                <p>
+                    <strong>Resultado:</strong>
+                    <span id="modalResultado"></span>
+                </p>
+
+                <hr>
+
+                <h6>Respuesta anterior</h6>
+
+                <textarea
+                    id="modalRespuesta"
+                    class="form-control"
+                    rows="8"
+                    readonly>
+                </textarea>
+                <button
+                    type="button"
+                    class="btn btn-primary"
+                    onclick="copiarRespuestaModal()">
+
+                    📋 Copiar Respuesta
+
+                </button>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+
+                    Cancelar
+
+                </button>
+
+                <button
+                    type="button"
+                    class="btn btn-success"
+                    id="btnGenerarNueva">
+
+                    🔄 Generar Nueva
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
   <script src="{% static 'javascript/backend.js' %}"></script>
   <footer style="text-align: center;">
     <p>&copy; 2025 Sebastian Rodriguez Rodriguez. Hecho en Costa Rica.</p>
@@ -282,6 +441,9 @@
 </body>
 
 </html>
+
+
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 

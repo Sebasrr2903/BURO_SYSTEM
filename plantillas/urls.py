@@ -13,6 +13,17 @@ path(
     views.exportar_excel,
     name='exportar_excel'
 ),
+path(
+    'verificar-cedula/',
+    views.verificar_cedula,
+    name='verificar_cedula'
+),
+
+path(
+    'ultima-gestion/',
+    views.ultima_gestion,
+    name='ultima_gestion'
+),
 
 path(
     'eliminar-usuario/<int:user_id>/',

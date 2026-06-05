@@ -15,8 +15,35 @@ def inicio(request):
     return render(request, 'index.html')
 
 
+
+@login_required
+def verificar_cedula(request):
+
+    cedula = request.GET.get('cedula')
+
+    registro = PlantillaGenerada.objects.filter(
+        cedula=cedula
+    ).order_by('-fecha').first()
+
+    if registro:
+
+        return JsonResponse({
+            "existe": True,
+            "fecha": registro.fecha.strftime("%d/%m/%Y %H:%M"),
+            "usuario": registro.usuario.username,
+            "resultado": registro.resultado,
+            "respuesta": registro.respuesta
+        })
+
+    return JsonResponse({
+        "existe": False
+    })
+
+
 @csrf_exempt
 def guardar_plantilla(request):
+
+
 
     if request.method == "POST":
 
@@ -24,7 +51,8 @@ def guardar_plantilla(request):
 
         print("ENTRE A GUARDAR")
         print(data)
-
+    
+        
         PlantillaGenerada.objects.create(
             usuario=request.user,
             gestion=data.get("gestion"),
@@ -53,7 +81,7 @@ def historial(request):
     busqueda = request.GET.get('q')
     usuario = request.GET.get('usuario')
     distribuidor = request.GET.get('distribuidor')
-    
+    resultado = request.GET.get('resultado')
 
     fecha_inicio = request.GET.get('fecha_inicio')
     fecha_fin = request.GET.get('fecha_fin')
@@ -74,7 +102,22 @@ def historial(request):
              registros = registros.filter(
              usuario__username=usuario
         )
+    
+    if resultado == "RECHAZADOS":
 
+            registros = registros.exclude(
+                resultado__in=[
+                    "PROCEDE",
+                    "NO PROCEDE"
+                ]
+            )
+
+    elif resultado:
+
+         registros = registros.filter(
+        resultado=resultado
+    )
+         
     if fecha_inicio:
         registros = registros.filter(
             fecha__date__gte=fecha_inicio
@@ -116,6 +159,7 @@ def historial(request):
         {
             'registros': registros,
             'distribuidor': distribuidor,
+            'resultado': resultado,
             'total': total,
             'procede': procede,
             'no_procede': no_procede,
@@ -142,7 +186,9 @@ def exportar_excel(request):
         "Gestión",
         "Cliente",
         "Cédula",
-        "Resultado"
+        "Resultado",
+        "Distribuidor", 
+        "Respuesta"
     ])
 
     registros = PlantillaGenerada.objects.all().order_by('-fecha')
@@ -168,7 +214,9 @@ def exportar_excel(request):
             registro.gestion,
             registro.nombre_cliente,
             registro.cedula,
-            registro.resultado
+            registro.resultado,
+            registro.distribuidor,
+            registro.respuesta
         ])
 
     response = HttpResponse(
@@ -197,6 +245,30 @@ def limpiar_historial(request):
     PlantillaGenerada.objects.all().delete()
 
     return redirect('/historial/')
+
+
+@login_required
+def ultima_gestion(request):
+
+    registro = PlantillaGenerada.objects.filter(
+        usuario=request.user
+    ).order_by('-fecha').first()
+
+    if not registro:
+        return JsonResponse({
+            "success": False
+        })
+
+    return JsonResponse({
+        "success": True,
+        "distribuidor": registro.distribuidor,
+        "gestion": registro.gestion,
+        "cedula": registro.cedula,
+        "nombre_cliente": registro.nombre_cliente,
+        "plantilla": registro.nombre_plantilla,
+        "resultado": registro.resultado,
+        "respuesta": registro.respuesta,
+    })
 
 
 @login_required
