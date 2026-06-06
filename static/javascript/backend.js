@@ -378,10 +378,17 @@ function verificarCedula() {
 
     if (!cedula) {
 
-        alert("Digite una cédula.");
+              Swal.fire({
+                  toast: true,
+                  position: 'top-end',
+                  icon: 'error',
+                  title: 'Campo cédula obligatorio',
+                  showConfirmButton: false,
+                  timer: 2500
+              });
 
-        return;
-    }
+    return;
+}
 
     fetch(`/verificar-cedula/?cedula=${cedula}`)
     .then(response => response.json())
@@ -423,6 +430,31 @@ function verificarCedula() {
     });
 
 }
+
+function copiarRespuestaModal() {
+
+    const respuesta =
+        document.getElementById(
+            "modalRespuesta"
+        ).value;
+
+    navigator.clipboard.writeText(
+        respuesta
+    );
+
+    Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'success',
+        title: 'Respuesta copiada',
+        showConfirmButton: false,
+        timer: 2000
+    });
+
+}
+
+
+
 
 function copiarTexto() {
   const texto = document.getElementById("resultado");

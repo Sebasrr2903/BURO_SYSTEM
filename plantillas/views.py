@@ -3,7 +3,8 @@ from django.http import HttpResponse, JsonResponse
 from openpyxl import Workbook
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from datetime import datetime
+from datetime import datetime, timezone
+from django.utils import timezone
 from .models import PlantillaGenerada
 from django.contrib.auth.models import User
 import json
@@ -151,6 +152,13 @@ def historial(request):
 
     registros = paginator.get_page(page_number)
 
+    limite = request.GET.get('limite', 50)
+
+    paginator = Paginator(
+        registros,
+        int(limite)
+        )
+
     usuarios = User.objects.order_by('username')
 
     return render(
@@ -177,6 +185,8 @@ def exportar_excel(request):
 
     wb = Workbook()
     ws = wb.active
+
+
 
     ws.title = "Historial"
 
@@ -209,7 +219,8 @@ def exportar_excel(request):
     for registro in registros:
 
         ws.append([
-            registro.fecha.strftime("%d/%m/%Y %H:%M"),
+            timezone.localtime(
+            registro.fecha).strftime("%d/%m/%Y %H:%M"),
             registro.usuario.username if registro.usuario else "",
             registro.gestion,
             registro.nombre_cliente,

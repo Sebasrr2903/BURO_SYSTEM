@@ -12,7 +12,10 @@
 
 
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
-
+<link
+    rel="icon"
+    type="image/png"
+    href="/static/img/icon.png">
 
 
 </head>
@@ -23,7 +26,7 @@
     <div class="container-fluid">
 
       <a class="navbar-brand fw-bold" href="/">
-        📄 BURÓ SYSTEM
+        BURÓ SYSTEM
       </a>
 
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -57,7 +60,7 @@
             {% if request.user.groups.all.0.name == 'Admin' %}
 
             <a class="nav-link" href="/crear-usuario/">
-              👤 Usuarios
+               Usuarios
             </a>
 
             {% endif %}
@@ -68,8 +71,10 @@
 
         <div class="ms-auto d-flex align-items-center gap-3">
 
+                    
           <span class="text-dark fw-semibold">
-            👤 {{ request.user.username }}
+             
+                👤 {{ request.user.username }}
           </span>
 
           <a href="/logout/" class="btn btn-dark rounded-pill px-4">
@@ -140,6 +145,7 @@
     ↩️ Recuperar última gestión
 
 </button>
+
 
 
 <br/>
@@ -312,7 +318,7 @@
 
     <div class="calculadora">
       <h3>🧮 Calculadora</h3>
-      <h6>"Esta calculadora puedes agregar los cero pagos con comas"</h6>
+      <h6>"En esta calculadora se puede agregar los cero pagos con comas"</h6>
       <input type="text" id="calcDisplay">
       <div class="botones">
         <button id="buttonCalcu" onclick="appendCalc('7')">7</button>
