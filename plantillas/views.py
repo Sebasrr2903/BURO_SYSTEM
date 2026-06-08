@@ -22,18 +22,39 @@ def verificar_cedula(request):
 
     cedula = request.GET.get('cedula')
 
-    registro = PlantillaGenerada.objects.filter(
+    historial = PlantillaGenerada.objects.filter(
         cedula=cedula
-    ).order_by('-fecha').first()
+    ).order_by('-fecha')
+
+    registro = historial.first()
 
     if registro:
 
         return JsonResponse({
             "existe": True,
-            "fecha": registro.fecha.strftime("%d/%m/%Y %H:%M"),
+            "fecha": timezone.localtime(
+                registro.fecha
+            ).strftime("%d/%m/%Y %H:%M"),
             "usuario": registro.usuario.username,
+            "cedula": registro.cedula,
+            "nombre_cliente": registro.nombre_cliente,
             "resultado": registro.resultado,
-            "respuesta": registro.respuesta
+            "distribuidor": registro.distribuidor,
+            "respuesta": registro.respuesta,
+            "total": historial.count(),
+
+            "historial": [
+                {
+                    "fecha": timezone.localtime(
+                        r.fecha
+                    ).strftime("%d/%m/%Y %H:%M"),
+
+                    "usuario": r.usuario.username,
+                    "resultado": r.resultado,
+                    "distribuidor": r.distribuidor
+                }
+                for r in historial[:10]
+            ]
         })
 
     return JsonResponse({
@@ -103,6 +124,8 @@ def historial(request):
              registros = registros.filter(
              usuario__username=usuario
         )
+             
+             
     
     if resultado == "RECHAZADOS":
 

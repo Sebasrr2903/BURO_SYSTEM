@@ -1,4 +1,5 @@
-function toggleCalculadora() {
+  
+  function toggleCalculadora() {
   const calc = document.querySelector(".calculadora");
   if (calc.style.display === "none") {
     calc.style.display = "block";
@@ -56,6 +57,9 @@ const plantillas = {
   "Facturas Pendientes": "Fecha:{fecha}\nHora:{hora}\n\nBuen día,\n\nNo procede visto bueno para venta nueva, cédula {cedula}, nombre del cliente {nombre}, ya que cuenta con facturas pendientes y no hay evidencia de pago o interacciones anteriores que lo respalden.\n\nFacturas pendientes: ¢{monto} {facturasPendientesTexto}\n\nSe adjunta documentación como respaldo de lo mencionado. Si mantienen evidencia que demuestre lo contrario, favor hacerla llegar para validar nuevamente el caso.\n\n\n\nCualquier duda adicional con gusto.\n\n\n¡Nos encantó atenderte el día de hoy!\nSu número de gestión es:{gestion}\nAnte cualquier duda o inconveniente que tengás podés comunicarte a los siguientes medios:\n📱 WhatsApp: 7002 4600\n¡Qué pases un excelente día!",
 
   //RECHAZOS 
+
+  "CASO DUPLICADO": "Fecha:{fecha}\nHora:{hora}\n\nBuen día,\n\nCompañeros el caso de este cliente ya ingreso anteriormente a análisis, por lo cual ya cuenta con respuesta a la solicitud.\n\nCualquier duda adicional con gusto.\n\n\n¡Nos encantó atenderte el día de hoy!\nSu número de gestión es:{gestion}\nAnte cualquier duda o inconveniente que tengás podés comunicarte a los siguientes medios:\n📱 WhatsApp: 7002 4600\n¡Qué pases un excelente día!.",
+
   "Rechazo por Cédula Alterado": "Fecha:{fecha}\nHora:{hora}\n\nBuen día,\n\n El caso se rechaza debido a sospechas de alteración en el documento de identidad.\n\nCualquier duda adicional con gusto.\n\n\n¡Nos encantó atenderte el día de hoy!\nSu número de gestión es:{gestion}\nAnte cualquier duda o inconveniente que tengás podés comunicarte a los siguientes medios:\n📱 WhatsApp: 7002 4600\n¡Qué pases un excelente día!.",
 
   "Rechazo por Cédula No Legible": "Fecha:{fecha}\nHora:{hora}\n\nBuen día,\n\nEl caso se rechaza por no adjuntar el documento de identidad legible y claro, fundamental para realizar el trámite.\n\nCualquier duda adicional con gusto.\n\n\n¡Nos encantó atenderte el día de hoy!\nSu número de gestión es:{gestion}\nAnte cualquier duda o inconveniente que tengás podés comunicarte a los siguientes medios:\n📱 WhatsApp: 7002 4600\n¡Qué pases un excelente día!.",
@@ -126,6 +130,11 @@ document.getElementById("plantilla").addEventListener("change", function () {
     seleccion === "NC APLICADA" ||
     seleccion === "Cero pagos" ||
     seleccion === "Visto Bueno" ||
+    seleccion === "CASO DUPLICADO" ||
+    seleccion === "SIN REGISTROS" ||
+    seleccion === "DOCUMENTO VENCIDO" ||
+    seleccion === "CONTROL DE ALTAS" ||
+    seleccion === "Rechazo por Cédula Alterado" ||
     seleccion === "Visto Bueno Carta de Descargo" ||
     seleccion === "Visto Bueno Activo" ||
     seleccion === "WRITTE OFF(SIN TERMINAL)" ||
@@ -371,6 +380,59 @@ function recuperarUltimaGestion() {
 }
 
 
+function llenarHistorial(data) {
+
+    document.getElementById(
+        "modalTotal"
+    ).innerText = data.total;
+
+    let html = "";
+
+    data.historial.forEach(item => {
+
+        html += `
+            <li>
+                ${item.fecha}
+                -
+                ${item.resultado}
+                -
+                ${item.distribuidor}
+                -
+                ${item.usuario}
+            </li>
+        `;
+
+    });
+
+    document.getElementById(
+        "listaHistorial"
+    ).innerHTML = html;
+}
+
+
+function generarNueva() {
+
+    document.getElementById(
+        "cedula"
+    ).value = datosCedula.cedula || "";
+
+    document.getElementById(
+        "nombre"
+    ).value = datosCedula.nombre_cliente || "";
+
+    bootstrap.Modal.getInstance(
+        document.getElementById(
+            "modalCedulaExiste"
+        )
+    ).hide();
+
+    document.getElementById(
+        "gestion"
+    ).focus();
+}
+
+
+let datosCedula = {};
 function verificarCedula() {
 
     const cedula =
@@ -404,6 +466,7 @@ function verificarCedula() {
                   });
             return;
         }
+        datosCedula = data;
 
         document.getElementById(
             "modalFecha"
@@ -421,6 +484,12 @@ function verificarCedula() {
             "modalRespuesta"
         ).value = data.respuesta;
 
+        document.getElementById(
+            "modalDistribuidor"
+        ).textContent = data.distribuidor;
+
+        llenarHistorial(data);
+
         new bootstrap.Modal(
             document.getElementById(
                 "modalCedulaExiste"
@@ -430,6 +499,8 @@ function verificarCedula() {
     });
 
 }
+
+
 
 function copiarRespuestaModal() {
 
