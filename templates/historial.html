@@ -288,6 +288,8 @@
 
                 </select>
 
+           
+
             </div>
 
             <div class="col-md-2">
@@ -474,28 +476,28 @@
 
     <div class="d-flex justify-content-center align-items-center gap-3">
 
-        <select
-            name="limite"
-            class="form-select"
-            style="width: 100px;">
+      <select
+                id="limite"
+                class="form-select"
+                style="width: 100px;"
+                onchange="cambiarLimite(this.value)">
 
-            <option value="10">10</option>
-            <option value="25">25</option>
-            <option value="50" selected>50</option>
-            <option value="100">100</option>
+                    <option value="10" {% if request.GET.limite == '10' %}selected{% endif %}>10</option>
+                    <option value="25" {% if request.GET.limite == '25' %}selected{% endif %}>25</option>
+                    <option value="50" {% if request.GET.limite == '50' or not request.GET.limite %}selected{% endif %}>50</option>
+                    <option value="100" {% if request.GET.limite == '100' %}selected{% endif %}>100</option>
 
-        </select>
+            </select>
 
         <ul class="pagination mb-0">
-
-            {% if registros.has_previous %}
-            <li class="page-item">
-                <a class="page-link"
-                   href="?page={{ registros.previous_page_number }}">
-                    Anterior
-                </a>
-            </li>
-            {% endif %}
+                {% if registros.has_previous %}
+                <li class="page-item">
+                    <a class="page-link"
+                    href="?page={{ registros.previous_page_number }}&q={{ busqueda|default:'' }}&usuario={{ usuario_seleccionado|default:'' }}&distribuidor={{ distribuidor|default:'' }}&resultado={{ resultado|default:'' }}&fecha_inicio={{ fecha_inicio|default:'' }}&fecha_fin={{ fecha_fin|default:'' }}&limite={{ request.GET.limite|default:'50' }}">
+                        Anterior
+                    </a>
+                </li>
+                {% endif %}
 
             <li class="page-item active">
                 <span class="page-link">
@@ -503,14 +505,13 @@
                 </span>
             </li>
 
-            {% if registros.has_next %}
-            <li class="page-item">
-                <a class="page-link"
-                   href="?page={{ registros.next_page_number }}">
-                    Siguiente
-                </a>
-            </li>
-            {% endif %}
+                {% if registros.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ registros.next_page_number }}&q={{ busqueda|default:'' }}&usuario={{ usuario_seleccionado|default:'' }}&distribuidor={{ distribuidor|default:'' }}&resultado={{ resultado|default:'' }}&fecha_inicio={{ fecha_inicio|default:'' }}&fecha_fin={{ fecha_fin|default:'' }}&limite={{ request.GET.limite|default:'50' }}">
+                        Siguiente
+                    </a>
+                </li>
+                {% endif %}
 
         </ul>
 
@@ -534,9 +535,25 @@
 
 <script>
 
+function cambiarLimite(limite) {
 
+    const url = new URL(
+        window.location.href
+    );
 
+    url.searchParams.set(
+        "limite",
+        limite
+    );
 
+    url.searchParams.set(
+        "page",
+        1
+    );
+
+    window.location.href =
+        url.toString();
+}
 
     function copiarRespuesta(id) {
 

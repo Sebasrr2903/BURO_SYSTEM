@@ -169,19 +169,18 @@ def historial(request):
     ).count()
 
     # PAGINACIÓN AL FINAL
-    paginator = Paginator(registros, 10)
-
-    page_number = request.GET.get('page')
-
-    registros = paginator.get_page(page_number)
-
-    limite = request.GET.get('limite', 50)
+    limite = request.GET.get('limite', 10)
 
     paginator = Paginator(
         registros,
         int(limite)
-        )
+    )
 
+    page_number = request.GET.get('page')
+
+    registros = paginator.get_page(
+        page_number
+    )
     usuarios = User.objects.order_by('username')
 
     return render(
