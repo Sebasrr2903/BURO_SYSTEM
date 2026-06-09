@@ -379,6 +379,22 @@ function recuperarUltimaGestion() {
 
 }
 
+function soloNumeros(input) {
+    input.value = input.value.replace(/\D/g, '');
+}
+
+function soloLetras(input) {
+    input.value = input.value
+        .replace(/[^A-ZÁÉÍÓÚÑÜ\s]/gi, '')
+        .toUpperCase();
+}
+
+function soloDistribuidor(input) {
+    input.value = input.value
+        .replace(/[^A-ZÁÉÍÓÚÑÜ&\-\s]/gi, '')
+        .toUpperCase();
+}
+
 
 function llenarHistorial(data) {
 
@@ -686,5 +702,55 @@ window.onload = function () {
   actualizarLista();
   renderIndice();
 };
+
+
+
+let temporizadorAdvertencia;
+let temporizadorLogout;
+
+function reiniciarSesion() {
+
+    clearTimeout(
+        temporizadorAdvertencia
+    );
+
+    clearTimeout(
+        temporizadorLogout
+    );
+
+    temporizadorAdvertencia = setTimeout(() => {
+
+        Swal.fire({
+            icon: "warning",
+            title: "Sesión próxima a expirar",
+            text: "Su sesión se cerrará en 5 minutos por inactividad."
+        });
+
+    }, 115 * 60 * 1000);
+
+    temporizadorLogout = setTimeout(() => {
+
+        window.location.href = "/logout/";
+
+    }, 120 * 60 * 1000);
+
+}
+
+document.addEventListener(
+    "mousemove",
+    reiniciarSesion
+);
+
+document.addEventListener(
+    "keydown",
+    reiniciarSesion
+);
+
+document.addEventListener(
+    "click",
+    reiniciarSesion
+);
+
+reiniciarSesion();
 
 

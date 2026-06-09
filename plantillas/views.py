@@ -20,10 +20,10 @@ def inicio(request):
 @login_required
 def verificar_cedula(request):
 
-    cedula = request.GET.get('cedula')
+    cedula = request.GET.get('cedula', '').strip()
 
     historial = PlantillaGenerada.objects.filter(
-        cedula=cedula
+            cedula__icontains=cedula
     ).order_by('-fecha')
 
     registro = historial.first()

@@ -141,5 +141,15 @@ STATICFILES_STORAGE = (
     'whitenoise.storage.CompressedManifestStaticFilesStorage'
 )
 
+
+# 2 horas = 7200 segundos
+SESSION_COOKIE_AGE = 7200
+
+# Reinicia el contador cada vez que el usuario hace una petición
+SESSION_SAVE_EVERY_REQUEST = True
+
+# Cerrar al cerrar el navegador (opcional)
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
