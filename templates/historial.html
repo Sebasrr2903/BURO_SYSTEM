@@ -9,6 +9,7 @@
 
 
     <title>Historial</title>
+  <link rel="stylesheet" href="{% static 'css/general.css' %}">
 
 <link
     rel="icon"
@@ -18,178 +19,88 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm">
+  <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm">
+
+    <div class="container-fluid">
 
 
-        <div class="container-fluid">
 
-            <a class="navbar-brand fw-bold" href="/">
-                📄 BURÓ SYSTEM
+<a class="navbar-brand d-flex align-items-center gap-2" href="/">
+    
+    <img
+        src="{% static 'img/icon2.png' %}"
+        alt="BURÓ SYSTEM"
+        class="logo-buro">
+
+    <div class="logo-texto">
+        <div class="logo-buro-text">BURÓ</div>
+        <div class="logo-system-text">SYSTEM</div>
+    </div>
+
+</a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+
+        <span class="navbar-toggler-icon"></span>
+
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+
+        <ul class="navbar-nav ms-4">
+
+          <li class="nav-item">
+            <a class="nav-link active" href="/">
+              Generador
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="/historial/">
+              Historial
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              Reportes
+            </a>
+          </li>
+          <li class="nav-item">
+            {% if request.user.groups.all.0.name == 'Admin' %}
+
+            <a class="nav-link" href="/crear-usuario/">
+              Usuarios
             </a>
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            {% endif %}
+          </li>
 
-                <span class="navbar-toggler-icon"></span>
 
-            </button>
-            <div class="modal fade" id="limpiarModal">
+        </ul>
 
-                <div class="modal-dialog">
+        <div class="ms-auto d-flex align-items-center gap-3">
 
-                    <div class="modal-content">
 
-                        <div class="modal-header">
+          <span class="text-dark fw-semibold">
 
-                            <h5 class="modal-title">
-                                Confirmar eliminación
-                            </h5>
+            👤 {{ request.user.username }}
+          </span>
 
-                        </div>
+          <a href="/logout/" class="btn btn-dark rounded-pill px-4">
 
-                        <div class="modal-body">
+            Salir
 
-                            ¿Desea eliminar TODOS los registros?
-
-                        </div>
-
-                        <div class="modal-footer">
-
-                            <button class="btn btn-secondary" data-bs-dismiss="modal">
-
-                                Cancelar
-
-                            </button>
-
-                            <a href="/limpiar-historial/" class="btn btn-danger">
-
-                                Eliminar Todo
-
-                            </a>
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-            <div class="modal fade" id="limpiarFechaModal">
-
-    <div class="modal-dialog">
-
-        <div class="modal-content">
-
-            <div class="modal-header">
-
-                <h5>
-                    Eliminar por rango de fechas
-                </h5>
-
-            </div>
-
-            <form action="/limpiar-por-fecha/" method="GET">
-
-                <div class="modal-body">
-
-                    <label>Desde</label>
-
-                    <input
-                        type="date"
-                        name="fecha_inicio"
-                        class="form-control mb-3"
-                        required>
-
-                    <label>Hasta</label>
-
-                    <input
-                        type="date"
-                        name="fecha_fin"
-                        class="form-control"
-                        required>
-
-                </div>
-
-                <div class="modal-footer">
-
-                    <button
-                        type="button"
-                        class="btn btn-secondary"
-                        data-bs-dismiss="modal">
-
-                        Cancelar
-
-                    </button>
-
-                    <button
-                        type="submit"
-                        class="btn btn-danger">
-
-                        Eliminar
-
-                    </button>
-
-                </div>
-
-            </form>
+          </a>
 
         </div>
+
+      </div>
 
     </div>
 
-</div>
-            <div class="collapse navbar-collapse" id="navbarNav">
-
-                <ul class="navbar-nav ms-4">
-
-                    <li class="nav-item">
-                        <a class="nav-link active" href="/">
-                            Generador
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="/historial/">
-                            Historial
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            Reportes
-                        </a>
-                    </li>
-                       <li class="nav-item">
-                        {% if request.user.groups.all.0.name == 'Admin' %}
-
-                        <a class="nav-link" href="/crear-usuario/">
-                           Usuarios
-                        </a>
-
-                        {% endif %}
-                    </li>
-
-                </ul>
-
-                <div class="ms-auto d-flex align-items-center gap-3">
-
-                    <span class="text-dark fw-semibold">
-                        👤 {{ request.user.username }}
-                    </span>
-
-                    <a href="/logout/" class="btn btn-dark rounded-pill px-4">
-
-                        Salir
-
-                    </a>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </nav>
-
-    <br>
+  </nav>
+    
 
     
 
@@ -200,7 +111,7 @@
             <div class="card-header bg-dark text-white">
 
                 <h4 class="mb-0">
-                    📋 Historial de Plantillas
+                     Historial de Plantillas
                 </h4>
                 {% if request.user.groups.all.0.name == 'Admin' %}
                 <br>
@@ -528,8 +439,13 @@
 
     </div>
     <br/>
+  <footer style="text-align: center;">
+    <p>&copy; 2025 Sebastian Rodriguez Rodriguez. Hecho en Costa Rica.</p>
+
+  </footer>
 
 </body>
+
 
 </html>
 

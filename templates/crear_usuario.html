@@ -6,74 +6,89 @@
     rel="icon"
     type="image/png"
     href="/static/img/icon2.png">
+<link rel="stylesheet" href="{% static 'css/general.css' %}">
 
-
- <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm">
+  <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm">
 
     <div class="container-fluid">
 
-        <a class="navbar-brand fw-bold" href="/">
-            📄 BURÓ SYSTEM
-        </a>
 
-        <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNav">
 
-            <span class="navbar-toggler-icon"></span>
+<a class="navbar-brand d-flex align-items-center gap-2" href="/">
+    
+    <img
+        src="{% static 'img/icon2.png' %}"
+        alt="BURÓ SYSTEM"
+        class="logo-buro">
 
-        </button>
+    <div class="logo-texto">
+        <div class="logo-buro-text">BURÓ</div>
+        <div class="logo-system-text">SYSTEM</div>
+    </div>
 
-        <div
-            class="collapse navbar-collapse"
-            id="navbarNav">
+</a>
 
-            <ul class="navbar-nav ms-4">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
 
-                <li class="nav-item">
-                    <a class="nav-link active" href="/">
-                        Generador
-                    </a>
-                </li>
+        <span class="navbar-toggler-icon"></span>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="/historial/">
-                        Historial
-                    </a>
-                </li>
+      </button>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        Reportes
-                    </a>
-                </li>
+      <div class="collapse navbar-collapse" id="navbarNav">
 
-            </ul>
+        <ul class="navbar-nav ms-4">
 
-            <div class="ms-auto d-flex align-items-center gap-3">
+          <li class="nav-item">
+            <a class="nav-link active" href="/">
+              Generador
+            </a>
+          </li>
 
-                <span class="text-dark fw-semibold">
-                    👤 {{ request.user.username }}
-                </span>
+          <li class="nav-item">
+            <a class="nav-link" href="/historial/">
+              Historial
+            </a>
+          </li>
 
-            <a
-                href="/logout/"
-                class="btn btn-dark rounded-pill px-4">
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              Reportes
+            </a>
+          </li>
+          <li class="nav-item">
+            {% if request.user.groups.all.0.name == 'Admin' %}
 
-                Salir
-
+            <a class="nav-link" href="/crear-usuario/">
+              Usuarios
             </a>
 
-            </div>
+            {% endif %}
+          </li>
+
+
+        </ul>
+
+        <div class="ms-auto d-flex align-items-center gap-3">
+
+
+          <span class="text-dark fw-semibold">
+
+            👤 {{ request.user.username }}
+          </span>
+
+          <a href="/logout/" class="btn btn-dark rounded-pill px-4">
+
+            Salir
+
+          </a>
 
         </div>
 
+      </div>
+
     </div>
 
-</nav>
-
+  </nav>
 
 <div class="container mt-5">
 

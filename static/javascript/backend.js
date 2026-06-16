@@ -347,38 +347,52 @@ function generarPlantilla() {
 
 function recuperarUltimaGestion() {
 
-    fetch("/ultima-gestion/")
-    .then(r => r.json())
-    .then(data => {
+    Swal.fire({
+        title: "¿Recuperar última gestión?",
+        text: "La gestión será eliminada del historial para evitar duplicados.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Recuperar",
+        cancelButtonText: "Cancelar"
+    }).then((result) => {
 
-        if (!data.success) {
+        if (!result.isConfirmed) {
             return;
         }
 
-        document.getElementById(
-            "distribuidor"
-        ).value = data.distribuidor;
+        fetch("/ultima-gestion/")
+        .then(r => r.json())
+        .then(data => {
 
-        document.getElementById(
-            "gestion"
-        ).value = data.gestion;
+            if (!data.success) {
+                return;
+            }
 
-        document.getElementById(
-            "cedula"
-        ).value = data.cedula;
+            document.getElementById(
+                "distribuidor"
+            ).value = data.distribuidor;
 
-        document.getElementById(
-            "nombre"
-        ).value = data.nombre_cliente;
+            document.getElementById(
+                "gestion"
+            ).value = data.gestion;
 
-        document.getElementById(
-            "plantillaSelect"
-        ).value = data.plantilla;
+            document.getElementById(
+                "cedula"
+            ).value = data.cedula;
+
+            document.getElementById(
+                "nombre"
+            ).value = data.nombre_cliente;
+
+            document.getElementById(
+                "plantillaSelect"
+            ).value = data.plantilla;
+
+        });
 
     });
 
 }
-
 function soloNumeros(input) {
     input.value = input.value.replace(/\D/g, '');
 }
@@ -576,66 +590,108 @@ function copiarTexto() {
 // Cargar al iniciar
 window.onload = actualizarLista;
 
-
 let calcInput = "";
 
 function appendCalc(value) {
-  calcInput += value;
-  document.getElementById("calcDisplay").value = calcInput;
+
+    calcInput += value;
+
+    document.getElementById(
+        "calcDisplay"
+    ).value = calcInput;
 }
 
 function calculate() {
-  try {
 
-    const sanitizedInput = calcInput.replace(/\./g, '').replace(/,/g, '.');
+    try {
 
+        document.getElementById(
+            "calcOperacion"
+        ).innerText = calcInput;
 
-    const result = eval(sanitizedInput);
+        let expression =
+            calcInput
+            .trim()
+            .replace(/\s/g, "");
 
+        // Si tiene coma, asumimos formato CR/ES
+        if (expression.includes(",")) {
 
-    const formattedResult = result.toLocaleString('en-US', { minimumFractionDigits: 2 });
+            expression = expression
+                .replace(/\./g, "")
+                .replace(/,/g, ".");
+        }
 
+        const result = eval(expression);
 
-    calcInput = formattedResult;
-    document.getElementById("calcDisplay").value = calcInput;
-  } catch (e) {
+        const formattedResult =
+            Number(result).toLocaleString(
+                "es-CR",
+                {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }
+            );
 
-    document.getElementById("calcDisplay").value = "Error";
-    calcInput = "";
-  }
+        calcInput = formattedResult;
+
+        document.getElementById(
+            "calcDisplay"
+        ).value = formattedResult;
+
+    } catch (error) {
+
+        console.error(error);
+
+        document.getElementById(
+            "calcDisplay"
+        ).value = "Error";
+
+        calcInput = "";
+    }
 }
 
 function clearCalc() {
-  calcInput = "";
-  document.getElementById("calcDisplay").value = "";
+
+    calcInput = "";
+
+    document.getElementById(
+        "calcDisplay"
+    ).value = "";
+
+    document.getElementById(
+        "calcOperacion"
+    ).innerText = "";
 }
 
-// Actualiza calcInput al escribir o pegar
-document.getElementById("calcDisplay").addEventListener("input", function (e) {
-  calcInput = this.value;
+document.getElementById(
+    "calcDisplay"
+).addEventListener("input", function () {
+
+    calcInput = this.value;
 });
 
-// Calcular con tecla Enter
-document.getElementById("calcDisplay").addEventListener("keydown", function (e) {
-  if (e.key === "Enter") {
-    calculate();
-  }
+document.getElementById(
+    "calcDisplay"
+).addEventListener("keydown", function (e) {
+
+    if (e.key === "Enter") {
+
+        calculate();
+    }
 });
-
-
-function filtrar(texto) {
-  const input = document.getElementById('filtroPlantilla');
-  input.value = texto;
-  input.dispatchEvent(new Event('input'));
-}
 
 function toggleCalculadora() {
-  const calc = document.querySelector(".calculadora");
-  if (calc.style.display === "none") {
-    calc.style.display = "block";
-  } else {
-    calc.style.display = "none";
-  }
+
+    const calc =
+        document.querySelector(
+            ".calculadora"
+        );
+
+    calc.style.display =
+        calc.style.display === "none"
+        ? "block"
+        : "none";
 }
 
 const plantillasProcede = [

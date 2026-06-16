@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 
@@ -15,7 +16,7 @@
     </div>
 
     {% endif %}
-
+ <link rel="stylesheet" href="{% static 'css/general.css' %}">
     <link
     rel="icon"
     type="image/png"
@@ -39,14 +40,26 @@
 
                     <div class="text-center mb-4">
 
-                        <h2 class="fw-bold">
-                            📄 BURÓ SYSTEM
-                        </h2>
+                         <img
+        src="{% static 'img/icon2.png' %}"
+        alt="BURÓ SYSTEM"
+        class="login-logo">
 
-                        <p class="text-muted">
-                            Inicia sesión para continuar
-                        </p>
+<h2 class="fw-bold mt-3">
+    <span class="logo-buro">
+        BURÓ
+    </span>
 
+    <span class="logo-system">
+        SYSTEM
+    </span>
+</h2>
+
+    <p class="text-muted">
+        Inicia sesión para continuar
+    </p>
+
+                 
                     </div>
 
                     <form method="POST">

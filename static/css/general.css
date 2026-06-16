@@ -1,0 +1,71 @@
+
+.logo-buro{
+    width: 55px;
+    height: 55px;
+    object-fit: contain;
+}
+
+.logo-texto{
+    line-height: 1;
+}
+
+.logo-buro-text{
+    font-size: 24px;
+    font-weight: 800;
+    color: #0d6efd;
+}
+
+.logo-system-text{
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #1f2937;
+}
+
+/* NAVBAR */
+
+.navbar {
+
+    min-height: 80px;
+}
+
+.navbar-brand{
+    margin-right: 30px;
+    text-decoration: none;
+}
+
+.nav-link {
+    color: #555 !important;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+.nav-link:hover {
+    color: #000 !important;
+}
+
+.nav-link.active {
+    background: #f3f4f6;
+    border-radius: 8px;
+    color: #000 !important;
+}
+
+
+
+.login-logo{
+
+    width: 100px;
+
+    filter:
+        drop-shadow(
+            0 4px 10px rgba(13,110,253,.25)
+        );
+}
+
+.logo-buro{
+    color:#0d6efd;
+}
+
+.logo-system{
+    color:#212529;
+}

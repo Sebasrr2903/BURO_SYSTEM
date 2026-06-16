@@ -12,10 +12,8 @@
 
 
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
-<link
-    rel="icon"
-    type="image/png"
-    href="/static/img/icon2.png">
+
+  <link rel="icon" type="image/png" href="/static/img/icon2.png">
 
 
 
@@ -26,9 +24,21 @@
 
     <div class="container-fluid">
 
-      <a class="navbar-brand fw-bold" href="/">
-        BURÓ SYSTEM
-      </a>
+
+
+<a class="navbar-brand d-flex align-items-center gap-2" href="/">
+    
+    <img
+        src="{% static 'img/icon2.png' %}"
+        alt="BURÓ SYSTEM"
+        class="logo-buro">
+
+    <div class="logo-texto">
+        <div class="logo-buro-text">BURÓ</div>
+        <div class="logo-system-text">SYSTEM</div>
+    </div>
+
+</a>
 
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
 
@@ -61,7 +71,7 @@
             {% if request.user.groups.all.0.name == 'Admin' %}
 
             <a class="nav-link" href="/crear-usuario/">
-               Usuarios
+              Usuarios
             </a>
 
             {% endif %}
@@ -72,10 +82,10 @@
 
         <div class="ms-auto d-flex align-items-center gap-3">
 
-                    
+
           <span class="text-dark fw-semibold">
-             
-                👤 {{ request.user.username }}
+
+            👤 {{ request.user.username }}
           </span>
 
           <a href="/logout/" class="btn btn-dark rounded-pill px-4">
@@ -93,378 +103,373 @@
   </nav>
 
 
-  <br> <!-- Tu formulario y generador de plantillas -->
-
-  <div class="flex-container">
-    <!-- Índice lateral -->
-    <div class="indice-lateral">
-      <h3>📌 Acceso Rápido</h3>
-      <label><input type="checkbox" id="toggleFavoritos" checked onchange="renderIndice()"> Mostrar solo
-        favoritos</label>
-      <ul>
-
-        <strong>✅ Procede</strong>
-        <ul style="text-align: center;" id="listaProcede"></ul>
-
-        <strong>⛔ No Procede</strong>
-        <ul style="text-align: center;" id="listaNoProcede"></ul>
-
-        <li><strong>🚫 Rechazos <button onclick="toggleSeccion('rechazosLista')">mostrar\ocultar</button>
-          </strong>
+  <div id="body">
 
 
-          <ul id="rechazosLista" style="text-align: center;">
-            <li><button onclick="accesoRapido('CASO DUPLICADO')">CASO DUPLICADO</button></li>
-            <li><button onclick="accesoRapido('Rechazo por Cédula Alterado')">Documento Alterado</button></li>
-            <li><button onclick="accesoRapido('Rechazo por Cédula No Legible')">Cédula no Legible</button></li>
-            <li><button onclick="accesoRapido('SIN CÉDULA')">Sin Cédula</button></li>
-            <li><button
-                onclick="accesoRapido('NO COINCIDE (cuando la información de la plantilla no coincide con la fotografía)')">NO
-                COINCIDE</button></li>
-            <li><button onclick="accesoRapido('CÉDULA AMBAS CARAS')">CÉDULA AMBAS CARAS</button></li>
-            <li><button onclick="accesoRapido('CONTROL DE ALTAS')">CONTROL DE ALTAS</button></li>
-            <li><button onclick="accesoRapido('FECHA SIN FORMATO')">FECHA SIN FORMATO</button></li>
-            <li><button onclick="accesoRapido('SIN INFOMACIÓN')">SIN INFORMACIÓN</button></li>
-            <li><button onclick="accesoRapido('CONTACTO')">CONTACTO</button></li>
-            <li><button onclick="accesoRapido('SIN REGISTROS')">SIN REGISTROS</button></li>
-            <li><button onclick="accesoRapido('DOCUMENTO VENCIDO')">DOCUMENTO VENCIDO</button></li>
-          </ul>
-        </li>
-      </ul>
-    </div>
+    <br />
 
-    <!-- Generador de plantillas -->
+    <div class="flex-container">
+      <!-- Índice lateral -->
+      <div class="indice-lateral">
+        <h3>📌 Acceso Rápido</h3>
+        <label><input type="checkbox" id="toggleFavoritos" checked onchange="renderIndice()"> Mostrar solo
+          favoritos</label>
+        <ul>
 
-    <div class="container">
+          <strong>✅ Procede</strong>
+          <ul style="text-align: center;" id="listaProcede"></ul>
 
-      <h2>📄 Generador de Plantillas BURÓ</h2>
-<button
-    type="button"
-    class="btn btn-warning"
-    onclick="recuperarUltimaGestion()">
+          <strong>⛔ No Procede</strong>
+          <ul style="text-align: center;" id="listaNoProcede"></ul>
 
-    ↩️ Recuperar última gestión
-
-</button>
+          <li><strong>🚫 Rechazos <button onclick="toggleSeccion('rechazosLista')">mostrar\ocultar</button>
+            </strong>
 
 
+            <ul id="rechazosLista" style="text-align: center;">
+              <li><button onclick="accesoRapido('CASO DUPLICADO')">CASO DUPLICADO</button></li>
+              <li><button onclick="accesoRapido('Rechazo por Cédula Alterado')">Documento Alterado</button></li>
+              <li><button onclick="accesoRapido('Rechazo por Cédula No Legible')">Cédula no Legible</button></li>
+              <li><button onclick="accesoRapido('SIN CÉDULA')">Sin Cédula</button></li>
+              <li><button
+                  onclick="accesoRapido('NO COINCIDE (cuando la información de la plantilla no coincide con la fotografía)')">NO
+                  COINCIDE</button></li>
+              <li><button onclick="accesoRapido('CÉDULA AMBAS CARAS')">CÉDULA AMBAS CARAS</button></li>
+              <li><button onclick="accesoRapido('CONTROL DE ALTAS')">CONTROL DE ALTAS</button></li>
+              <li><button onclick="accesoRapido('FECHA SIN FORMATO')">FECHA SIN FORMATO</button></li>
+              <li><button onclick="accesoRapido('SIN INFOMACIÓN')">SIN INFORMACIÓN</button></li>
+              <li><button onclick="accesoRapido('CONTACTO')">CONTACTO</button></li>
+              <li><button onclick="accesoRapido('SIN REGISTROS')">SIN REGISTROS</button></li>
+              <li><button onclick="accesoRapido('DOCUMENTO VENCIDO')">DOCUMENTO VENCIDO</button></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
 
-<br/>
+      <!-- Generador de plantillas -->
 
-
-      <label for="plantilla">Seleccionar Plantilla:</label>
-      <select id="plantilla"></select>
-
-     <label for="distribuidor">Distribuidor:</label>
-
-<input
-    type="text"
-    id="distribuidor"
-    list="listaDistribuidores"
-    placeholder="Ej: PIKI"
-    oninput="soloDistribuidor(this)">
-
-<datalist id="listaDistribuidores">
-    <option value="ARMADILLO">
-    <option value="CAC CARTAGO">
-    <option value="CAC CITY MALL">
-    <option value="CAC CITY PLAZA">
-    <option value="CAC CIUDAD QUESADA">
-    <option value="CAC DESAMPARADOS">
-    <option value="CAC GUÁPILES">
-    <option value="CAC LIBERIA">
-    <option value="CAC MULTIPLAZA DEL ESTE">
-    <option value="CAC NICOYA">
-    <option value="CAC PASEO DE LAS FLORES">
-    <option value="CAC PASEO METROPOLI">
-    <option value="CAC PLAZA DEL SOL">
-    <option value="CAC PLAZA REAL">
-    <option value="CAC PLAZA VILLA HERRERA">
-    <option value="CAC PUNTARENAS">
-    <option value="CAC ROHRMOSER">
-    <option value="CAC SAN JOSÉ PRESIDENTE">
-    <option value="CAC TURRIALBA">
-    <option value="CALL ESV">
-    <option value="CASBELSA">
-    <option value="CLC NET">
-    <option value="CONEXIÓN MÓVIL">
-    <option value="DATA ANÁLISIS">
-    <option value="DESAROLLO CELULAR">
-    <option value="DESARROLLO CELULAR">
-    <option value="DIGITAL SAT">
-    <option value="DIMONSSA">
-    <option value="GREENCALL">
-    <option value="HJ VEGA">
-    <option value="INCSA">
-    <option value="INTECNO">
-    <option value="JHONNY CELULAR">
-    <option value="JORDI - BO TMK">
-    <option value="KOOLMOVI">
-    <option value="KOOLMÓVIL">
-    <option value="MAXIMIZADO">
-    <option value="MEGARED">
-    <option value="MOBO">
-    <option value="OZONO DIGITAL">
-    <option value="PIKI">
-    <option value="PRISMA">
-    <option value="RECARGAS VIRTUALES">
-    <option value="REDCELL">
-    <option value="ROSADO Y AZUL">
-    <option value="SALESLAND">
-    <option value="SELFIE TECH">
-    <option value="SOLUCIONES CREATIVAS">
-    <option value="STANDARD COMMUNICATIONS">
-    <option value="T&E">
-    <option value="TMK AMERICA SERVICE">
-    <option value="N/A">
-    <option value="SIN DISTRIBUIDOR">
-    <option value="FLOWER RIVERS">
-    <option value="FRT">
-    <option value="CONEXIÓN COMERCIAL MOVIL LATAM">  
-    <option value="COOPELACINCO">  
-    <option value="EAV">
-    <option value="TELEFY">
-    <option value="REDDOT">
-    <option value="BMA GROUP">
-    <option value="DIGITAL CENTER">
-    <option value="MELCAS">  
-    <option value="KODA">  
-    <option value="EXXI">
-    </option>
-</datalist>
-
-<div id="errorDistribuidor" class="invalid-feedback d-none">
-    Campo obligatorio
-</div>
-      <label for="gestion">Numero de gestion:</label>
-      <input type="text" id="gestion" placeholder="Ej:239393"oninput="soloNumeros(this)" >
-      <div id="errorGestion" class="invalid-feedback d-none"> Campo obligatorio </div>
+      <div class="container">
 
 
-      <div id="formulario" style="display: none;">
-        <label for="nombre">Nombre del Cliente:</label>
-        <input type="text" id="nombre" placeholder="Ej: JUAN PÉREZ" oninput="soloLetras(this)"
-          >
-        <div id="errorNombre" class="invalid-feedback d-none"> Campo obligatorio </div>
+        <button type="button" class="btn btn-warning" onclick="recuperarUltimaGestion()">
 
-     <label for="cedula">Cédula:</label>
+          ↩️ Recuperar última gestión
 
-      <div class="cedula-container">
+        </button>
 
-          <input
-              type="text"
-              id="cedula"
-              placeholder="Ej: 123456789" oninput="this.value = this.value.toUpperCase();">
 
-          <button
-              type="button"
-              id="btnVerificarCedula"
-              onclick="verificarCedula()">
+
+        <br />
+
+
+        <label for="plantilla">Seleccionar Plantilla:</label>
+        <select id="plantilla"></select>
+
+        <label for="distribuidor">Distribuidor:</label>
+
+        <input type="text" id="distribuidor" list="listaDistribuidores" placeholder="Ej: PIKI"
+          oninput="soloDistribuidor(this)">
+
+        <datalist id="listaDistribuidores">
+          <option value="ARMADILLO">
+          <option value="CAC CARTAGO">
+          <option value="CAC CITY MALL">
+          <option value="CAC CITY PLAZA">
+          <option value="CAC CIUDAD QUESADA">
+          <option value="CAC DESAMPARADOS">
+          <option value="CAC GUÁPILES">
+          <option value="CAC LIBERIA">
+          <option value="CAC MULTIPLAZA DEL ESTE">
+          <option value="CAC NICOYA">
+          <option value="CAC PASEO DE LAS FLORES">
+          <option value="CAC PASEO METROPOLI">
+          <option value="CAC PLAZA DEL SOL">
+          <option value="CAC PLAZA REAL">
+          <option value="CAC PLAZA VILLA HERRERA">
+          <option value="CAC PUNTARENAS">
+          <option value="CAC ROHRMOSER">
+          <option value="CAC SAN JOSÉ PRESIDENTE">
+          <option value="CAC TURRIALBA">
+          <option value="CALL ESV">
+          <option value="CASBELSA">
+          <option value="CLC NET">
+          <option value="CONEXIÓN MÓVIL">
+          <option value="DATA ANÁLISIS">
+          <option value="DESAROLLO CELULAR">
+          <option value="DESARROLLO CELULAR">
+          <option value="DIGITAL SAT">
+          <option value="DIMONSSA">
+          <option value="GREENCALL">
+          <option value="HJ VEGA">
+          <option value="INCSA">
+          <option value="INTECNO">
+          <option value="JHONNY CELULAR">
+          <option value="JORDI - BO TMK">
+          <option value="KOOLMOVI">
+          <option value="KOOLMÓVIL">
+          <option value="MAXIMIZADO">
+          <option value="MEGARED">
+          <option value="MOBO">
+          <option value="OZONO DIGITAL">
+          <option value="PIKI">
+          <option value="PRISMA">
+          <option value="RECARGAS VIRTUALES">
+          <option value="REDCELL">
+          <option value="ROSADO Y AZUL">
+          <option value="SALESLAND">
+          <option value="SELFIE TECH">
+          <option value="SOLUCIONES CREATIVAS">
+          <option value="STANDARD COMMUNICATIONS">
+          <option value="T&E">
+          <option value="TMK AMERICA SERVICE">
+          <option value="N/A">
+          <option value="SIN DISTRIBUIDOR">
+          <option value="FLOWER RIVERS">
+          <option value="FRT">
+          <option value="CONEXIÓN COMERCIAL MOVIL LATAM">
+          <option value="COOPELACINCO">
+          <option value="EAV">
+          <option value="TELEFY">
+          <option value="REDDOT">
+          <option value="BMA GROUP">
+          <option value="DIGITAL CENTER">
+          <option value="MELCAS">
+          <option value="KODA">
+          <option value="EXXI">
+          </option>
+        </datalist>
+
+        <div id="errorDistribuidor" class="invalid-feedback d-none">
+          Campo obligatorio
+        </div>
+        <label for="gestion">Numero de gestion:</label>
+        <input type="text" id="gestion" placeholder="Ej:239393" oninput="soloNumeros(this)">
+        <div id="errorGestion" class="invalid-feedback d-none"> Campo obligatorio </div>
+
+
+        <div id="formulario" style="display: none;">
+          <label for="nombre">Nombre del Cliente:</label>
+          <input type="text" id="nombre" placeholder="Ej: JUAN PÉREZ" oninput="soloLetras(this)">
+          <div id="errorNombre" class="invalid-feedback d-none"> Campo obligatorio </div>
+
+          <label for="cedula">Cédula:</label>
+
+          <div class="cedula-container">
+
+            <input type="text" id="cedula" placeholder="Ej: 123456789" oninput="this.value = this.value.toUpperCase();">
+
+            <button type="button" id="btnVerificarCedula" onclick="verificarCedula()">
 
               🔍 Verificar
 
-          </button>
+            </button>
+
+          </div>
+
+          <div id="errorCedula" class="invalid-feedback d-none">
+            Campo obligatorio
+          </div>
+
+
+
+
+          <div id="montoInput" style="display: none;">
+            <label for="monto">Monto (¢):</label>
+            <input type="text" id="monto" placeholder="Ej: 25,000.00" oninput="formatMonto(this)" required>
+
+          </div>
+
+          <div id="checkboxes" class="checkbox-section" style="display: none;" style="align-items: center;">
+            <label>
+              <input type="radio" name="condicion" id="finaciamiento"> Financiamiento abierto.
+            </label>
+            <label>
+              <input type="radio" name="condicion" id="suspendido"> Suspendido
+            </label>
+            <label>
+              <input type="radio" name="condicion" id="sinCumplirAno">Facturas no Cumple año antigüedad
+            </label>
+            <label>
+              <input type="radio" name="condicion" id="menos2750"> Normal
+            </label>
+          </div>
+
+
+          <div id="writteOffCampos" style="display: none;">
+            <label for="fecha_activacion">Fecha de activación:</label>
+            <input type="text" id="fecha_activacion" placeholder="Ej: 3/7/2013">
+
+            <label for="fecha_expiracion">Fecha de expiración:</label>
+            <input type="text" id="fecha_expiracion" placeholder="Ej: 3/7/2015">
+
+            <label for="fecha_desactivacion">Fecha de desactivación:</label>
+            <input type="text" id="fecha_desactivacion" placeholder="Ej: 21/11/2013">
+
+            <label for="terminal">Terminal ligado:</label>
+            <input type="text" id="terminal" placeholder="Ej: SAMSUNG GALAXY S III ONYX BLACK">
+          </div>
+
+          <div id="campoFecha" style="display: none;">
+            <label for="fecha">Fecha de Nota de Crédito:</label>
+            <input type="date" id="fecha">
+          </div>
+        </div>
+
+
+
+        <button id="new" onclick="generarPlantilla(), copiarTexto()">🧾 Generar Plantilla/📋Copiar texto</button>
+
+        <label for="resultado">Texto Generado:</label>
+        <textarea id="resultado"></textarea>
+
+        <button id="new" onclick="copiarTexto()">📋 Copiar al portapapeles</button>
+        <button id="ocultar" onclick="toggleCalculadora()">🧮 Mostrar/Ocultar Calculadora</button>
 
       </div>
 
-      <div id="errorCedula" class="invalid-feedback d-none">
-          Campo obligatorio
-      </div>
 
 
 
+ <div class="calculadora">
 
-        <div id="montoInput" style="display: none;">
-          <label for="monto">Monto (¢):</label>
-          <input type="text" id="monto" placeholder="Ej: 25,000.00" oninput="formatMonto(this)" required>
+    <h3>🧮 Calculadora</h3>
 
-        </div>
+    <h6>
+        En esta calculadora se puede agregar los cero pagos con comas
+    </h6>
 
-        <div id="checkboxes" class="checkbox-section" style="display: none;" style="align-items: center;">
-          <label>
-            <input type="radio" name="condicion" id="finaciamiento"> Financiamiento abierto.
-          </label>
-          <label>
-            <input type="radio" name="condicion" id="suspendido"> Suspendido
-          </label>
-          <label>
-            <input type="radio" name="condicion" id="sinCumplirAno">Facturas no Cumple año antigüedad
-          </label>
-          <label>
-            <input type="radio" name="condicion" id="menos2750"> Normal
-          </label>
-        </div>
+    <div id="calcOperacion" class="operacion"></div>
 
-
-        <div id="writteOffCampos" style="display: none;">
-          <label for="fecha_activacion">Fecha de activación:</label>
-          <input type="text" id="fecha_activacion" placeholder="Ej: 3/7/2013">
-
-          <label for="fecha_expiracion">Fecha de expiración:</label>
-          <input type="text" id="fecha_expiracion" placeholder="Ej: 3/7/2015">
-
-          <label for="fecha_desactivacion">Fecha de desactivación:</label>
-          <input type="text" id="fecha_desactivacion" placeholder="Ej: 21/11/2013">
-
-          <label for="terminal">Terminal ligado:</label>
-          <input type="text" id="terminal" placeholder="Ej: SAMSUNG GALAXY S III ONYX BLACK">
-        </div>
-
-        <div id="campoFecha" style="display: none;">
-          <label for="fecha">Fecha de Nota de Crédito:</label>
-          <input type="date" id="fecha">
-        </div>
-      </div>
+<input
+    type="text"
+    id="calcDisplay">
 
 
 
-      <button id="new" onclick="generarPlantilla(), copiarTexto()">🧾 Generar Plantilla/📋Copiar texto</button>
+    
 
-      <label for="resultado">Texto Generado:</label>
-      <textarea id="resultado"></textarea>
+    <div class="botones">
 
-      <button id="new" onclick="copiarTexto()">📋 Copiar al portapapeles</button>
-      <button id="ocultar" onclick="toggleCalculadora()">🧮 Mostrar/Ocultar Calculadora</button>
+        <button class="btnCalc" onclick="appendCalc('7')">7</button>
+        <button class="btnCalc" onclick="appendCalc('8')">8</button>
+        <button class="btnCalc" onclick="appendCalc('9')">9</button>
+        <button class="btnCalc operador" onclick="appendCalc('/')">÷</button>
 
-    </div>
+        <button class="btnCalc" onclick="appendCalc('4')">4</button>
+        <button class="btnCalc" onclick="appendCalc('5')">5</button>
+        <button class="btnCalc" onclick="appendCalc('6')">6</button>
+        <button class="btnCalc operador" onclick="appendCalc('*')">×</button>
 
+        <button class="btnCalc" onclick="appendCalc('1')">1</button>
+        <button class="btnCalc" onclick="appendCalc('2')">2</button>
+        <button class="btnCalc" onclick="appendCalc('3')">3</button>
+        <button class="btnCalc operador" onclick="appendCalc('-')">−</button>
 
+        <button class="btnCalc" onclick="appendCalc('0')">0</button>
+        <button class="btnCalc" onclick="appendCalc('.')">.</button>
+        <button class="btnCalc igual" onclick="calculate()">=</button>
+        <button class="btnCalc operador" onclick="appendCalc('+')">+</button>
 
-
-    <div class="calculadora">
-      <h3>🧮 Calculadora</h3>
-      <h6>"En esta calculadora se puede agregar los cero pagos con comas"</h6>
-      <input type="text" id="calcDisplay">
-      <div class="botones">
-        <button id="buttonCalcu" onclick="appendCalc('7')">7</button>
-        <button id="buttonCalcu" onclick="appendCalc('8')">8</button>
-        <button id="buttonCalcu" onclick="appendCalc('9')">9</button>
-        <button id="buttonCalcu" onclick="appendCalc('/')">÷</button>
-        <button id="buttonCalcu" onclick="appendCalc('4')">4</button>
-        <button id="buttonCalcu" onclick="appendCalc('5')">5</button>
-        <button id="buttonCalcu" onclick="appendCalc('6')">6</button>
-        <button id="buttonCalcu" onclick="appendCalc('*')">×</button>
-        <button id="buttonCalcu" onclick="appendCalc('1')">1</button>
-        <button id="buttonCalcu" onclick="appendCalc('2')">2</button>
-        <button id="buttonCalcu" onclick="appendCalc('3')">3</button>
-        <button id="buttonCalcu" onclick="appendCalc('-')">−</button>
-        <button id="buttonCalcu" onclick="appendCalc('0')">0</button>
-        <button id="buttonCalcu" onclick="appendCalc('.')">.</button>
-        <button id="buttonCalcu" onclick="calculate()">=</button>
-        <button id="buttonCalcu" onclick="appendCalc('+')">+</button>
-        <button id="buttonCalcu" onclick="clearCalc()" style="grid-column: span 4;">C</button>
-      </div>
-    </div>
-  </div>
-
-
-  <div class="modal fade" id="modalCedulaExiste" tabindex="-1">
-
-    <div class="modal-dialog modal-lg">
-
-        <div class="modal-content">
-
-            <div class="modal-header bg-warning">
-
-                <h5 class="modal-title">
-                    ⚠️ Cédula ya gestionada
-                </h5>
-
-                <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal">
-                </button>
-
-            </div>
-
-            <div class="modal-body">
-
-                <p>
-                    Esta cédula ya fue gestionada anteriormente.
-                </p>
-
-                <hr>
-
-                <p>
-                    <strong>Fecha:</strong>
-                    <span id="modalFecha"></span>
-                </p>
-                
-                <p>
-                    <strong>distribuidor:</strong>
-                    <span id="modalDistribuidor"></span>
-                </p>
-
-                <p>
-                    <strong>Usuario:</strong>
-                    <span id="modalUsuario"></span>
-                </p>
-
-                <p>
-                    <strong>Resultado:</strong>
-                    <span id="modalResultado"></span>
-                </p>
-                <p>
-                    <strong>Total respuestas:</strong>
-                    <span id="modalTotal">0</span>
-                </p>
-                <div class="alert alert-info">
-
-                    <strong>Historial de la cédula</strong>
-
-                    <ul id="listaHistorial"></ul>
-
-                </div>
-
-                <hr>
-
-                <h6>Respuesta anterior</h6>
-
-                <textarea
-                    id="modalRespuesta"
-                    class="form-control"
-                    rows="8"
-                    readonly>
-                </textarea>
-                <button
-                    type="button"
-                    class="btn btn-primary"
-                    onclick="copiarRespuestaModal()">
-
-                    📋 Copiar Respuesta
-
-                </button>
-
-            </div>
-
-            <div class="modal-footer">
-
-                <button
-                    type="button"
-                    class="btn btn-secondary"
-                    data-bs-dismiss="modal">
-
-                    Cancelar
-
-                </button>
-                <button
-                    type="button"
-                    class="btn btn-success"
-                    onclick="generarNueva()">
-
-                    🔄 Generar Nueva
-
-                </button>
-
-            </div>
-
-        </div>
+        <button class="btnCalc limpiar" onclick="clearCalc()">C</button>
 
     </div>
 
 </div>
+    
+    </div>
 
+
+    <div class="modal fade" id="modalCedulaExiste" tabindex="-1">
+
+      <div class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+
+          <div class="modal-header bg-warning">
+
+            <h5 class="modal-title">
+              ⚠️ Cédula ya gestionada
+            </h5>
+
+            <button type="button" class="btn-close" data-bs-dismiss="modal">
+            </button>
+
+          </div>
+
+          <div class="modal-body">
+
+            <p>
+              Esta cédula ya fue gestionada anteriormente.
+            </p>
+
+            <hr>
+
+            <p>
+              <strong>Fecha:</strong>
+              <span id="modalFecha"></span>
+            </p>
+
+            <p>
+              <strong>distribuidor:</strong>
+              <span id="modalDistribuidor"></span>
+            </p>
+
+            <p>
+              <strong>Usuario:</strong>
+              <span id="modalUsuario"></span>
+            </p>
+
+            <p>
+              <strong>Resultado:</strong>
+              <span id="modalResultado"></span>
+            </p>
+            <p>
+              <strong>Total respuestas:</strong>
+              <span id="modalTotal">0</span>
+            </p>
+            <div class="alert alert-info">
+
+              <strong>Historial de la cédula</strong>
+
+              <ul id="listaHistorial"></ul>
+
+            </div>
+
+            <hr>
+
+            <h6>Respuesta anterior</h6>
+
+            <textarea id="modalRespuesta" class="form-control" rows="8" readonly>
+                </textarea>
+            <button type="button" class="btn btn-primary" onclick="copiarRespuestaModal()">
+
+              📋 Copiar Respuesta
+
+            </button>
+
+          </div>
+
+          <div class="modal-footer">
+
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+
+              Cancelar
+
+            </button>
+            <button type="button" class="btn btn-success" onclick="generarNueva()">
+
+              🔄 Generar Nueva
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
 
   <script src="{% static 'javascript/backend.js' %}"></script>
   <footer style="text-align: center;">
@@ -478,6 +483,6 @@
 
 </html>
 
+<script></script>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
-
-

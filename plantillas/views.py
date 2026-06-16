@@ -279,7 +279,6 @@ def limpiar_historial(request):
 
     return redirect('/historial/')
 
-
 @login_required
 def ultima_gestion(request):
 
@@ -292,7 +291,7 @@ def ultima_gestion(request):
             "success": False
         })
 
-    return JsonResponse({
+    datos = {
         "success": True,
         "distribuidor": registro.distribuidor,
         "gestion": registro.gestion,
@@ -301,7 +300,11 @@ def ultima_gestion(request):
         "plantilla": registro.nombre_plantilla,
         "resultado": registro.resultado,
         "respuesta": registro.respuesta,
-    })
+    }
+
+    registro.delete()
+
+    return JsonResponse(datos)
 
 
 @login_required
