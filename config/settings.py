@@ -141,9 +141,7 @@ STATICFILES_STORAGE = (
     'whitenoise.storage.CompressedManifestStaticFilesStorage'
 )
 
-DEBUG = True
 
-ALLOWED_HOSTS = []
 
 MEDIA_URL = "/media/"
 
