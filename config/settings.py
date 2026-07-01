@@ -141,6 +141,13 @@ STATICFILES_STORAGE = (
     'whitenoise.storage.CompressedManifestStaticFilesStorage'
 )
 
+DEBUG = True
+
+ALLOWED_HOSTS = []
+
+MEDIA_URL = "/media/"
+
+MEDIA_ROOT = BASE_DIR / "media"
 
 # 2 horas = 7200 segundos
 SESSION_COOKIE_AGE = 7200

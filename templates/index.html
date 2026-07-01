@@ -19,26 +19,28 @@
 
 </head>
 
-<body>
-  <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm">
+<body class="tema-{{ request.user.perfil.color }}" {% if request.user.perfil.fondo %} style="
+background-image:url('{{ request.user.perfil.fondo.url }}');
+background-size:cover;
+background-position:center;
+background-attachment:fixed;
+" {% endif %}>
+  <nav class="navbar navbar-expand-lg border-bottom shadow-sm">
 
     <div class="container-fluid">
 
 
 
-<a class="navbar-brand d-flex align-items-center gap-2" href="/">
-    
-    <img
-        src="{% static 'img/icon2.png' %}"
-        alt="BURÓ SYSTEM"
-        class="logo-buro">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="/">
 
-    <div class="logo-texto">
-        <div class="logo-buro-text">BURÓ</div>
-        <div class="logo-system-text">SYSTEM</div>
-    </div>
+        <img src="{% static 'img/icon2.png' %}" alt="BURÓ SYSTEM" class="logo-buro">
 
-</a>
+        <div class="logo-texto">
+          <div class="logo-buro-text">BURÓ</div>
+          <div class="logo-system-text">SYSTEM</div>
+        </div>
+
+      </a>
 
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
 
@@ -51,7 +53,7 @@
         <ul class="navbar-nav ms-4">
 
           <li class="nav-item">
-            <a class="nav-link active" href="/">
+            <a class="nav-link " href="/">
               Generador
             </a>
           </li>
@@ -81,12 +83,22 @@
         </ul>
 
         <div class="ms-auto d-flex align-items-center gap-3">
+          {% if request.user.perfil.foto %}
 
+          <img src="{{ request.user.perfil.foto.url }}" class="rounded-circle" width="40" height="40">
 
-          <span class="text-dark fw-semibold">
+          {% endif %}
+        <button class="btn perfil-user-btn"
+        data-bs-toggle="modal"
+        data-bs-target="#perfilModal">
 
-            👤 {{ request.user.username }}
-          </span>
+    <i class="bi bi-person-circle me-2"></i>
+
+    <span>{{ request.user.username }}</span>
+
+    <i class="bi bi-chevron-down ms-2"></i>
+
+</button>
 
           <a href="/logout/" class="btn btn-dark rounded-pill px-4">
 
@@ -330,52 +342,50 @@
 
 
 
- <div class="calculadora">
+      <div class="calculadora">
 
-    <h3>🧮 Calculadora</h3>
+        <h3>🧮 Calculadora</h3>
 
-    <h6>
-        En esta calculadora se puede agregar los cero pagos con comas
-    </h6>
+        <h6>
+          En esta calculadora se puede agregar los cero pagos con comas
+        </h6>
 
-    <div id="calcOperacion" class="operacion"></div>
+        <div id="calcOperacion" class="operacion"></div>
 
-<input
-    type="text"
-    id="calcDisplay">
+        <input type="text" id="calcDisplay">
 
 
 
-    
 
-    <div class="botones">
 
-        <button class="btnCalc" onclick="appendCalc('7')">7</button>
-        <button class="btnCalc" onclick="appendCalc('8')">8</button>
-        <button class="btnCalc" onclick="appendCalc('9')">9</button>
-        <button class="btnCalc operador" onclick="appendCalc('/')">÷</button>
+        <div class="botones">
 
-        <button class="btnCalc" onclick="appendCalc('4')">4</button>
-        <button class="btnCalc" onclick="appendCalc('5')">5</button>
-        <button class="btnCalc" onclick="appendCalc('6')">6</button>
-        <button class="btnCalc operador" onclick="appendCalc('*')">×</button>
+          <button class="btnCalc" onclick="appendCalc('7')">7</button>
+          <button class="btnCalc" onclick="appendCalc('8')">8</button>
+          <button class="btnCalc" onclick="appendCalc('9')">9</button>
+          <button class="btnCalc operador" onclick="appendCalc('/')">÷</button>
 
-        <button class="btnCalc" onclick="appendCalc('1')">1</button>
-        <button class="btnCalc" onclick="appendCalc('2')">2</button>
-        <button class="btnCalc" onclick="appendCalc('3')">3</button>
-        <button class="btnCalc operador" onclick="appendCalc('-')">−</button>
+          <button class="btnCalc" onclick="appendCalc('4')">4</button>
+          <button class="btnCalc" onclick="appendCalc('5')">5</button>
+          <button class="btnCalc" onclick="appendCalc('6')">6</button>
+          <button class="btnCalc operador" onclick="appendCalc('*')">×</button>
 
-        <button class="btnCalc" onclick="appendCalc('0')">0</button>
-        <button class="btnCalc" onclick="appendCalc('.')">.</button>
-        <button class="btnCalc igual" onclick="calculate()">=</button>
-        <button class="btnCalc operador" onclick="appendCalc('+')">+</button>
+          <button class="btnCalc" onclick="appendCalc('1')">1</button>
+          <button class="btnCalc" onclick="appendCalc('2')">2</button>
+          <button class="btnCalc" onclick="appendCalc('3')">3</button>
+          <button class="btnCalc operador" onclick="appendCalc('-')">−</button>
 
-        <button class="btnCalc limpiar" onclick="clearCalc()">C</button>
+          <button class="btnCalc" onclick="appendCalc('0')">0</button>
+          <button class="btnCalc" onclick="appendCalc('.')">.</button>
+          <button class="btnCalc igual" onclick="calculate()">=</button>
+          <button class="btnCalc operador" onclick="appendCalc('+')">+</button>
 
-    </div>
+          <button class="btnCalc limpiar" onclick="clearCalc()">C</button>
 
-</div>
-    
+        </div>
+
+      </div>
+
     </div>
 
 
@@ -469,6 +479,80 @@
       </div>
 
     </div>
+
+    <div class="modal fade" id="perfilModal">
+
+      <div class="modal-dialog">
+
+        <div class="modal-content">
+
+          <form method="POST" action="{% url 'actualizar_perfil' %}" enctype="multipart/form-data">
+
+            {% csrf_token %}
+
+            <div class="modal-header">
+
+              <h5>
+                Mi Perfil
+              </h5>
+
+            </div>
+
+            <div class="modal-body">
+              <label class="form-label">
+                  Color del sistema
+              </label>
+
+              <select
+                  class="form-select"
+                  name="color">
+
+                  <option value="azul">🔵 Azul</option>
+
+                  <option value="verde">🟢 Verde</option>
+
+                  <option value="morado">🟣 Morado</option>
+
+                  <option value="oscuro">⚫ Oscuro</option>
+
+                  <option value="claro">⚪ Claro</option>
+
+              </select>
+
+              <label>
+                Foto de perfil
+              </label>
+
+              <input type="file" name="foto" class="form-control">
+
+              <br>
+
+              <label>
+                Fondo
+              </label>
+
+              <input type="file" name="fondo" class="form-control">
+
+            </div>
+
+            <div class="modal-footer">
+
+              <button class="btn btn-primary">
+
+                Guardar
+
+              </button>
+
+            </div>
+
+          </form>
+
+        </div>
+
+      </div>
+
+    </div>
+
   </div>
 
   <script src="{% static 'javascript/backend.js' %}"></script>

@@ -18,8 +18,15 @@
 
 </head>
 
-<body>
-  <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm">
+<body class="tema-{{ request.user.perfil.color }}"
+  {% if request.user.perfil.fondo %} style="
+background-image:url('{{ request.user.perfil.fondo.url }}');
+background-size:cover;
+background-position:center;
+background-attachment:fixed;
+" {% endif %}>
+
+  <nav class="navbar navbar-expand-lg  border-bottom shadow-sm">
 
     <div class="container-fluid">
 
@@ -50,7 +57,7 @@
         <ul class="navbar-nav ms-4">
 
           <li class="nav-item">
-            <a class="nav-link active" href="/">
+            <a class="nav-link" href="/">
               Generador
             </a>
           </li>
@@ -81,12 +88,22 @@
 
         <div class="ms-auto d-flex align-items-center gap-3">
 
+      {% if request.user.perfil.foto %}
 
-          <span class="text-dark fw-semibold">
+          <img src="{{ request.user.perfil.foto.url }}" class="rounded-circle" width="40" height="40">
 
-            👤 {{ request.user.username }}
-          </span>
+          {% endif %}
+         <button class="btn perfil-user-btn"
+                    data-bs-toggle="modal"
+                    data-bs-target="#perfilModal">
 
+                <i class="bi bi-person-circle me-2"></i>
+
+                <span>{{ request.user.username }}</span>
+
+                <i class="bi bi-chevron-down ms-2"></i>
+
+            </button>
           <a href="/logout/" class="btn btn-dark rounded-pill px-4">
 
             Salir
@@ -438,7 +455,82 @@
     </div>
 
     </div>
+      <div class="modal fade" id="perfilModal">
+
+      <div class="modal-dialog">
+
+        <div class="modal-content">
+
+          <form method="POST" action="{% url 'actualizar_perfil' %}" enctype="multipart/form-data">
+
+            {% csrf_token %}
+
+            <div class="modal-header">
+
+              <h5>
+                Mi Perfil
+              </h5>
+
+            </div>
+
+            <div class="modal-body">
+              <label class="form-label">
+                  Color del sistema
+              </label>
+
+              <select
+                  class="form-select"
+                  name="color">
+
+                  <option value="azul">🔵 Azul</option>
+
+                  <option value="verde">🟢 Verde</option>
+
+                  <option value="morado">🟣 Morado</option>
+
+                  <option value="oscuro">⚫ Oscuro</option>
+
+                  <option value="claro">⚪ Claro</option>
+
+              </select>
+
+              <label>
+                Foto de perfil
+              </label>
+
+              <input type="file" name="foto" class="form-control">
+
+              <br>
+
+              <label>
+                Fondo
+              </label>
+
+              <input type="file" name="fondo" class="form-control">
+
+            </div>
+
+            <div class="modal-footer">
+
+              <button class="btn btn-primary">
+
+                Guardar
+
+              </button>
+
+            </div>
+
+          </form>
+
+        </div>
+
+      </div>
+
+    </div>
+
     <br/>
+      <script src="{% static 'javascript/backend.js' %}"></script>
+
   <footer style="text-align: center;">
     <p>&copy; 2025 Sebastian Rodriguez Rodriguez. Hecho en Costa Rica.</p>
 

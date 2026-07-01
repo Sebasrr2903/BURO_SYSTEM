@@ -1,3 +1,49 @@
+:root{
+
+    --principal:#0d6efd;
+    --secundario:#15325b;
+    --claro:#4da3ff;
+
+    --navbar:#cbeaff;
+
+    --fondo:#f4f7fb;
+    --blanco:#ffffff;
+
+    --texto:#15325b;
+    --texto-secundario:#6b7280;
+
+    --boton:#ffc107;
+    --boton-hover:#e0a800;
+
+    --panel:#ffffff;
+
+}
+
+
+.perfil-user-btn{
+    display:flex;
+    align-items:center;
+    gap:6px;
+
+    background:#ffffff;
+    border:1px solid #d9e4f5;
+    border-radius:30px;
+
+    padding:8px 18px;
+
+    color:#15325b;
+    font-weight:600;
+
+    transition:.25s;
+}
+
+.perfil-user-btn:hover{
+    background:#f3f8ff;
+    border-color:#0d6efd;
+    color:#0d6efd;
+    transform:translateY(-2px);
+    box-shadow:0 6px 15px rgba(13,110,253,.15);
+}
 
 .logo-buro{
     width: 55px;
@@ -23,9 +69,8 @@
 }
 
 /* NAVBAR */
-
 .navbar {
-
+    background:var(--navbar);
     min-height: 80px;
 }
 
@@ -51,7 +96,6 @@
 }
 
 
-
 .login-logo{
 
     width: 100px;
@@ -68,4 +112,117 @@
 
 .logo-system{
     color:#212529;
+}
+
+.tema-azul{
+
+    --principal:#0d6efd;
+    --secundario:#15325b;
+    --claro:#4da3ff;
+
+    --navbar:#cbeaff;
+
+    --fondo:#f4f7fb;
+
+    --texto:#15325b;
+
+    --boton:#ffc107;
+    --boton-hover:#e0a800;
+
+    --panel:#ffffff;
+
+}
+
+.tema-verde{
+
+    --principal:#198754;
+    --secundario:#0d5132;
+    --claro:#53c58b;
+
+    --navbar:#d8f5e3;
+
+    --fondo:#f7fff9;
+
+    --texto:#0d5132;
+
+    --boton:#ffc107;
+    --boton-hover:#e0a800;
+
+    --panel:#ffffff;
+
+}
+.tema-morado{
+
+    --principal:#6f42c1;
+    --secundario:#43256f;
+    --claro:#9d79ff;
+
+    --navbar:#efe4ff;
+
+    --fondo:#faf7ff;
+
+    --texto:#43256f;
+
+    --boton:#ffc107;
+    --boton-hover:#e0a800;
+
+    --panel:#ffffff;
+
+}
+
+.tema-rojo{
+
+    --principal:#dc3545;
+    --secundario:#7a1520;
+    --claro:#ff6b79;
+
+    --navbar:#ffe3e6;
+
+    --fondo:#fff7f8;
+
+    --texto:#7a1520;
+
+    --boton:#ffc107;
+    --boton-hover:#e0a800;
+
+    --panel:#ffffff;
+
+}
+
+.tema-naranja{
+
+    --principal:#fd7e14;
+    --secundario:#9a4d08;
+    --claro:#ffb066;
+
+    --navbar:#fff1e4;
+
+    --fondo:#fffaf5;
+
+    --texto:#9a4d08;
+
+    --boton:#198754;
+    --boton-hover:#146c43;
+
+    --panel:#ffffff;
+
+}
+
+.tema-oscuro{
+
+    --principal:#212529;
+    --secundario:#0f172a;
+    --claro:#495057;
+
+    --navbar:#20242b;
+
+    --fondo:#2b3035;
+
+    --texto:#9e9e9e;
+
+    --boton:#ffc107;
+    --boton-hover:#e0a800;
+
+    --panel:#343a40;
+
 }

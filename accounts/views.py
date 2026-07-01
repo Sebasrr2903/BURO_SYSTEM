@@ -31,8 +31,37 @@ def login_view(request):
             'error': error
         }
     )
+    
+    
+from .models import Perfil
 
+@login_required
+def actualizar_perfil(request):
 
+    perfil, creado = Perfil.objects.get_or_create(
+        usuario=request.user
+    )
+
+    if request.method == "POST":
+        
+        perfil.color = request.POST.get(
+                "color",
+                "azul"
+        )
+
+        if request.FILES.get("foto"):
+
+            perfil.foto = request.FILES["foto"]
+
+        if request.FILES.get("fondo"):
+
+            perfil.fondo = request.FILES["fondo"]
+            
+            
+
+        perfil.save()
+
+    return redirect("/")
 
 
 
