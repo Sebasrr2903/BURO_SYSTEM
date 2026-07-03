@@ -344,7 +344,86 @@ function generarPlantilla() {
     });
 }
 
+function verificarAntesDeGenerar() {
 
+    const cedula = document
+        .getElementById("cedula")
+        .value.trim();
+
+    if (!cedula) {
+
+        generarPlantilla();
+        copiarTexto();
+        return;
+    }
+
+    fetch(`/verificar-cedula/?cedula=${encodeURIComponent(cedula)}`)
+        .then(r => r.json())
+        .then(data => {
+
+            if (!data.existe) {
+
+                generarPlantilla();
+                copiarTexto();
+                return;
+
+            }
+
+            historialActual = data.historial;
+            indiceActual = 0;
+
+            llenarHistorial();
+            mostrarGestion();
+
+            new bootstrap.Modal(
+                document.getElementById("modalCedulaExiste")
+            ).show();
+
+        });
+
+}
+function generarYCopiar() {
+
+    bootstrap.Modal
+        .getInstance(
+            document.getElementById("modalCedulaExiste")
+        )
+        .hide();
+
+    generarPlantilla();
+
+    copiarTexto();
+
+}
+function mostrarGestion() {
+
+    const g = historialActual[indiceActual];
+
+    document.getElementById("fechaHistorial").innerText = g.fecha;
+    document.getElementById("usuarioHistorial").innerText = g.usuario;
+    document.getElementById("resultadoHistorial").innerText = g.resultado;
+    document.getElementById("distribuidorHistorial").innerText = g.distribuidor;
+    document.getElementById("respuestaAnterior").value = g.respuesta;
+
+    document.getElementById("contador").innerText =
+        `Gestión ${indiceActual + 1} de ${historialActual.length}`;
+
+    document.getElementById("btnAnterior").disabled =
+        indiceActual === 0;
+
+    document.getElementById("btnSiguiente").disabled =
+        indiceActual === historialActual.length - 1;
+
+    document.querySelectorAll(".itemHistorial").forEach((item, index) => {
+
+        item.classList.toggle(
+            "active",
+            index === indiceActual
+        );
+
+    });
+
+}
 function recuperarUltimaGestion() {
 
     Swal.fire({
@@ -409,36 +488,34 @@ function soloDistribuidor(input) {
         .toUpperCase();
 }
 
+function llenarHistorial() {
 
-function llenarHistorial(data) {
+    const lista = document.getElementById("listaHistorial");
 
-    document.getElementById(
-        "modalTotal"
-    ).innerText = data.total;
+    lista.innerHTML = "";
 
-    let html = "";
+    historialActual.forEach((g, index) => {
 
-    data.historial.forEach(item => {
+        lista.innerHTML += `
+            <button
+                class="list-group-item list-group-item-action itemHistorial ${index === indiceActual ? 'active' : ''}"
+                onclick="seleccionarGestion(${index})">
 
-        html += `
-            <li>
-                ${item.fecha}
-                -
-                ${item.resultado}
-                -
-                ${item.distribuidor}
-                -
-                ${item.usuario}
-            </li>
+                ${g.fecha} - ${g.resultado} - ${g.distribuidor}
+
+            </button>
         `;
 
     });
 
-    document.getElementById(
-        "listaHistorial"
-    ).innerHTML = html;
 }
+function seleccionarGestion(index){
 
+    indiceActual = index;
+
+    mostrarGestion();
+
+}
 
 function generarNueva() {
 
@@ -488,42 +565,28 @@ function verificarCedula() {
 
         if (!data.existe) {
 
-                  Swal.fire({
-                      icon: "success",
-                      title: "Sin registros",
-                      text: "No existen gestiones para esta cédula.",
-                      confirmButtonText: "Aceptar"
-                  });
+            Swal.fire({
+                icon: "success",
+                title: "Sin registros",
+                text: "No existen gestiones para esta cédula.",
+                confirmButtonText: "Aceptar"
+            });
+
             return;
         }
+
         datosCedula = data;
 
-        document.getElementById(
-            "modalFecha"
-        ).textContent = data.fecha;
+        historialActual = data.historial;
 
-        document.getElementById(
-            "modalUsuario"
-        ).textContent = data.usuario;
+        indiceActual = 0;
 
-        document.getElementById(
-            "modalResultado"
-        ).textContent = data.resultado;
+        mostrarGestion();
 
-        document.getElementById(
-            "modalRespuesta"
-        ).value = data.respuesta;
-
-        document.getElementById(
-            "modalDistribuidor"
-        ).textContent = data.distribuidor;
-
-        llenarHistorial(data);
+        llenarHistorial();
 
         new bootstrap.Modal(
-            document.getElementById(
-                "modalCedulaExiste"
-            )
+            document.getElementById("modalCedulaExiste")
         ).show();
 
     });

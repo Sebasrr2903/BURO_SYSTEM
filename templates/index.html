@@ -329,8 +329,9 @@ background-attachment:fixed;
 
 
 
-        <button id="new" onclick="generarPlantilla(), copiarTexto()">🧾 Generar Plantilla/📋Copiar texto</button>
-
+        <button id="new" onclick="verificarAntesDeGenerar()">
+            🧾 Generar Plantilla / 📋 Copiar texto
+        </button>
         <label for="resultado">Texto Generado:</label>
         <textarea id="resultado"></textarea>
 
@@ -389,96 +390,168 @@ background-attachment:fixed;
     </div>
 
 
-    <div class="modal fade" id="modalCedulaExiste" tabindex="-1">
+  <div class="modal fade" id="modalCedulaExiste" tabindex="-1">
 
-      <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
 
         <div class="modal-content">
 
-          <div class="modal-header bg-warning">
+            <div class="modal-header bg-warning">
 
-            <h5 class="modal-title">
-              ⚠️ Cédula ya gestionada
-            </h5>
+                <h5 class="modal-title">
+                    ⚠️ Gestión encontrada
+                </h5>
 
-            <button type="button" class="btn-close" data-bs-dismiss="modal">
-            </button>
-
-          </div>
-
-          <div class="modal-body">
-
-            <p>
-              Esta cédula ya fue gestionada anteriormente.
-            </p>
-
-            <hr>
-
-            <p>
-              <strong>Fecha:</strong>
-              <span id="modalFecha"></span>
-            </p>
-
-            <p>
-              <strong>distribuidor:</strong>
-              <span id="modalDistribuidor"></span>
-            </p>
-
-            <p>
-              <strong>Usuario:</strong>
-              <span id="modalUsuario"></span>
-            </p>
-
-            <p>
-              <strong>Resultado:</strong>
-              <span id="modalResultado"></span>
-            </p>
-            <p>
-              <strong>Total respuestas:</strong>
-              <span id="modalTotal">0</span>
-            </p>
-            <div class="alert alert-info">
-
-              <strong>Historial de la cédula</strong>
-
-              <ul id="listaHistorial"></ul>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal">
+                </button>
 
             </div>
 
-            <hr>
+            <div class="modal-body">
 
-            <h6>Respuesta anterior</h6>
+                <p>
+                    Se encontraron gestiones anteriores para esta cédula.
+                </p>
 
-            <textarea id="modalRespuesta" class="form-control" rows="8" readonly>
+                <hr>
+
+                <div class="row">
+
+                    <div class="col-md-6">
+
+                        <p>
+                            <strong>📅 Fecha:</strong>
+                            <span id="fechaHistorial"></span>
+                        </p>
+
+                        <p>
+                            <strong>👤 Usuario:</strong>
+                            <span id="usuarioHistorial"></span>
+                        </p>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <p>
+                            <strong>🏢 Distribuidor:</strong>
+                            <span id="distribuidorHistorial"></span>
+                        </p>
+
+                        <p>
+                            <strong>📌 Resultado:</strong>
+                            <span id="resultadoHistorial"></span>
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <div class="alert alert-info">
+
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+
+                        <strong>
+                            📋 Historial de la cédula
+                        </strong>
+
+                        <span id="contador">
+
+                            Gestión 1 de 1
+
+                        </span>
+
+                    </div>
+
+                    <div
+                        id="listaHistorial"
+                        class="list-group">
+
+                    </div>
+
+                </div>
+
+                <div class="d-flex justify-content-between mt-3">
+
+                    <button
+                        id="btnAnterior"
+                        class="btn btn-outline-secondary"
+                        onclick="anterior()">
+
+                        ⬅ Anterior
+
+                    </button>
+
+                    <button
+                        id="btnSiguiente"
+                        class="btn btn-outline-secondary"
+                        onclick="siguiente()">
+
+                        Siguiente ➡
+
+                    </button>
+
+                </div>
+
+                <hr>
+
+                <h6>
+
+                    📄 Respuesta seleccionada
+
+                </h6>
+
+                <textarea
+                    id="respuestaAnterior"
+                    class="form-control"
+                    rows="8"
+                    readonly>
+
                 </textarea>
-            <button type="button" class="btn btn-primary" onclick="copiarRespuestaModal()">
 
-              📋 Copiar Respuesta
+                <button
+                    type="button"
+                    class="btn btn-primary mt-3"
+                    onclick="copiarRespuestaModal()">
 
-            </button>
+                    📋 Copiar respuesta
 
-          </div>
+                </button>
 
-          <div class="modal-footer">
+            </div>
 
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            <div class="modal-footer">
 
-              Cancelar
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
 
-            </button>
-            <button type="button" class="btn btn-success" onclick="generarNueva()">
+                    Cancelar
 
-              🔄 Generar Nueva
+                </button>
 
-            </button>
+               <button
+                    type="button"
+                    class="btn btn-success"
+                    onclick="generarYCopiar()">
 
-          </div>
+                    📄 Generar y Copiar
+
+                </button>
+
+            </div>
 
         </div>
 
-      </div>
-
     </div>
+
+</div>
 
     <div class="modal fade" id="perfilModal">
 

@@ -1,0 +1,506 @@
+:root{
+
+    --principal:#0d6efd;
+    --secundario:#15325b;
+    --claro:#4da3ff;
+
+    --navbar:#cbeaff;
+
+    --fondo:#f4f7fb;
+    --blanco:#ffffff;
+
+    --texto:#15325b;
+    --texto-secundario:#6b7280;
+
+    --boton:#ffc107;
+    --boton-hover:#e0a800;
+
+    --panel:#ffffff;
+
+}
+ :root{
+    --buro-azul-principal: #0d6efd;
+    --buro-azul-oscuro: #15325b;
+    --buro-azul-claro: #4da3ff;
+    --buro-fondo: #f4f7fb;
+    --buro-blanco: #ffffff;
+    }
+.perfil-user-btn{
+    display:flex;
+    align-items:center;
+    gap:6px;
+
+    background:#ffffff;
+    border:1px solid #d9e4f5;
+    border-radius:30px;
+
+    padding:8px 18px;
+
+    color:#15325b;
+    font-weight:600;
+
+    transition:.25s;
+}
+
+.perfil-user-btn:hover{
+    background:#f3f8ff;
+    border-color:#0d6efd;
+    color:#0d6efd;
+    transform:translateY(-2px);
+    box-shadow:0 6px 15px rgba(13,110,253,.15);
+}
+ 
+#body{
+
+    margin:15px;
+
+    font-family:Arial;
+
+    color:var(--texto);
+
+}
+
+    .flex-container {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .container {
+      background:var(--panel);
+
+      padding: 20px;
+      border-radius: 8px;
+      flex: 1;
+      min-width: 320px;
+      max-width: 700px;
+    }
+    .checkbox-section label {
+  display: block;  /* Esto los pone uno debajo del otro */
+  margin-bottom: 8px;
+}
+
+ select, textarea,#new,input[type="text"], input[type="date"] {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 12px 14px; /* aumenta altura */
+  border-radius: 10px; /* bordes redondeados */
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  font-size: 1rem;
+}
+
+   textarea {
+  height: 200px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+#new {
+ 
+  background:var(--principal);
+  color: white;
+  border: none;
+  padding: 12px 16px; /* más altura */
+  border-radius: 10px; /* redondeado */
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+#ocultar{
+  background-color: #068f71;
+  color: white;
+  border: none;
+   padding: 12px 16px; /* más altura */
+  border-radius: 10px; /* redondeado */
+
+}
+
+#new:hover {
+     filter:brightness(.9);
+
+}
+
+
+
+
+.calculadora{
+
+    width: 330px;
+    padding: 25px;
+
+    background:var(--fondo);
+
+
+    border-radius: 25px;
+
+  
+}
+
+.pantalla{
+
+    background:#f4f7fb;
+
+    border-radius:20px;
+
+    padding:15px;
+
+    margin-bottom:15px;
+}
+
+.operacion{
+
+    text-align:right;
+
+    color:#9ca3af;
+
+    font-size:22px;
+
+    min-height:30px;
+}
+
+#calcDisplay{
+
+    width:100%;
+
+    border:none;
+
+    background:transparent;
+
+    text-align:right;
+
+    font-size:40px;
+
+    font-weight:bold;
+
+    color:var(--texto);
+
+    outline:none;
+}
+.botones {
+
+    margin-top: 20px;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 15px;
+}
+
+.btnCalc{
+
+    width:60px;
+    height:60px;
+
+    border:none;
+    border-radius:50%;
+
+    background:white;
+
+    color:var(--texto);
+
+
+    font-size:22px;
+    font-weight:700;
+
+    box-shadow:
+        4px 4px 10px rgba(21,50,91,.12);
+
+    transition:.2s;
+}
+
+.btnCalc:hover{
+
+    transform:scale(1.05);
+
+    background:var(--principal);
+    color:white;
+}
+
+
+.btnCalc:active {
+
+    box-shadow:
+        inset 4px 4px 8px rgba(0,0,0,.08),
+        inset -4px -4px 8px rgba(255,255,255,.9);
+}
+
+.operador{
+
+    background:#e9f2ff;
+
+    color:var(--principal);
+
+
+    font-weight:bold;
+}
+.igual{
+
+    background:var(--principal);
+
+    color:white;
+}
+
+.limpiar {
+
+    grid-column: span 4;
+
+    width: 100%;
+    border-radius: 20px;
+    background:var(--principal);
+
+    color: white;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+    .indice-lateral {
+      background:var(--panel);
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 0 5px #ccc;
+      margin-bottom: 20px;
+      min-width: 200px;
+    }
+
+    .indice-lateral ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .indice-lateral li {
+      cursor: pointer;
+      margin: 8px 0;
+      font-weight: bold;
+    }
+
+    .indice-lateral button {
+      background: none;
+      border: none;
+      color: #0078d7;
+      font-weight: bold;
+      cursor: pointer;
+      padding: 4px 0;
+    }
+
+    .indice-lateral button:hover {
+      text-decoration: underline;
+    }
+    
+
+
+
+.logo-buro{
+    width: 55px;
+    height: 55px;
+    object-fit: contain;
+}
+
+.logo-texto{
+    line-height: 1;
+}
+
+.logo-buro-text{
+    font-size: 24px;
+    font-weight: 800;
+    color: #0d6efd;
+}
+
+.logo-system-text{
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #1f2937;
+}
+
+/* NAVBAR */
+
+.navbar {
+    background:var(--navbar);
+    min-height: 80px;
+}
+
+.navbar-brand{
+    margin-right: 30px;
+    text-decoration: none;
+}
+
+.nav-link {
+    color: #555 !important;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+.nav-link:hover {
+    color: #000 !important;
+}
+
+.nav-link.active {
+    background: #f3f4f6;
+    border-radius: 8px;
+    color: #000 !important;
+}
+
+
+
+.cedula-container{
+    display:flex;
+    gap:10px;
+    align-items:center;
+}
+
+.cedula-container input{
+    flex:1;
+    margin:0;
+}
+
+#btnVerificarCedula{
+    background:var(--boton);
+
+    border:none;
+    border-radius:10px;
+    padding:12px 20px;
+    white-space:nowrap;
+    cursor:pointer;
+    transition:.3s;
+}
+
+#btnVerificarCedula:hover{
+        background:var(--boton-hover);
+
+}
+
+
+
+
+
+.tema-azul{
+
+    --principal:#0d6efd;
+    --secundario:#15325b;
+    --claro:#4da3ff;
+
+    --navbar:#cbeaff;
+
+    --fondo:#f4f7fb;
+
+    --texto:#15325b;
+
+    --boton:#ffc107;
+    --boton-hover:#e0a800;
+
+    --panel:#ffffff;
+
+}
+
+.tema-verde{
+
+    --principal:#198754;
+    --secundario:#0d5132;
+    --claro:#53c58b;
+
+    --navbar:#d8f5e3;
+
+    --fondo:#f7fff9;
+
+    --texto:#0d5132;
+
+    --boton:#ffc107;
+    --boton-hover:#e0a800;
+
+    --panel:#ffffff;
+
+}
+.tema-morado{
+
+    --principal:#6f42c1;
+    --secundario:#43256f;
+    --claro:#9d79ff;
+
+    --navbar:#efe4ff;
+
+    --fondo:#faf7ff;
+
+    --texto:#43256f;
+
+    --boton:#ffc107;
+    --boton-hover:#e0a800;
+
+    --panel:#ffffff;
+
+}
+
+.tema-rojo{
+
+    --principal:#dc3545;
+    --secundario:#7a1520;
+    --claro:#ff6b79;
+
+    --navbar:#ffe3e6;
+
+    --fondo:#fff7f8;
+
+    --texto:#7a1520;
+
+    --boton:#ffc107;
+    --boton-hover:#e0a800;
+
+    --panel:#ffffff;
+
+}
+
+.tema-naranja{
+
+    --principal:#fd7e14;
+    --secundario:#9a4d08;
+    --claro:#ffb066;
+
+    --navbar:#fff1e4;
+
+    --fondo:#fffaf5;
+
+    --texto:#9a4d08;
+
+    --boton:#198754;
+    --boton-hover:#146c43;
+
+    --panel:#ffffff;
+
+}
+
+.tema-oscuro{
+
+    --principal:#212529;
+    --secundario:#0f172a;
+    --claro:#495057;
+
+    --navbar:#20242b;
+
+    --fondo:#2b3035;
+
+    --texto:#9e9e9e;
+
+    --boton:#ffc107;
+    --boton-hover:#e0a800;
+
+    --panel:#343a40;
+
+}

@@ -51,7 +51,9 @@ def verificar_cedula(request):
 
                     "usuario": r.usuario.username,
                     "resultado": r.resultado,
-                    "distribuidor": r.distribuidor
+                    "distribuidor": r.distribuidor,
+                    "respuesta": r.respuesta
+
                 }
                 for r in historial[:10]
             ]
