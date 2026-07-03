@@ -344,86 +344,7 @@ function generarPlantilla() {
     });
 }
 
-function verificarAntesDeGenerar() {
 
-    const cedula = document
-        .getElementById("cedula")
-        .value.trim();
-
-    if (!cedula) {
-
-        generarPlantilla();
-        copiarTexto();
-        return;
-    }
-
-    fetch(`/verificar-cedula/?cedula=${encodeURIComponent(cedula)}`)
-        .then(r => r.json())
-        .then(data => {
-
-            if (!data.existe) {
-
-                generarPlantilla();
-                copiarTexto();
-                return;
-
-            }
-
-            historialActual = data.historial;
-            indiceActual = 0;
-
-            llenarHistorial();
-            mostrarGestion();
-
-            new bootstrap.Modal(
-                document.getElementById("modalCedulaExiste")
-            ).show();
-
-        });
-
-}
-function generarYCopiar() {
-
-    bootstrap.Modal
-        .getInstance(
-            document.getElementById("modalCedulaExiste")
-        )
-        .hide();
-
-    generarPlantilla();
-
-    copiarTexto();
-
-}
-function mostrarGestion() {
-
-    const g = historialActual[indiceActual];
-
-    document.getElementById("fechaHistorial").innerText = g.fecha;
-    document.getElementById("usuarioHistorial").innerText = g.usuario;
-    document.getElementById("resultadoHistorial").innerText = g.resultado;
-    document.getElementById("distribuidorHistorial").innerText = g.distribuidor;
-    document.getElementById("respuestaAnterior").value = g.respuesta;
-
-    document.getElementById("contador").innerText =
-        `Gestión ${indiceActual + 1} de ${historialActual.length}`;
-
-    document.getElementById("btnAnterior").disabled =
-        indiceActual === 0;
-
-    document.getElementById("btnSiguiente").disabled =
-        indiceActual === historialActual.length - 1;
-
-    document.querySelectorAll(".itemHistorial").forEach((item, index) => {
-
-        item.classList.toggle(
-            "active",
-            index === indiceActual
-        );
-
-    });
-
-}
 function recuperarUltimaGestion() {
 
     Swal.fire({
@@ -488,34 +409,42 @@ function soloDistribuidor(input) {
         .toUpperCase();
 }
 
-function llenarHistorial() {
-
-    const lista = document.getElementById("listaHistorial");
-
-    lista.innerHTML = "";
-
-    historialActual.forEach((g, index) => {
-
-        lista.innerHTML += `
-            <button
-                class="list-group-item list-group-item-action itemHistorial ${index === indiceActual ? 'active' : ''}"
-                onclick="seleccionarGestion(${index})">
-
-                ${g.fecha} - ${g.resultado} - ${g.distribuidor}
-
-            </button>
-        `;
-
-    });
-
-}
 function seleccionarGestion(index){
 
     indiceActual = index;
 
     mostrarGestion();
 
+    llenarHistorial();
+
 }
+
+function llenarHistorial() {
+    
+document.getElementById("contador").innerText =
+    `Gestión ${indiceActual + 1} de ${historialActual.length}`;
+
+    let html = "";
+
+    historialActual.forEach((item, index) => {
+
+        html += `
+            <button
+                type="button"
+                class="list-group-item list-group-item-action ${index === indiceActual ? 'active' : ''}"
+                onclick="seleccionarGestion(${index})">
+
+                ${item.fecha} - ${item.resultado} - ${item.distribuidor}
+
+            </button>
+        `;
+
+    });
+
+    document.getElementById("listaHistorial").innerHTML = html;
+
+}
+
 
 function generarNueva() {
 
@@ -538,26 +467,70 @@ function generarNueva() {
     ).focus();
 }
 
+function verificarAntesDeGenerar() {
 
-let datosCedula = {};
-function verificarCedula() {
-
-    const cedula =
-        document.getElementById("cedula").value.trim();
+    const cedula = document
+        .getElementById("cedula")
+        .value.trim();
 
     if (!cedula) {
 
-              Swal.fire({
-                  toast: true,
-                  position: 'top-end',
-                  icon: 'error',
-                  title: 'Campo cédula obligatorio',
-                  showConfirmButton: false,
-                  timer: 2500
-              });
+        generarPlantilla();
+        copiarTexto();
+        return;
+    }
 
-    return;
+    fetch(`/verificar-cedula/?cedula=${encodeURIComponent(cedula)}`)
+        .then(r => r.json())
+        .then(data => {
+
+            if (!data.existe) {
+
+                generarPlantilla();
+                copiarTexto();
+                return;
+
+            }
+
+            historialActual = data.historial;
+            indiceActual = 0;
+
+            llenarHistorial();
+            mostrarGestion();
+
+            new bootstrap.Modal(
+                document.getElementById("modalCedulaExiste")
+            ).show();
+
+        });
+
 }
+
+
+
+let historialActual = [];
+let indiceActual = 0;
+let datosCedula = {};
+
+function verificarCedula() {
+
+    const cedula = document
+        .getElementById("cedula")
+        .value.trim();
+
+    if (!cedula) {
+
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'error',
+            title: 'Campo cédula obligatorio',
+            showConfirmButton: false,
+            timer: 2500
+        });
+
+        return;
+    }
 
     fetch(`/verificar-cedula/?cedula=${cedula}`)
     .then(response => response.json())
@@ -578,12 +551,11 @@ function verificarCedula() {
         datosCedula = data;
 
         historialActual = data.historial;
-
         indiceActual = 0;
 
-        mostrarGestion();
-
         llenarHistorial();
+
+        mostrarGestion();
 
         new bootstrap.Modal(
             document.getElementById("modalCedulaExiste")
@@ -592,7 +564,73 @@ function verificarCedula() {
     });
 
 }
+function generarYCopiar() {
 
+    bootstrap.Modal
+        .getInstance(document.getElementById("modalCedulaExiste"))
+        .hide();
+
+    generarPlantilla();
+
+    copiarTexto();
+
+}
+
+function siguiente() {
+
+    if (indiceActual < historialActual.length - 1) {
+
+        indiceActual++;
+
+        mostrarGestion();
+
+    }
+
+}
+
+function anterior() {
+
+    if (indiceActual > 0) {
+
+        indiceActual--;
+
+        mostrarGestion();
+
+    }
+
+}
+
+function mostrarGestion() {
+
+    const g = historialActual[indiceActual];
+
+    document.getElementById("fechaHistorial").textContent =
+        g.fecha;
+
+    document.getElementById("usuarioHistorial").textContent =
+        g.usuario;
+
+    document.getElementById("resultadoHistorial").textContent =
+        g.resultado;
+
+    document.getElementById("distribuidorHistorial").textContent =
+        g.distribuidor;
+
+    document.getElementById("respuestaAnterior").value =
+        g.respuesta;
+
+    document.getElementById("contador").textContent =
+        `Gestión ${indiceActual + 1} de ${historialActual.length}`;
+
+    document.getElementById("btnAnterior").disabled =
+        indiceActual === 0;
+
+    document.getElementById("btnSiguiente").disabled =
+        indiceActual === historialActual.length - 1;
+
+    llenarHistorial();
+
+}
 
 
 function copiarRespuestaModal() {
