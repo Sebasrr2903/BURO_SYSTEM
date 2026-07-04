@@ -498,8 +498,8 @@ body{
 
 .tema-oscuro{
 
-    --principal:#212529;
-    --secundario:#0f172a;
+    --principal:#000000;
+    --secundario:#000000;
     --claro:#495057;
 
     --navbar:#20242b;
