@@ -14,17 +14,23 @@
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
   <link rel="icon" type="image/png" href="/static/img/icon2.png">
-
+<style>
+body{
+    background-image: url("{% static 'img/iconfondo.jpg' %}");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+</style>
 
 
 </head>
 
-<body class="tema-{{ request.user.perfil.color }}" {% if request.user.perfil.fondo %} style="
-background-image:url('{{ request.user.perfil.fondo.url }}');
-background-size:cover;
-background-position:center;
-background-attachment:fixed;
-" {% endif %}>
+{% load static %}
+
+<body class="tema-{{ request.user.perfil.color }}">
+             
   <nav class="navbar navbar-expand-lg border-bottom shadow-sm">
 
     <div class="container-fluid">
@@ -514,13 +520,12 @@ background-attachment:fixed;
 
                 </textarea>
 
-                <button
+               <button
                     type="button"
-                    class="btn btn-primary mt-3"
-                    onclick="copiarRespuestaModal()">
+                    class="btn btn-warning"
+                    onclick="generarNueva()">
 
-                    📋 Copiar respuesta
-
+                    📄 Extraer Datos
                 </button>
 
             </div>
@@ -535,6 +540,8 @@ background-attachment:fixed;
                     Cancelar
 
                 </button>
+
+              
 
                <button
                     type="button"
@@ -592,21 +599,7 @@ background-attachment:fixed;
 
               </select>
 
-              <label>
-                Foto de perfil
-              </label>
-
-              <input type="file" name="foto" class="form-control">
-
-              <br>
-
-              <label>
-                Fondo
-              </label>
-
-              <input type="file" name="fondo" class="form-control">
-
-            </div>
+          
 
             <div class="modal-footer">
 

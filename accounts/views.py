@@ -49,16 +49,6 @@ def actualizar_perfil(request):
                 "azul"
         )
 
-        if request.FILES.get("foto"):
-
-            perfil.foto = request.FILES["foto"]
-
-        if request.FILES.get("fondo"):
-
-            perfil.fondo = request.FILES["fondo"]
-            
-            
-
         perfil.save()
 
     return redirect("/")

@@ -17,14 +17,17 @@
     href="/static/img/icon2.png">
 
 </head>
-
-<body class="tema-{{ request.user.perfil.color }}"
-  {% if request.user.perfil.fondo %} style="
-background-image:url('{{ request.user.perfil.fondo.url }}');
-background-size:cover;
-background-position:center;
-background-attachment:fixed;
-" {% endif %}>
+<style>
+body{
+    background-image: url("{% static 'img/iconfondo.jpg' %}");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+</style>
+<body
+    class="tema-{{ request.user.perfil.color }}">
 
   <nav class="navbar navbar-expand-lg  border-bottom shadow-sm">
 
