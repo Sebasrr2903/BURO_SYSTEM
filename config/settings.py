@@ -38,7 +38,7 @@ DEBUG = os.environ.get(
 
 
 ALLOWED_HOSTS = ['*']
-STATIC_ROOT = BASE_DIR / "staticfiles"
+
 
 # Application definition
 
@@ -50,7 +50,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'cloudinary',
-    'cloudinary_storage',
     'django.contrib.staticfiles',
     'plantillas',
 ]
@@ -139,10 +138,7 @@ STATICFILES_DIRS = [
     BASE_DIR / "static"
 ]
 
-STATICFILES_STORAGE = (
-    'whitenoise.storage.CompressedManifestStaticFilesStorage'
-)
-
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 MEDIA_URL = "/media/"
 
@@ -170,6 +166,4 @@ cloudinary.config(
     api_secret=os.environ.get("CLOUDINARY_API_SECRET"),
     secure=True,
 )
-
-DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
