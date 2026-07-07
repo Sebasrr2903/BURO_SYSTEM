@@ -146,12 +146,13 @@ body{
 
             <ul id="rechazosLista" style="text-align: center;">
               <li><button onclick="accesoRapido('CASO DUPLICADO')">CASO DUPLICADO</button></li>
-              <li><button onclick="accesoRapido('Rechazo por Cédula Alterado')">Documento Alterado</button></li>
-              <li><button onclick="accesoRapido('Rechazo por Cédula No Legible')">Cédula no Legible</button></li>
-              <li><button onclick="accesoRapido('SIN CÉDULA')">Sin Cédula</button></li>
-              <li><button
-                  onclick="accesoRapido('NO COINCIDE (cuando la información de la plantilla no coincide con la fotografía)')">NO
-                  COINCIDE</button></li>
+              <li><button onclick="accesoRapido('CAPTURA DE PANTALLA')">CAPTURA DE PANTALLA</button></li>
+              <li><button onclick="accesoRapido('CEDULA DETERIORADA')">CÉDULA DETERIORADA</button></li>
+              <li><button onclick="accesoRapido('CEDULA CON MANCHAS')">CÉDULA CON MANCHAS</button></li>
+              <li><button onclick="accesoRapido('CEDULA NO LEGIBLE')">CÉDULA NO LEGIBLE</button></li>
+              <li><button onclick="accesoRapido('Rechazo por Cédula Alterado')">DOCUMENTO ALTERADO</button></li>
+              <li><button onclick="accesoRapido('SIN CÉDULA')">SIN CÉDULA</button></li>
+              <li><button onclick="accesoRapido('NO COINCIDE (cuando la información de la plantilla no coincide con la fotografía)')">NO COINCIDE</button></li>
               <li><button onclick="accesoRapido('CÉDULA AMBAS CARAS')">CÉDULA AMBAS CARAS</button></li>
               <li><button onclick="accesoRapido('CONTROL DE ALTAS')">CONTROL DE ALTAS</button></li>
               <li><button onclick="accesoRapido('FECHA SIN FORMATO')">FECHA SIN FORMATO</button></li>
@@ -187,7 +188,9 @@ body{
 
         <input type="text" id="distribuidor" list="listaDistribuidores" placeholder="Ej: PIKI"
           oninput="soloDistribuidor(this)">
-
+        <div id="errorDistribuidor" class="invalid-feedback d-none">
+          Campo obligatorio
+        </div>
         <datalist id="listaDistribuidores">
           <option value="ARMADILLO">
           <option value="CAC CARTAGO">
@@ -257,9 +260,7 @@ body{
           </option>
         </datalist>
 
-        <div id="errorDistribuidor" class="invalid-feedback d-none">
-          Campo obligatorio
-        </div>
+      
         <label for="gestion">Numero de gestion:</label>
         <input type="text" id="gestion" placeholder="Ej:239393" oninput="soloNumeros(this)">
         <div id="errorGestion" class="invalid-feedback d-none"> Campo obligatorio </div>
@@ -295,6 +296,9 @@ body{
             <label for="monto">Monto (¢):</label>
             <input type="text" id="monto" placeholder="Ej: 25,000.00" oninput="formatMonto(this)" required>
 
+          </div>
+          <div id="errorMonto" class="invalid-feedback d-none">
+            Campo obligatorio
           </div>
 
           <div id="checkboxes" class="checkbox-section" style="display: none;" style="align-items: center;">
@@ -596,6 +600,8 @@ body{
                   <option value="oscuro">⚫ Oscuro</option>
 
                   <option value="rojo">🔴 Rojo</option>
+
+                  <option value="rosado">🩷 Rosado</option>
 
                   <option value="naranja">🟠 Naranja</option>
 

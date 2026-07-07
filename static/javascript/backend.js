@@ -58,7 +58,13 @@ const plantillas = {
 
   //RECHAZOS 
 
-  "CASO DUPLICADO": "Fecha:{fecha}\nHora:{hora}\n\nBuen día,\n\nCompañeros el caso de este cliente ya ingreso anteriormente a análisis, por lo cual ya cuenta con respuesta a la solicitud.\n\nCualquier duda adicional con gusto.\n\n\n¡Nos encantó atenderte el día de hoy!\nSu número de gestión es:{gestion}\nAnte cualquier duda o inconveniente que tengás podés comunicarte a los siguientes medios:\n📱 WhatsApp: 7002 4600\n¡Qué pases un excelente día!.",
+  "CASO DUPLICADO": "Fecha: {fecha}\nHora: {hora}\n\nBuen día.\n\nCompañeros, se informa que la presente solicitud corresponde a un caso que ya fue ingresado previamente por el mismo DTS y que ya cuenta con una gestión y respuesta emitida por el área de Análisis.\n\nEn virtud de lo anterior, se solicita dar seguimiento a la gestión existente, por lo que no procede la creación de un nuevo caso.\n\nQuedamos atentos ante cualquier consulta adicional.\n\n¡Nos encantó atenderte el día de hoy!\nSu número de gestión es: {gestion}\nAnte cualquier duda o inconveniente que tengás podés comunicarte a los siguientes medios:\n📱 WhatsApp: 7002 4600\n¡Qué pases un excelente día!." ,
+
+  "CAPTURA DE PANTALLA": "Fecha:{fecha}\nHora:{hora}\n\nBuen día,\n\nCompañeros se rechaza el caso porque el documento fue remitido en fotocopia, pdf , escaneo, pantallazo o emplasticado por favor, envíen el original para poder proceder con el análisis \n\nCualquier duda adicional con gusto.\n\n\n¡Nos encantó atenderte el día de hoy!\nSu número de gestión es:{gestion}\nAnte cualquier duda o inconveniente que tengás podés comunicarte a los siguientes medios:\n📱 WhatsApp: 7002 4600\n¡Qué pases un excelente día!.",
+  
+  "CEDULA DETERIORADA": "Fecha:{fecha}\nHora:{hora}\n\nBuen día,\n\nCompañeros el caso se rechaza por venir el documento de identidad deteriorado fundamental para realizar el trámite.\n\nCualquier duda adicional con gusto.\n\n\n¡Nos encantó atenderte el día de hoy!\nSu número de gestión es:{gestion}\nAnte cualquier duda o inconveniente que tengás podés comunicarte a los siguientes medios:\n📱 WhatsApp: 7002 4600\n¡Qué pases un excelente día!.",
+
+  "CEDULA CON MANCHAS": "Fecha:{fecha}\nHora:{hora}\n\nBuen día,\n\nCompañeros el caso se rechaza el caso por motivo que el documento de identidad  presenta manchas que afectan su nitidez.Por favor, envíen el documento en condiciones claras y legibles para poder proceder con el análisis.\n\n\n¡Nos encantó atenderte el día de hoy!\nSu número de gestión es:{gestion}\nAnte cualquier duda o inconveniente que tengás podés comunicarte a los siguientes medios:\n📱 WhatsApp: 7002 4600\n¡Qué pases un excelente día!.",
 
   "Rechazo por Cédula Alterado": "Fecha:{fecha}\nHora:{hora}\n\nBuen día,\n\n El caso se rechaza debido a sospechas de alteración en el documento de identidad.\n\nCualquier duda adicional con gusto.\n\n\n¡Nos encantó atenderte el día de hoy!\nSu número de gestión es:{gestion}\nAnte cualquier duda o inconveniente que tengás podés comunicarte a los siguientes medios:\n📱 WhatsApp: 7002 4600\n¡Qué pases un excelente día!.",
 
@@ -72,7 +78,7 @@ const plantillas = {
 
   "NO COINCIDE (cuando la información de la plantilla no coincide con la fotografía)": "Fecha:{fecha}\nHora:{hora}\n\nBuen día,\n\nEl caso se rechaza por no coincidir el documento de identidad con la información adjunta.\n\nCualquier duda adicional con gusto.\n\n\n¡Nos encantó atenderte el día de hoy!\nSu número de gestión es:{gestion}\nAnte cualquier duda o inconveniente que tengás podés comunicarte a los siguientes medios:\n📱 WhatsApp: 7002 4600\n¡Qué pases un excelente día!.",
 
-  "FECHA SIN FORMATO": "Fecha:{fecha}\nHora:{hora}\n\nBuen día,\n\nCompañeros el caso se rechaza por motivo que el documento presenta alteraciones físicas y la fecha de vencimiento no coincide con Migracion y Extranjeria. \n\nCualquier duda adicional con gusto.\n\n\n¡Nos encantó atenderte el día de hoy!\nSu número de gestión es:{gestion}\nAnte cualquier duda o inconveniente que tengás podés comunicarte a los siguientes medios:\n📱 WhatsApp: 7002 4600\n¡Qué pases un excelente día!.",
+  "FECHA SIN FORMATO": "Fecha:{fecha}\nHora:{hora}\n\nBuen día,\n\nCompañeros el caso se rechaza por indicaciones de operaciones comerciales, se rechaza el caso debido a que la cédula de identidad presentada no cumple con el formato establecido para los procesos de validación. Por favor, envíen el documento en el formato correcto y conforme a las disposiciones vigentes, para poder proceder con el análisis correspondiente. \n\nCualquier duda adicional con gusto.\n\n\n¡Nos encantó atenderte el día de hoy!\nSu número de gestión es:{gestion}\nAnte cualquier duda o inconveniente que tengás podés comunicarte a los siguientes medios:\n📱 WhatsApp: 7002 4600\n¡Qué pases un excelente día!.",
 
   "SIN CÉDULA": "Fecha:{fecha}\nHora:{hora}\n\nBuen día,\n\nEl caso se rechaza por no adjuntar el documento de identidad, fundamental para realizar el trámite.\n\nCualquier duda adicional con gusto.\n\n\n¡Nos encantó atenderte el día de hoy!\nSu número de gestión es:{gestion}\nAnte cualquier duda o inconveniente que tengás podés comunicarte a los siguientes medios:\n📱 WhatsApp: 7002 4600\n¡Qué pases un excelente día!.",
 
@@ -130,6 +136,7 @@ document.getElementById("plantilla").addEventListener("change", function () {
     seleccion === "NC APLICADA" ||
     seleccion === "Cero pagos" ||
     seleccion === "Visto Bueno" ||
+
     seleccion === "CASO DUPLICADO" ||
     seleccion === "SIN REGISTROS" ||
     seleccion === "DOCUMENTO VENCIDO" ||
@@ -241,6 +248,27 @@ function generarPlantilla() {
         .classList.remove("is-invalid");
 
 }
+
+
+ if (!monto && (plantillaKey === "Cero pagos(CON TERMINAL)" || plantillaKey === "WRITTE OFF(CON TERMINAL)" || plantillaKey === "TERMINAL LIGADO (Financiamiento y facturas pendientes)" || plantillaKey === "TERMINAL LIGADO (Solo debe finaciamiento)" || plantillaKey === "NC APLICADA" || plantillaKey === "Cero pagos" || plantillaKey === "WRITTE OFF(SIN TERMINAL)" || plantillaKey === "LIMPIEZA DE SALDOS" || plantillaKey === "LIMPIEZA DE SALDOS WRITE OFF" || plantillaKey === "Facturas Pendientes")) {
+
+    document
+        .getElementById("errorMonto")
+        .classList.remove("d-none");
+
+    document
+        .getElementById("monto")
+        .classList.add("is-invalid");
+
+    hayError = true;
+
+} else {
+
+   document
+        .getElementById("monto")
+        .classList.remove("is-invalid");
+
+}
   if (!gestion) {
     document.getElementById("errorGestion").classList.remove("d-none");
     document.getElementById("gestion").classList.add("is-invalid");
@@ -248,6 +276,7 @@ function generarPlantilla() {
   } else {
     document.getElementById("gestion").classList.remove("is-invalid");
   }
+  
 
   if (
     plantillasProcede.includes(plantillaKey) ||
@@ -270,6 +299,8 @@ function generarPlantilla() {
       document.getElementById("cedula").classList.remove("is-invalid");
     }
   }
+
+  
 
   if (hayError) {
     return;
