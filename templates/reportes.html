@@ -1,0 +1,1091 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+
+    <title>Historial</title>
+    <link rel="stylesheet" href="{% static 'css/general.css' %}">
+
+    <link rel="icon" type="image/png" href="/static/img/icon2.png">
+
+</head>
+<style>
+    body {
+        background-image: url("{% static 'img/iconfondo.jpg' %}");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
+</style>
+
+<body class="tema-{{ request.user.perfil.color }}">
+
+    <nav class="navbar navbar-expand-lg  border-bottom shadow-sm">
+
+        <div class="container-fluid">
+
+
+
+            <a class="navbar-brand d-flex align-items-center gap-2" href="/">
+
+                <img src="{% static 'img/icon2.png' %}" alt="BURÓ SYSTEM" class="logo-buro">
+
+                <div class="logo-texto">
+                    <div class="logo-buro-text">BURÓ</div>
+                    <div class="logo-system-text">SYSTEM</div>
+                </div>
+
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+
+                <span class="navbar-toggler-icon"></span>
+
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+
+                <ul class="navbar-nav ms-4">
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">
+                            Generador
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/historial/">
+                            Historial
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            Reportes
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        {% if request.user.groups.all.0.name == 'Admin' %}
+
+                        <a class="nav-link" href="/crear-usuario/">
+                            Usuarios
+                        </a>
+
+                        {% endif %}
+                    </li>
+
+
+                </ul>
+
+                <div class="ms-auto d-flex align-items-center gap-3">
+
+                    {% if request.user.perfil.foto %}
+
+                    <img src="{{ request.user.perfil.foto.url }}" class="rounded-circle" width="40" height="40">
+
+                    {% endif %}
+                    <button class="btn perfil-user-btn" data-bs-toggle="modal" data-bs-target="#perfilModal">
+
+                        <i class="bi bi-person-circle me-2"></i>
+
+                        <span>{{ request.user.username }}</span>
+
+                        <i class="bi bi-chevron-down ms-2"></i>
+
+                    </button>
+                    <a href="/logout/" class="btn btn-dark rounded-pill px-4">
+
+                        Salir
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+
+
+
+
+    <ul class="nav nav-tabs mb-4" id="reportesTab" role="tablist" style=" background-color: #f0f5fa;  padding: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+
+        <li class="nav-item">
+
+            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#dashboard">
+
+                📊 Dashboard
+
+            </button>
+
+        </li>
+
+        <li class="nav-item">
+
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#gestiones">
+
+                📄 Gestiones
+
+            </button>
+
+        </li>
+
+        <li class="nav-item">
+
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#usuarios">
+
+                👤 Usuarios
+
+            </button>
+
+        </li>
+
+        <li class="nav-item">
+
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#duplicados">
+
+                🔍 Duplicados
+
+            </button>
+
+        </li>
+
+        <li class="nav-item">
+
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#estadisticas">
+
+                📈 Estadísticas
+
+            </button>
+
+        </li>
+        <li class="nav-item">
+
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#alertas">
+
+                🚨 Alertas
+
+            </button>
+
+        </li>
+
+    </ul>
+    <div class="tab-content">
+
+        <div class="tab-pane fade show active" id="dashboard">
+
+            <div class="container mt-4">
+
+                <h2 class="mb-4">
+                    📊 Reportes
+                </h2>
+
+                <!-- FILTROS -->
+
+                <div class="card shadow-sm mb-4">
+
+                    <div class="card-header bg-primary text-white">
+
+                        Filtros
+
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="row">
+
+                            <div class="col-md-3">
+
+                                <label>Fecha Inicio</label>
+
+                                <input type="date" id="fechaInicio" class="form-control">
+
+                            </div>
+
+                            <div class="col-md-3">
+
+                                <label>Fecha Fin</label>
+
+                                <input type="date" id="fechaFin" class="form-control">
+
+                            </div>
+
+                            <div class="col-md-3">
+
+                                <label>Usuario</label>
+
+                                <select id="usuario" class="form-select">
+
+                                    <option value="">Todos</option>
+
+                                </select>
+
+                            </div>
+
+                            <div class="col-md-3">
+
+                                <label>Resultado</label>
+
+                                <select id="resultadoFiltro" class="form-select">
+
+                                    <option value="">Todos</option>
+
+                                    <option>PROCEDE</option>
+
+                                    <option>NO PROCEDE</option>
+
+                                    <option>RECHAZO</option>
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+                        <div class="row mt-3">
+
+                            <div class="col-md-3">
+
+                                <label>Distribuidor</label>
+
+                                <select id="distribuidorFiltro" class="form-select">
+
+                                    <option value="">Todos</option>
+
+                                </select>
+
+                            </div>
+
+                            <div class="col-md-9 d-flex align-items-end justify-content-end">
+
+                                <button class="btn btn-primary me-2">
+
+                                    🔍 Buscar
+
+                                </button>
+
+                                <button class="btn btn-success">
+
+                                    📥 Exportar Excel
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- KPIs -->
+
+                <div class="row">
+
+                    <div class="col-md-3">
+
+                        <div class="card text-center shadow">
+
+                            <div class="card-body">
+
+                                <h6>Total Gestiones</h6>
+
+                                <h2 id="totalGestiones">
+
+                                        {{total_gestiones}}
+                                </h2>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-3">
+
+                        <div class="card text-center shadow border-success">
+
+                            <div class="card-body">
+
+                                <h6 class="text-success">
+
+                                    Procede
+
+                                </h6>
+
+                                <h2 id="procede">
+
+                                    {{procede}}
+
+                                </h2>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-3">
+
+                        <div class="card text-center shadow border-warning">
+
+                            <div class="card-body">
+
+                                <h6 class="text-warning">
+
+                                    No Procede
+
+                                </h6>
+
+                                <h2 id="noProcede">
+
+                                    {{no_procede}}
+
+                                </h2>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-3">
+
+                        <div class="card text-center shadow border-danger">
+
+                            <div class="card-body">
+
+                                <h6 class="text-danger">
+
+                                    Rechazos
+
+                                </h6>
+
+                                <h2 id="rechazos">
+
+                                    {{rechazados}}
+
+                                </h2>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- GRAFICOS -->
+
+                <div class="row mt-4">
+
+                    <div class="col-md-6">
+
+                        <div class="card shadow">
+
+                            <div class="card-header">
+
+                                Resultado de Gestiones
+
+                            </div>
+
+                            <div class="card-body">
+
+                                <canvas id="graficoEstados"></canvas>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <div class="card shadow">
+
+                            <div class="card-header">
+
+                                Gestiones por Día
+
+                            </div>
+
+                            <div class="card-body">
+
+                                <canvas id="graficoDia"></canvas>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+        <div class="tab-pane fade" id="gestiones">
+
+            <div class="card shadow mt-4">
+
+                <div class="card-header">
+
+                    Historial de Gestiones
+
+                </div>
+
+                <div class="card-body">
+
+                    <table class="table table-hover">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Fecha</th>
+
+                                <th>Gestión</th>
+
+                                <th>Cédula</th>
+
+                                <th>Cliente</th>
+
+                                <th>Usuario</th>
+
+                                <th>Distribuidor</th>
+
+                                <th>Resultado</th>
+
+                                <th>Acción</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="tablaReportes">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="tab-pane fade" id="usuarios">
+
+            ...
+
+        </div>
+
+        <div class="tab-pane fade" id="duplicados">
+            <div class="tab-pane fade" id="duplicados">
+
+                <div class="card shadow">
+
+                    <div class="card-header">
+
+                        Detección de Duplicados
+
+                    </div>
+
+                    <div class="card-body">
+
+                        <table class="table">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>Cédula</th>
+
+                                    <th>Cliente</th>
+
+                                    <th>Cantidad</th>
+
+                                    <th>Última Gestión</th>
+
+                                    <th></th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody id="tablaDuplicados">
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="tab-pane fade" id="estadisticas">
+
+            ...
+
+        </div>
+
+
+        <div class="tab-pane fade" id="alertas">
+
+            <div class="container mt-4">
+
+                <h3 class="mb-4">
+                    🚨 Alertas del Sistema
+                </h3>
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+
+                        <div class="card border-danger shadow">
+
+                            <div class="card-header bg-danger text-white">
+
+                                🔁 Cédulas con múltiples gestiones
+
+                            </div>
+
+                            <div class="card-body">
+
+                                <table class="table table-sm">
+
+                                    <thead>
+
+                                        <tr>
+                                            <th>Cédula</th>
+                                            <th>Cliente</th>
+                                            <th>Gestiones</th>
+                                        </tr>
+
+                                    </thead>
+
+                                    <tbody id="alertaDuplicados">
+
+                                        {% for d in duplicados %}
+
+                                        <tr>
+
+                                            <td>{{ d.cedula }}</td>
+                                            <td>{{ d.nombre_cliente }}</td>
+                                            <td>
+                                                <span class="badge bg-danger">
+                                                    {{ d.total }}
+                                                </span>
+                                            </td>
+
+                                        </tr>
+
+                                        {% empty %}
+
+                                        <tr>
+
+                                            <td colspan="3" class="text-center">
+                                                No existen cédulas duplicadas.
+                                            </td>
+
+                                        </tr>
+
+                                        {% endfor %}
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <div class="card border-warning shadow">
+
+                            <div class="card-header bg-warning">
+
+                                📈 Distribuidores con más gestiones
+
+                            </div>
+
+                            <div class="card-body">
+
+                                <table class="table table-sm">
+
+                                    <thead>
+
+                                        <tr>
+
+                                            <th>Distribuidor</th>
+
+                                            <th>Gestiones</th>
+
+                                        </tr>
+
+
+                                    </thead>
+
+                                    <tbody id="alertaRechazos">
+
+                                        {% for d in distribuidores %}
+
+                                            <tr>
+
+                                                <td>{{ d.distribuidor }}</td>
+                                                <td>{{ d.total }}</td>
+
+                                            </tr>
+
+                                        
+
+                               
+                                            {% empty %}
+
+                                            <tr>
+
+                                                <td colspan="3" class="text-center">
+                                                    No existen distribuidores.
+                                                </td>
+
+                                            </tr>
+
+                                            {% endfor %}
+
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+
+                        <div class="card border-info shadow">
+
+                            <div class="card-header bg-info text-white">
+
+                                👤 Usuarios sin actividad
+
+                            </div>
+
+                            <div class="card-body">
+
+                                <table class="table table-sm">
+
+                                    <thead>
+
+                                        <tr>
+
+                                            <th>Usuario</th>
+
+                                            <th>Última Gestión</th>
+
+                                        </tr>
+
+                                    </thead>
+
+                                    <tbody id="alertaUsuarios">
+
+                                        {% for u in usuarios %}
+
+                                        <tr>
+
+                                            <td>{{ u.usuario__username }}</td>
+
+                                            <td>
+                                                <span class="badge bg-info">
+                                                    {{ u.total }}
+                                                </span>
+                                            </td>
+
+                                        </tr>
+
+                                        {% empty %}
+
+                                        <tr>
+
+                                            <td colspan="2" class="text-center">
+                                                No existen registros.
+                                            </td>
+
+                                        </tr>
+
+                                        {% endfor %}
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <div class="card border-success shadow">
+
+                            <div class="card-header bg-success text-white">
+
+                                📋 Plantillas más utilizadas
+
+                            </div>
+
+                            <div class="card-body">
+
+                                <table class="table table-sm">
+
+                                    <thead>
+
+                                        <tr>
+
+                                            <th>Plantilla</th>
+
+                                            <th>Total</th>
+
+                                        </tr>
+
+                                    </thead>
+
+                                    <tbody id="alertaPlantillas">
+                                        {% for p in plantillas %}
+
+                                        <tr>
+
+                                            <td>{{ p.nombre_plantilla }}</td>
+                                            <td>{{ p.total }}</td>
+
+                                        </tr>
+
+
+                                        {% endfor %}
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-12 mt-3">
+
+                        <div class="card border-dark shadow">
+
+                            <div class="card-header bg-dark text-white">
+
+                                ⚠ Posibles respuestas inconsistentes
+
+                            </div>
+
+                            <div class="card-body">
+
+                                <table class="table table-hover">
+
+                                    <thead>
+
+                                        <tr>
+
+                                            <th>Cédula</th>
+                                            <th>Cliente</th>
+                                            <th>Resultados encontrados</th>
+
+                                        </tr>
+
+                                    </thead>
+
+                                    <tbody>
+
+                                        {% for i in inconsistencias %}
+
+                                        <tr>
+
+                                            <td>{{ i.cedula }}</td>
+                                            <td>{{ i.cliente }}</td>
+
+                                            <td>
+
+                                                <span class="badge bg-danger">
+
+                                                    {{ i.resultados }}
+
+                                                </span>
+
+                                            </td>
+
+                                        </tr>
+
+                                        {% empty %}
+
+                                        <tr>
+
+                                            <td colspan="3" class="text-center">
+
+                                                No se encontraron inconsistencias.
+
+                                            </td>
+
+                                        </tr>
+
+                                        {% endfor %}
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                    
+
+                    
+                </div>
+                
+
+            </div>
+
+        </div>
+
+
+
+    </div>
+
+
+    <div class="modal fade" id="perfilModal">
+
+        <div class="modal-dialog">
+
+            <div class="modal-content">
+
+                <form method="POST" action="{% url 'actualizar_perfil' %}" enctype="multipart/form-data">
+
+                    {% csrf_token %}
+
+                    <div class="modal-header">
+
+                        <h5>
+                            Mi Perfil
+                        </h5>
+
+                    </div>
+
+                    <div class="modal-body">
+                        <label class="form-label">
+                            Color del sistema
+                        </label>
+
+                        <select class="form-select" name="color">
+
+                            <option value="azul">🔵 Azul</option>
+
+                            <option value="verde">🟢 Verde</option>
+
+                            <option value="morado">🟣 Morado</option>
+
+                            <option value="oscuro">⚫ Oscuro</option>
+
+                            <option value="rojo">🔴 Rojo</option>
+
+                            <option value="rosado">🩷 Rosado</option>
+
+                            <option value="naranja">🟠 Naranja</option>
+
+                        </select>
+
+
+
+                        <div class="modal-footer">
+
+                            <button class="btn btn-primary">
+
+                                Guardar
+
+                            </button>
+
+                        </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <br />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+   
+    <script src="{% static 'javascript/backend.js' %}"></script>
+    
+
+{{ gestiones_dia|json_script:"datosDia" }}
+{{ estados|json_script:"datosEstados" }}
+
+<script>
+
+        const datosDia = JSON.parse(
+            document.getElementById("datosDia").textContent
+        );
+        const etiquetas = datosDia.map(item => item.dia);
+
+        const cantidades = datosDia.map(item => item.total);
+
+        console.log(etiquetas);
+        console.log(cantidades);
+
+        const estados = JSON.parse(
+            document.getElementById("datosEstados").textContent
+        );
+
+        console.log(datosDia);
+        console.log(estados);
+
+
+    new Chart(document.getElementById("graficoEstados"), {
+
+    type: "doughnut",
+
+    data: {
+
+        labels: [
+            "Procede",
+            "No Procede",
+            "Rechazos"
+        ],
+
+        datasets: [{
+
+            data: estados,
+
+            backgroundColor: [
+                "#198754",
+                "#ffc107",
+                "#dc3545"
+            ],
+
+            borderWidth: 1
+
+        }]
+
+    },
+
+    options: {
+
+        responsive: true,
+
+        plugins: {
+
+            legend: {
+
+                position: "bottom"
+
+            }
+
+        }
+
+    }
+
+});
+
+
+new Chart(document.getElementById("graficoDia"), {
+
+    type: "line",
+
+    data: {
+
+        labels: etiquetas,
+
+        datasets: [{
+
+            label: "Gestiones",
+
+            data: cantidades,
+
+            borderColor: "#0d6efd",
+
+            backgroundColor: "rgba(13,110,253,.15)",
+
+            fill: true,
+
+            tension: .3
+
+        }]
+
+    },
+
+    options: {
+
+        responsive: true,
+
+        plugins: {
+
+            legend: {
+
+                display: false
+
+            }
+
+        },
+
+        scales: {
+
+            y: {
+
+                beginAtZero: true
+
+            }
+
+        }
+
+    }
+
+});
+
+        
+
+</script>
+
+    <footer style="text-align: center;">
+        <p>&copy; 2025 Sebastian Rodriguez Rodriguez. Hecho en Costa Rica.</p>
+
+    </footer>
+
+</body>
+
+
+</html>

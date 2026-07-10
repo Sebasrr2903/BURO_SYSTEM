@@ -33,7 +33,7 @@
 
     padding:8px 18px;
 
-    color:#f1f1f1;
+    color:var(--secundario);
     font-weight:600;
 
     transition:.25s;

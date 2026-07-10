@@ -250,7 +250,7 @@ function generarPlantilla() {
 }
 
 
- if (!monto && (plantillaKey === "Cero pagos(CON TERMINAL)" || plantillaKey === "WRITTE OFF(CON TERMINAL)" || plantillaKey === "TERMINAL LIGADO (Financiamiento y facturas pendientes)" || plantillaKey === "TERMINAL LIGADO (Solo debe finaciamiento)" || plantillaKey === "NC APLICADA" || plantillaKey === "Cero pagos" || plantillaKey === "WRITTE OFF(SIN TERMINAL)" || plantillaKey === "LIMPIEZA DE SALDOS" || plantillaKey === "LIMPIEZA DE SALDOS WRITE OFF" || plantillaKey === "Facturas Pendientes")) {
+ if (!monto && (plantillaKey === "Cero pagos(CON TERMINAL)" || plantillaKey === "WRITTE OFF(CON TERMINAL)" || plantillaKey === "TERMINAL LIGADO (Financiamiento y facturas pendientes)" || plantillaKey === "NC APLICADA" || plantillaKey === "Cero pagos" || plantillaKey === "WRITTE OFF(SIN TERMINAL)" || plantillaKey === "LIMPIEZA DE SALDOS" || plantillaKey === "LIMPIEZA DE SALDOS WRITE OFF" || plantillaKey === "Facturas Pendientes")) {
 
     document
         .getElementById("errorMonto")
