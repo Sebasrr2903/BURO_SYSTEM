@@ -95,7 +95,7 @@ def guardar_plantilla(request):
     return JsonResponse({"success": False})
 
 
-from django.db.models import Q, Count
+from django.db.models import Q, Count, Max
 from django.core.paginator import Paginator
 
 
@@ -358,156 +358,304 @@ def eliminar_usuario(request, user_id):
 
 
 
-from django.db.models import Count
+
+
+from .models import PlantillaGenerada
+
 
 @login_required
 def reportes(request):
 
-    # Cédulas con más de una gestión
+    # =====================================================
+    # FILTROS
+    # =====================================================
+
+    fecha_inicio = request.GET.get("fecha_inicio")
+    fecha_fin = request.GET.get("fecha_fin")
+
+    usuario = request.GET.get("usuario")
+    resultado = request.GET.get("resultado")
+    distribuidor = request.GET.get("distribuidor")
+
+
+    # =====================================================
+    # QUERYSET BASE
+    # =====================================================
+
+    registros = PlantillaGenerada.objects.all()
+
+
+    # =====================================================
+    # APLICAR FILTROS
+    # =====================================================
+
+    if fecha_inicio:
+        registros = registros.filter(
+            fecha__date__gte=fecha_inicio
+        )
+
+    if fecha_fin:
+        registros = registros.filter(
+            fecha__date__lte=fecha_fin
+        )
+
+    if usuario:
+        registros = registros.filter(
+            usuario__username=usuario
+        )
+
+    if resultado:
+        if resultado == "RECHAZADOS":
+
+            registros = registros.exclude(
+                resultado__in=[
+                    "PROCEDE",
+                    "NO PROCEDE"
+                ]
+            )
+
+        else:
+
+            registros = registros.filter(
+                resultado=resultado
+            )
+
+    if distribuidor:
+        registros = registros.filter(
+            distribuidor=distribuidor
+        )
+
+
+    # =====================================================
+    # CÉDULAS CON MÚLTIPLES GESTIONES
+    # SOLO DEL PERÍODO FILTRADO
+    # =====================================================
+
     duplicados = (
-        PlantillaGenerada.objects
-        .values("cedula", "nombre_cliente")
-        .annotate(total=Count("id"))
-        .filter(total__gt=1)
-        .order_by("-total")
+        registros
+        .exclude(cedula="")
+        .values(
+            "cedula",
+            "nombre_cliente"
+        )
+        .annotate(
+            total=Count("id")
+        )
+        .filter(
+            total__gt=1
+        )
+        .order_by("-total")[:20]
     )
 
-    # Estados
-    estados = {
-        "procede": PlantillaGenerada.objects.filter(
-            resultado="PROCEDE"
-        ).count(),
 
-        "no_procede": PlantillaGenerada.objects.filter(
-            resultado="NO PROCEDE"
-        ).count(),
+    # =====================================================
+    # ESTADOS
+    # =====================================================
 
-        "rechazos": PlantillaGenerada.objects.exclude(
-            resultado__in=["PROCEDE","NO PROCEDE"]
-        ).count(),
-    }
+    procede = registros.filter(
+        resultado="PROCEDE"
+    ).count()
 
-    # Gestiones por día
+    no_procede = registros.filter(
+        resultado="NO PROCEDE"
+    ).count()
+
+    rechazados = registros.exclude(
+        resultado__in=[
+            "PROCEDE",
+            "NO PROCEDE"
+        ]
+    ).count()
+
+
+    estados_json = [
+        procede,
+        no_procede,
+        rechazados
+    ]
+
+
+    # =====================================================
+    # GESTIONES POR DÍA
+    # =====================================================
+
     gestiones_dia = (
-        PlantillaGenerada.objects
-        .annotate(dia=TruncDate("fecha"))
+        registros
+        .annotate(
+            dia=TruncDate("fecha")
+        )
         .values("dia")
-        .annotate(total=Count("id"))
+        .annotate(
+            total=Count("id")
+        )
         .order_by("dia")
     )
-
-        # Usuarios con más gestiones
-    usuarios = (
-        PlantillaGenerada.objects
-        .values("usuario__username")
-        .annotate(total=Count("id"))
-        .order_by("-total")[:10]
-    )
-
-    # Distribuidores con más casos
-    distribuidores = (
-        PlantillaGenerada.objects
-        .values("distribuidor")
-        .annotate(total=Count("id"))
-        .order_by("-total")[:10]
-    )
-
-    # Plantillas más utilizadas
-    plantillas = (
-        PlantillaGenerada.objects
-        .values("nombre_plantilla")
-        .annotate(total=Count("id"))
-        .order_by("-total")[:10]
-    )
-
-    # Posibles respuestas inconsistentes
-# inconsistencias = []
-
-# cedulas = (
-#     PlantillaGenerada.objects
-#     .values("cedula", "nombre_cliente")
-#     .annotate(total=Count("id"))
-# )
-
-# for c in cedulas:
-#
-#     resultados = (
-#         PlantillaGenerada.objects
-#         .filter(cedula=c["cedula"])
-#         .values_list("resultado", flat=True)
-#         .distinct()
-#     )
-#
-#     if "PROCEDE" in resultados and "NO PROCEDE" in resultados:
-#
-#         inconsistencias.append({
-#             "cedula": c["cedula"],
-#             "cliente": c["nombre_cliente"],
-#             "resultados": ", ".join(resultados)
-#         })
-
-    inconsistencias = []
-
-        # KPIs
-    total_gestiones = PlantillaGenerada.objects.count()
-
-    total_usuarios = (
-            PlantillaGenerada.objects
-            .values("usuario")
-            .distinct()
-            .count()
-        )
-
-    total_distribuidores = (
-            PlantillaGenerada.objects
-            .values("distribuidor")
-            .distinct()
-            .count()
-        )
-
-    total_plantillas = (
-            PlantillaGenerada.objects
-            .values("nombre_plantilla")
-            .distinct()
-            .count()
-        )
-
-    procede = estados["procede"]
-    no_procede = estados["no_procede"]
-    rechazados = estados["rechazos"] 
 
 
     datos_dia = [
         {
-            "dia": g["dia"].strftime("%d/%m/%Y") if g["dia"] else "",
+            "dia": (
+                g["dia"].strftime("%d/%m/%Y")
+                if g["dia"]
+                else ""
+            ),
             "total": g["total"]
         }
         for g in gestiones_dia
-    ]   
+    ]
 
 
-    estados_json = [
-    estados["procede"],
-    estados["no_procede"],
-    estados["rechazos"]
-]               
-            
+    # =====================================================
+    # USUARIOS CON MÁS GESTIONES
+    # =====================================================
+
+    usuarios = (
+        registros
+        .values("usuario__username")
+        .annotate(
+            total=Count("id")
+        )
+        .order_by("-total")[:10]
+    )
+
+
+    # =====================================================
+    # DISTRIBUIDORES CON MÁS GESTIONES
+    # =====================================================
+
+    distribuidores = (
+        registros
+        .exclude(distribuidor="")
+        .values("distribuidor")
+        .annotate(
+            total=Count("id")
+        )
+        .order_by("-total")[:10]
+    )
+
+
+    # =====================================================
+    # PLANTILLAS MÁS UTILIZADAS
+    # =====================================================
+
+    plantillas = (
+        registros
+        .values("nombre_plantilla")
+        .annotate(
+            total=Count("id")
+        )
+        .order_by("-total")[:10]
+    )
+
+
+    # =====================================================
+    # INCONSISTENCIAS
+    # POR AHORA DESACTIVADO
+    # =====================================================
+
+    inconsistencias = []
+
+
+    # =====================================================
+    # KPIs
+    # =====================================================
+
+    total_gestiones = registros.count()
+
+    total_usuarios = (
+        registros
+        .values("usuario")
+        .distinct()
+        .count()
+    )
+
+    total_distribuidores = (
+        registros
+        .exclude(distribuidor="")
+        .values("distribuidor")
+        .distinct()
+        .count()
+    )
+
+    total_plantillas = (
+        registros
+        .values("nombre_plantilla")
+        .distinct()
+        .count()
+    )
+
+    lista_usuarios = User.objects.order_by("username")
+
+    lista_distribuidores = (
+        PlantillaGenerada.objects
+        .exclude(distribuidor="")
+        .exclude(distribuidor__isnull=True)
+        .values_list("distribuidor", flat=True)
+        .distinct()
+        .order_by("distribuidor")
+    )
+
+
+    ultimas_gestiones = (
+        registros
+        .select_related("usuario")
+        .order_by("-fecha")[:20]
+    )
+
+
+    duplicados = (
+    registros
+    .exclude(cedula="")
+    .exclude(cedula__isnull=True)
+    .values("cedula", "nombre_cliente")
+    .annotate(
+        total=Count("id"),
+        ultima_fecha=Max("fecha"),
+        total_usuarios=Count("usuario", distinct=True),
+    )
+    .filter(total__gt=1)
+    .order_by("-total")[:50]
+)
 
 
 
-    return render(request, "reportes.html", {
-        "duplicados": duplicados,
-        "usuarios": usuarios,
-        "distribuidores": distribuidores,
-        "plantillas": plantillas,
-        "inconsistencias": inconsistencias,
-        "estados": estados_json,        
-        "procede": procede,
-        "no_procede": no_procede,
-        "rechazados": rechazados,
-        "gestiones_dia": datos_dia,
-        "total_gestiones": total_gestiones,
-        "total_usuarios": total_usuarios,
-        "total_distribuidores": total_distribuidores,
-        "total_plantillas": total_plantillas
-    })
+    # =====================================================
+    # RENDER
+    # =====================================================
+
+    return render(
+        request,
+        "reportes.html",
+        {
+            "duplicados": duplicados,
+            "usuarios": usuarios,
+            "distribuidores": distribuidores,
+            "plantillas": plantillas,
+            "inconsistencias": inconsistencias,
+
+            "estados": estados_json,
+
+            "procede": procede,
+            "no_procede": no_procede,
+            "rechazados": rechazados,
+
+            "gestiones_dia": datos_dia,
+            "ultimas_gestiones": ultimas_gestiones,
+
+            "total_gestiones": total_gestiones,
+            "total_usuarios": total_usuarios,
+            "total_distribuidores": total_distribuidores,
+            "total_plantillas": total_plantillas,
+            "lista_usuarios": lista_usuarios,
+            "lista_distribuidores": lista_distribuidores,
+
+            # Mantener filtros
+            "fecha_inicio": fecha_inicio,
+            "fecha_fin": fecha_fin,
+            "usuario_seleccionado": usuario,
+            "resultado_seleccionado": resultado,
+            "distribuidor_seleccionado": distribuidor,
+        }
+    )
+
+   

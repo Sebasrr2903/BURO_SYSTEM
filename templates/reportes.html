@@ -24,7 +24,7 @@
     }
 </style>
 
-<body class="tema-{{ request.user.perfil.color }}">
+<body class="tema-{{ request.user.perfil.color }}" style="">
 
     <nav class="navbar navbar-expand-lg  border-bottom shadow-sm">
 
@@ -139,15 +139,6 @@
 
         </li>
 
-        <li class="nav-item">
-
-            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#usuarios">
-
-                👤 Usuarios
-
-            </button>
-
-        </li>
 
         <li class="nav-item">
 
@@ -179,6 +170,199 @@
         </li>
 
     </ul>
+           <form method="GET">
+
+                <div class="card shadow-sm mb-4">
+
+                    <div class="card-header bg-primary text-white">
+                        Filtros
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="row">
+
+                            <div class="col-md-3">
+
+                                <label class="form-label">
+                                    Fecha Inicio
+                                </label>
+
+                                <input
+                                    type="date"
+                                    name="fecha_inicio"
+                                    id="fechaInicio"
+                                    class="form-control"
+                                    value="{{ fecha_inicio|default:'' }}"
+                                >
+
+                            </div>
+
+                            <div class="col-md-3">
+
+                                <label class="form-label">
+                                    Fecha Fin
+                                </label>
+
+                                <input
+                                    type="date"
+                                    name="fecha_fin"
+                                    id="fechaFin"
+                                    class="form-control"
+                                    value="{{ fecha_fin|default:'' }}"
+                                >
+
+                            </div>
+
+                            <div class="col-md-3">
+
+                                <label class="form-label">
+                                    Usuario
+                                </label>
+
+                                <select
+                                    name="usuario"
+                                    id="usuario"
+                                    class="form-select"
+                                >
+
+                                    <option value="">
+                                        Todos
+                                    </option>
+
+                                    {% for u in lista_usuarios %}
+
+                                    <option
+                                        value="{{ u.username }}"
+                                        {% if usuario_seleccionado == u.username %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        {{ u.username }}
+                                    </option>
+
+                                    {% endfor %}
+
+                                </select>
+
+                            </div>
+
+                            <div class="col-md-3">
+
+                                <label class="form-label">
+                                    Resultado
+                                </label>
+
+                                <select
+                                    name="resultado"
+                                    id="resultadoFiltro"
+                                    class="form-select"
+                                >
+
+                                    <option value="">
+                                        Todos
+                                    </option>
+
+                                    <option
+                                        value="PROCEDE"
+                                        {% if resultado_seleccionado == "PROCEDE" %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        PROCEDE
+                                    </option>
+
+                                    <option
+                                        value="NO PROCEDE"
+                                        {% if resultado_seleccionado == "NO PROCEDE" %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        NO PROCEDE
+                                    </option>
+
+                                    <option
+                                        value="RECHAZADOS"
+                                        {% if resultado_seleccionado == "RECHAZADOS" %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        RECHAZADOS
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+                        <div class="row mt-3">
+
+                            <div class="col-md-4">
+
+                                <label class="form-label">
+                                    Distribuidor
+                                </label>
+
+                                <select
+                                    name="distribuidor"
+                                    id="distribuidorFiltro"
+                                    class="form-select"
+                                >
+
+                                    <option value="">
+                                        Todos
+                                    </option>
+
+                                    {% for d in lista_distribuidores %}
+
+                                    <option
+                                        value="{{ d }}"
+                                        {% if distribuidor_seleccionado == d %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        {{ d }}
+                                    </option>
+
+                                    {% endfor %}
+
+                                </select>
+
+                            </div>
+
+                            <div class="col-md-8 d-flex align-items-end justify-content-end gap-2">
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-primary"
+                                >
+                                    🔍 Buscar
+                                </button>
+
+                                <a
+                                    href="{% url 'reportes' %}"
+                                    class="btn btn-secondary"
+                                >
+                                    Limpiar filtros
+                                </a>
+
+                                <a
+                                    href="{% url 'exportar_excel' %}?fecha_inicio={{ fecha_inicio|default:'' }}&fecha_fin={{ fecha_fin|default:'' }}"
+                                    class="btn btn-success"
+                                >
+                                    📥 Exportar Excel
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </form>
     <div class="tab-content">
 
         <div class="tab-pane fade show active" id="dashboard">
@@ -191,103 +375,7 @@
 
                 <!-- FILTROS -->
 
-                <div class="card shadow-sm mb-4">
-
-                    <div class="card-header bg-primary text-white">
-
-                        Filtros
-
-                    </div>
-
-                    <div class="card-body">
-
-                        <div class="row">
-
-                            <div class="col-md-3">
-
-                                <label>Fecha Inicio</label>
-
-                                <input type="date" id="fechaInicio" class="form-control">
-
-                            </div>
-
-                            <div class="col-md-3">
-
-                                <label>Fecha Fin</label>
-
-                                <input type="date" id="fechaFin" class="form-control">
-
-                            </div>
-
-                            <div class="col-md-3">
-
-                                <label>Usuario</label>
-
-                                <select id="usuario" class="form-select">
-
-                                    <option value="">Todos</option>
-
-                                </select>
-
-                            </div>
-
-                            <div class="col-md-3">
-
-                                <label>Resultado</label>
-
-                                <select id="resultadoFiltro" class="form-select">
-
-                                    <option value="">Todos</option>
-
-                                    <option>PROCEDE</option>
-
-                                    <option>NO PROCEDE</option>
-
-                                    <option>RECHAZO</option>
-
-                                </select>
-
-                            </div>
-
-                        </div>
-
-                        <div class="row mt-3">
-
-                            <div class="col-md-3">
-
-                                <label>Distribuidor</label>
-
-                                <select id="distribuidorFiltro" class="form-select">
-
-                                    <option value="">Todos</option>
-
-                                </select>
-
-                            </div>
-
-                            <div class="col-md-9 d-flex align-items-end justify-content-end">
-
-                                <button class="btn btn-primary me-2">
-
-                                    🔍 Buscar
-
-                                </button>
-
-                                <button class="btn btn-success">
-
-                                    📥 Exportar Excel
-
-                                </button>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
+     
                 <!-- KPIs -->
 
                 <div class="row">
@@ -474,8 +562,223 @@
                             </tr>
 
                         </thead>
+                                <tbody id="tablaReportes">
 
-                        <tbody id="tablaReportes">
+                                    {% for r in ultimas_gestiones %}
+
+                                    <tr>
+                                        <td>{{ r.fecha|date:"d/m/Y H:i" }}</td>
+                                        <td>{{ r.gestion }}</td>
+                                        <td>{{ r.cedula }}</td>
+                                        <td>{{ r.nombre_cliente }}</td>
+                                        <td>
+                                            {% if r.usuario %}
+                                                {{ r.usuario.username }}
+                                            {% else %}
+                                                Sin usuario
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ r.distribuidor }}</td>
+                                        <td>
+                                            {% if r.resultado == "PROCEDE" %}
+                                                <span class="badge bg-success">PROCEDE</span>
+                                            {% elif r.resultado == "NO PROCEDE" %}
+                                                <span class="badge bg-warning text-dark">NO PROCEDE</span>
+                                            {% else %}
+                                                <span class="badge bg-danger">{{ r.resultado }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <button
+                                                type="button"
+                                                class="btn btn-sm btn-primary"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#respuestaModal{{ r.id }}"
+                                            >
+                                                Ver
+                                            </button>
+                                        </td>
+                                    </tr>
+
+                                    <div class="modal fade" id="respuestaModal{{ r.id }}" tabindex="-1">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">
+                                                        Respuesta de la gestión {{ r.gestion }}
+                                                    </h5>
+
+                                                    <button
+                                                        type="button"
+                                                        class="btn-close"
+                                                        data-bs-dismiss="modal"
+                                                    ></button>
+                                                </div>
+
+                                                <div class="modal-body">
+                                                    <textarea
+                                                        class="form-control"
+                                                        rows="12"
+                                                        readonly
+                                                    >{{ r.respuesta }}</textarea>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {% empty %}
+
+                                    <tr>
+                                        <td colspan="8" class="text-center">
+                                            No se encontraron gestiones.
+                                        </td>
+                                    </tr>
+
+                                    {% endfor %}
+
+                                </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="tab-pane fade" id="duplicados">
+
+    <div class="container mt-4">
+
+        <div class="card shadow">
+
+            <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
+
+                <span>
+                    🔍 Detección de gestiones duplicadas
+                </span>
+
+                <span class="badge bg-light text-danger">
+                    {{ duplicados|length }} resultados
+                </span>
+
+            </div>
+
+            <div class="card-body">
+
+                <p class="text-muted">
+                    Se muestran las cédulas que poseen más de una gestión
+                    dentro del período seleccionado.
+                </p>
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle">
+
+                        <thead class="table-dark">
+
+                            <tr>
+                                <th>Cédula</th>
+                                <th>Cliente</th>
+                                <th>Gestiones</th>
+                                <th>Analistas</th>
+                                <th>Última gestión</th>
+                                <th>Estado</th>
+                                <th>Acción</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            {% for d in duplicados %}
+
+                            <tr>
+
+                                <td>
+                                    <strong>
+                                        {{ d.cedula }}
+                                    </strong>
+                                </td>
+
+                                <td>
+                                    {{ d.nombre_cliente|default:"SIN NOMBRE" }}
+                                </td>
+
+                                <td>
+
+                                    <span class="badge bg-danger">
+                                        {{ d.total }}
+                                    </span>
+
+                                </td>
+
+                                <td>
+
+                                    <span class="badge bg-primary">
+                                        {{ d.total_usuarios }}
+                                    </span>
+
+                                </td>
+
+                                <td>
+                                    {{ d.ultima_fecha|date:"d/m/Y H:i" }}
+                                </td>
+
+                                <td>
+
+                                    {% if d.total >= 5 %}
+
+                                        <span class="badge bg-danger">
+                                            Alta repetición
+                                        </span>
+
+                                    {% elif d.total >= 3 %}
+
+                                        <span class="badge bg-warning text-dark">
+                                            Revisar
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="badge bg-info text-dark">
+                                            Duplicado
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+                                <td>
+
+                                    <button
+                                        type="button"
+                                        class="btn btn-sm btn-primary"
+                                        onclick="verHistorialDuplicado('{{ d.cedula|escapejs }}')"
+                                    >
+                                        Ver historial
+                                    </button>
+
+                                </td>
+
+                            </tr>
+
+                            {% empty %}
+
+                            <tr>
+
+                                <td colspan="7" class="text-center py-4">
+
+                                    No se encontraron cédulas duplicadas
+                                    para el período seleccionado.
+
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
 
                         </tbody>
 
@@ -487,58 +790,10 @@
 
         </div>
 
-        <div class="tab-pane fade" id="usuarios">
+    </div>
 
-            ...
-
-        </div>
-
-        <div class="tab-pane fade" id="duplicados">
-            <div class="tab-pane fade" id="duplicados">
-
-                <div class="card shadow">
-
-                    <div class="card-header">
-
-                        Detección de Duplicados
-
-                    </div>
-
-                    <div class="card-body">
-
-                        <table class="table">
-
-                            <thead>
-
-                                <tr>
-
-                                    <th>Cédula</th>
-
-                                    <th>Cliente</th>
-
-                                    <th>Cantidad</th>
-
-                                    <th>Última Gestión</th>
-
-                                    <th></th>
-
-                                </tr>
-
-                            </thead>
-
-                            <tbody id="tablaDuplicados">
-
-                            </tbody>
-
-                        </table>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
+</div>
+        
 
         <div class="tab-pane fade" id="estadisticas">
 
@@ -693,8 +948,7 @@
 
                             <div class="card-header bg-info text-white">
 
-                                👤 Usuarios sin actividad
-
+                                  👤 Usuarios con más gestiones
                             </div>
 
                             <div class="card-body">
@@ -707,7 +961,7 @@
 
                                             <th>Usuario</th>
 
-                                            <th>Última Gestión</th>
+                                            <th>Gestiones</th>
 
                                         </tr>
 
@@ -883,7 +1137,69 @@
 
     </div>
 
+<div class="modal fade" id="modalDuplicados" tabindex="-1">
 
+    <div class="modal-dialog modal-xl">
+
+        <div class="modal-content">
+
+            <div class="modal-header bg-primary text-white">
+
+                <h5 class="modal-title">
+                    Historial de la cédula
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn-close btn-close-white"
+                    data-bs-dismiss="modal"
+                ></button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <div id="cargandoDuplicado" class="text-center py-4 d-none">
+
+                    <div class="spinner-border text-primary"></div>
+
+                    <p class="mt-2">
+                        Consultando historial...
+                    </p>
+
+                </div>
+
+                <div class="table-responsive">
+
+                    <table class="table table-striped">
+
+                        <thead>
+
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Usuario</th>
+                                <th>Distribuidor</th>
+                                <th>Resultado</th>
+                                <th>Respuesta</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="detalleDuplicados">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
     <div class="modal fade" id="perfilModal">
 
         <div class="modal-dialog">
@@ -947,6 +1263,7 @@
 
 
     <br />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
    
     <script src="{% static 'javascript/backend.js' %}"></script>
@@ -1075,6 +1392,123 @@ new Chart(document.getElementById("graficoDia"), {
     }
 
 });
+
+
+
+async function verHistorialDuplicado(cedula) {
+
+    const modalElemento =
+        document.getElementById("modalDuplicados");
+
+    const modal =
+        bootstrap.Modal.getOrCreateInstance(modalElemento);
+
+    const tabla =
+        document.getElementById("detalleDuplicados");
+
+    const cargando =
+        document.getElementById("cargandoDuplicado");
+
+    tabla.innerHTML = "";
+
+    cargando.classList.remove("d-none");
+
+    modal.show();
+
+    try {
+
+        const respuesta = await fetch(
+            `/verificar-cedula/?cedula=${encodeURIComponent(cedula)}`
+        );
+
+        if (!respuesta.ok) {
+            throw new Error("No se pudo consultar el historial.");
+        }
+
+        const data = await respuesta.json();
+
+        cargando.classList.add("d-none");
+
+        if (!data.existe || !data.historial.length) {
+
+            tabla.innerHTML = `
+                <tr>
+                    <td colspan="5" class="text-center">
+                        No existen registros para esta cédula.
+                    </td>
+                </tr>
+            `;
+
+            return;
+        }
+
+        data.historial.forEach(item => {
+
+            const fila = document.createElement("tr");
+
+            fila.innerHTML = `
+                <td>${item.fecha || ""}</td>
+                <td>${item.usuario || ""}</td>
+                <td>${item.distribuidor || ""}</td>
+                <td>
+                    <span class="badge bg-secondary">
+                        ${item.resultado || ""}
+                    </span>
+                </td>
+                <td>
+                    <button
+                        type="button"
+                        class="btn btn-sm btn-outline-primary"
+                        onclick='mostrarRespuestaDuplicado(${JSON.stringify(item.respuesta || "")})'
+                    >
+                        Ver respuesta
+                    </button>
+                </td>
+            `;
+
+            tabla.appendChild(fila);
+
+        });
+
+    } catch (error) {
+
+        cargando.classList.add("d-none");
+
+        tabla.innerHTML = `
+            <tr>
+                <td colspan="5" class="text-center text-danger">
+                    ${error.message}
+                </td>
+            </tr>
+        `;
+
+    }
+
+}
+
+
+function mostrarRespuestaDuplicado(respuesta) {
+
+    Swal.fire({
+        title: "Respuesta registrada",
+        html: `
+            <textarea
+                class="form-control"
+                rows="12"
+                readonly
+            ></textarea>
+        `,
+        width: 900,
+        didOpen: () => {
+            Swal.getHtmlContainer()
+                .querySelector("textarea")
+                .value = respuesta;
+        }
+    });
+
+}
+
+
 
         
 
