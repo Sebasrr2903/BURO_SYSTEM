@@ -421,31 +421,32 @@ def reportes(request):
     )
 
     # Posibles respuestas inconsistentes
+# inconsistencias = []
+
+# cedulas = (
+#     PlantillaGenerada.objects
+#     .values("cedula", "nombre_cliente")
+#     .annotate(total=Count("id"))
+# )
+
+# for c in cedulas:
+#
+#     resultados = (
+#         PlantillaGenerada.objects
+#         .filter(cedula=c["cedula"])
+#         .values_list("resultado", flat=True)
+#         .distinct()
+#     )
+#
+#     if "PROCEDE" in resultados and "NO PROCEDE" in resultados:
+#
+#         inconsistencias.append({
+#             "cedula": c["cedula"],
+#             "cliente": c["nombre_cliente"],
+#             "resultados": ", ".join(resultados)
+#         })
+
     inconsistencias = []
-
-    cedulas = (
-        PlantillaGenerada.objects
-        .values("cedula", "nombre_cliente")
-        .annotate(total=Count("id"))
-    )
-
-    for c in cedulas:
-
-            resultados = (
-                PlantillaGenerada.objects
-                .filter(cedula=c["cedula"])
-                .values_list("resultado", flat=True)
-                .distinct()
-            )
-
-            if "PROCEDE" in resultados and "NO PROCEDE" in resultados:
-
-                inconsistencias.append({
-                    "cedula": c["cedula"],
-                    "cliente": c["nombre_cliente"],
-                    "resultados": ", ".join(resultados)
-                })
-
 
         # KPIs
     total_gestiones = PlantillaGenerada.objects.count()
@@ -477,12 +478,12 @@ def reportes(request):
 
 
     datos_dia = [
-    {
-        "dia": g["dia"].strftime("%d/%m/%Y"),
-        "total": g["total"]
-    }
-    for g in gestiones_dia
-    ]       
+        {
+            "dia": g["dia"].strftime("%d/%m/%Y") if g["dia"] else "",
+            "total": g["total"]
+        }
+        for g in gestiones_dia
+    ]   
 
 
     estados_json = [
