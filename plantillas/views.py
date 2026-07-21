@@ -518,6 +518,65 @@ def reportes(request):
         .order_by("-total")[:10]
     )
 
+    # =====================================================
+    # ANÁLISIS POR USUARIO (seguro para plantilla)
+    # =====================================================
+
+    analisis_qs = (
+        registros
+        .values("usuario__id", "usuario__username")
+        .annotate(
+            gestiones=Count("id"),
+            procede=Count("id", filter=Q(resultado="PROCEDE")),
+            no_procede=Count("id", filter=Q(resultado="NO PROCEDE")),
+            rechazados=Count("id", filter=~Q(resultado__in=["PROCEDE", "NO PROCEDE"]))
+        )
+        .order_by("-gestiones", "usuario__username")
+    )
+
+    analisis_usuarios = list(analisis_qs)
+
+    for u in analisis_usuarios:
+        total = u.get("gestiones") or 0
+        u["tasa_procede"] = round((u.get("procede", 0) / total) * 100, 1) if total else 0
+        u["tasa_rechazo"] = round((u.get("rechazados", 0) / total) * 100, 1) if total else 0
+
+    registros_count = registros.count()
+    promedio_gestiones_por_usuario = round(registros_count / len(analisis_usuarios), 1) if analisis_usuarios else 0
+
+    usuario_mas_activo = analisis_usuarios[0] if analisis_usuarios else None
+
+    usuario_mas_rechazos = None
+    if analisis_usuarios:
+        usuario_mas_rechazos = max(analisis_usuarios, key=lambda item: (item.get("tasa_rechazo", 0), item.get("rechazados", 0)))
+
+    recomendaciones_analisis = []
+    if usuario_mas_activo:
+        recomendaciones_analisis.append({
+            "titulo": "Usuario con más actividad",
+            "descripcion": (
+                f"{usuario_mas_activo.get('usuario__username') or 'Sin usuario'} concentra {usuario_mas_activo.get('gestiones', 0)} gestiones en este período."
+            ),
+        })
+
+    if usuario_mas_rechazos and usuario_mas_rechazos.get("gestiones"):
+        recomendaciones_analisis.append({
+            "titulo": "Revisión de rechazos",
+            "descripcion": (
+                f"{usuario_mas_rechazos.get('usuario__username') or 'Sin usuario'} tiene {usuario_mas_rechazos.get('tasa_rechazo', 0)}% de rechazos, ideal para revisar calidad o procesos."
+            ),
+        })
+
+    recomendaciones_analisis.append({
+        "titulo": "Equilibrio de carga",
+        "descripcion": "Compara la carga entre usuarios para detectar si alguno trabaja por encima de la media y repartir mejor las gestiones.",
+    })
+
+    recomendaciones_analisis.append({
+        "titulo": "Seguimiento de desempeño",
+        "descripcion": "Monitorea semanalmente los usuarios con mayor volumen y los que muestran más rechazos para mejorar la productividad.",
+    })
+
 
     # =====================================================
     # DISTRIBUIDORES CON MÁS GESTIONES
@@ -629,6 +688,10 @@ def reportes(request):
         {
             "duplicados": duplicados,
             "usuarios": usuarios,
+            "analisis_usuarios": analisis_usuarios,
+            "recomendaciones_analisis": recomendaciones_analisis,
+            "promedio_gestiones_por_usuario": promedio_gestiones_por_usuario,
+            "usuario_mas_activo": usuario_mas_activo,
             "distribuidores": distribuidores,
             "plantillas": plantillas,
             "inconsistencias": inconsistencias,

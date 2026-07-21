@@ -797,7 +797,114 @@
 
         <div class="tab-pane fade" id="estadisticas">
 
-            ...
+            <div class="container mt-4">
+
+                <div class="card shadow mb-4">
+
+                    <div class="card-header bg-info text-white">
+                        📊 Análisis por usuario
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="row mb-4">
+
+                            <div class="col-md-3 mb-3">
+                                <div class="border rounded p-3 h-100">
+                                    <h6 class="text-muted">Usuarios con actividad</h6>
+                                    <h3 class="mb-0">{{ analisis_usuarios|length }}</h3>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 mb-3">
+                                <div class="border rounded p-3 h-100">
+                                    <h6 class="text-muted">Promedio por usuario</h6>
+                                    <h3 class="mb-0">{{ promedio_gestiones_por_usuario }}</h3>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 mb-3">
+                                <div class="border rounded p-3 h-100">
+                                    <h6 class="text-muted">Usuario más activo</h6>
+                                    <h5 class="mb-0">{{ usuario_mas_activo.usuario__username|default:"Sin usuario" }}</h5>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 mb-3">
+                                <div class="border rounded p-3 h-100">
+                                    <h6 class="text-muted">Gestiones totales</h6>
+                                    <h3 class="mb-0">{{ total_gestiones }}</h3>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="table-responsive">
+
+                            <table class="table table-hover align-middle">
+
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Usuario</th>
+                                        <th>Gestiones</th>
+                                        <th>Procede</th>
+                                        <th>No procede</th>
+                                        <th>Rechazos</th>
+                                        <th>% Procede</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    {% for usuario in analisis_usuarios %}
+                                    <tr>
+                                        <td><strong>{{ usuario.usuario__username|default:"Sin usuario" }}</strong></td>
+                                        <td>{{ usuario.gestiones }}</td>
+                                        <td>{{ usuario.procede }}</td>
+                                        <td>{{ usuario.no_procede }}</td>
+                                        <td>{{ usuario.rechazados }}</td>
+                                        <td>{{ usuario.tasa_procede }}%</td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="6" class="text-center py-4">No hay datos de usuarios para este período.</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="card shadow">
+
+                    <div class="card-header bg-warning text-dark">
+                        💡 Recomendaciones de análisis
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row">
+                            {% for recomendacion in recomendaciones_analisis %}
+                            <div class="col-md-6 mb-3">
+                                <div class="border rounded p-3 h-100">
+                                    <h6>{{ recomendacion.titulo }}</h6>
+                                    <p class="mb-0 text-muted">{{ recomendacion.descripcion }}</p>
+                                </div>
+                            </div>
+                            {% empty %}
+                            <div class="col-12">
+                                <p class="mb-0 text-muted">No hay recomendaciones disponibles aún.</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
 
         </div>
 

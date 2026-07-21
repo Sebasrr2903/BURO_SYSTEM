@@ -33,7 +33,7 @@ SECRET_KEY = os.environ.get(
 
 DEBUG = os.environ.get(
     'DEBUG',
-    'False'
+    'True'
 ) == 'True'
 
 
