@@ -97,11 +97,12 @@ def guardar_plantilla(request):
 
 from django.db.models import Q, Count, Max
 from django.core.paginator import Paginator
+from django.views.decorators.http import require_POST
+from .models import Preset
 
 
 @login_required
 def historial(request):
-
     registros = PlantillaGenerada.objects.all().order_by('-fecha')
 
     busqueda = request.GET.get('q')
@@ -120,41 +121,107 @@ def historial(request):
         )
 
     if distribuidor:
-         registros = registros.filter(
-        distribuidor__icontains=distribuidor
-    )
+        registros = registros.filter(
+            distribuidor__icontains=distribuidor
+        )
 
     if usuario:
-             registros = registros.filter(
-             usuario__username=usuario
-        )
-             
-             
-    
-    if resultado == "RECHAZADOS":
-
-            registros = registros.exclude(
-                resultado__in=[
-                    "PROCEDE",
-                    "NO PROCEDE"
-                ]
-            )
-
-    elif resultado:
-
-         registros = registros.filter(
-        resultado=resultado
-    )
-         
-    if fecha_inicio:
         registros = registros.filter(
-            fecha__date__gte=fecha_inicio
+            usuario__username=usuario
         )
+
+    if resultado == "RECHAZADOS":
+        registros = registros.exclude(
+            resultado__in=["PROCEDE", "NO PROCEDE"]
+        )
+    elif resultado:
+        registros = registros.filter(resultado=resultado)
+
+    if fecha_inicio:
+        registros = registros.filter(fecha__date__gte=fecha_inicio)
 
     if fecha_fin:
-        registros = registros.filter(
-            fecha__date__lte=fecha_fin
-        )
+        registros = registros.filter(fecha__date__lte=fecha_fin)
+
+    total = registros.count()
+
+    procede = registros.filter(resultado="PROCEDE").count()
+    no_procede = registros.filter(resultado="NO PROCEDE").count()
+    rechazados = registros.exclude(resultado__in=["PROCEDE", "NO PROCEDE"]).count()
+
+    # PAGINACIÓN
+    limite = request.GET.get('limite', 10)
+    paginator = Paginator(registros, int(limite))
+    page_number = request.GET.get('page')
+    registros = paginator.get_page(page_number)
+
+    usuarios = User.objects.order_by('username')
+
+    return render(
+        request,
+        'historial.html',
+        {
+            'registros': registros,
+            'distribuidor': distribuidor,
+            'resultado': resultado,
+            'total': total,
+            'procede': procede,
+            'no_procede': no_procede,
+            'rechazados': rechazados,
+            'busqueda': busqueda,
+            'fecha_inicio': fecha_inicio,
+            'fecha_fin': fecha_fin,
+            'usuarios': usuarios,
+            'usuario_seleccionado': usuario,
+        }
+    )
+
+
+@login_required
+def presets_list(request):
+    presets = Preset.objects.filter(user=request.user).order_by('-creado_en')
+    data = [
+        {
+            'id': p.id,
+            'nombre': p.nombre,
+            'fecha_inicio': p.fecha_inicio.isoformat() if p.fecha_inicio else '',
+            'fecha_fin': p.fecha_fin.isoformat() if p.fecha_fin else '',
+            'hora_inicio': p.hora_inicio.strftime('%H:%M') if p.hora_inicio else '',
+            'hora_fin': p.hora_fin.strftime('%H:%M') if p.hora_fin else '',
+        }
+        for p in presets
+    ]
+    return JsonResponse({'presets': data})
+
+
+@login_required
+@require_POST
+def presets_create(request):
+    nombre = request.POST.get('nombre')
+    fecha_inicio = request.POST.get('fecha_inicio') or None
+    fecha_fin = request.POST.get('fecha_fin') or None
+    hora_inicio = request.POST.get('hora_inicio') or None
+    hora_fin = request.POST.get('hora_fin') or None
+
+    p = Preset.objects.create(
+        user=request.user,
+        nombre=nombre,
+        fecha_inicio=fecha_inicio or None,
+        fecha_fin=fecha_fin or None,
+        hora_inicio=hora_inicio or None,
+        hora_fin=hora_fin or None,
+    )
+
+    return JsonResponse({'success': True, 'id': p.id})
+
+
+@login_required
+@require_POST
+def presets_delete(request, preset_id):
+    p = get_object_or_404(Preset, id=preset_id, user=request.user)
+    p.delete()
+    return JsonResponse({'success': True})
+    
 
     
 
@@ -376,6 +443,8 @@ def reportes(request):
     usuario = request.GET.get("usuario")
     resultado = request.GET.get("resultado")
     distribuidor = request.GET.get("distribuidor")
+    hora_inicio = request.GET.get("hora_inicio")
+    hora_fin = request.GET.get("hora_fin")
 
 
     # =====================================================
@@ -424,6 +493,23 @@ def reportes(request):
         registros = registros.filter(
             distribuidor=distribuidor
         )
+
+    # =====================================================
+    # FILTRO POR HORA (opcional)
+    # Si se proporcionan fecha + hora, filtra por rango datetime
+    # =====================================================
+
+    if fecha_inicio and fecha_fin and hora_inicio and hora_fin:
+        try:
+            # form: fecha yyyy-mm-dd, hora HH:MM
+            start_dt = datetime.strptime(f"{fecha_inicio} {hora_inicio}", "%Y-%m-%d %H:%M")
+            end_dt = datetime.strptime(f"{fecha_fin} {hora_fin}", "%Y-%m-%d %H:%M")
+            start_dt = timezone.make_aware(start_dt)
+            end_dt = timezone.make_aware(end_dt)
+            registros = registros.filter(fecha__range=[start_dt, end_dt])
+        except Exception:
+            # si hay problema parseando, ignorar y usar filtros por fecha
+            pass
 
 
     # =====================================================
@@ -715,6 +801,8 @@ def reportes(request):
             # Mantener filtros
             "fecha_inicio": fecha_inicio,
             "fecha_fin": fecha_fin,
+            "hora_inicio": hora_inicio,
+            "hora_fin": hora_fin,
             "usuario_seleccionado": usuario,
             "resultado_seleccionado": resultado,
             "distribuidor_seleccionado": distribuidor,

@@ -170,199 +170,146 @@
         </li>
 
     </ul>
-           <form method="GET">
+<div class="container mb-4">
+<form method="GET">
 
-                <div class="card shadow-sm mb-4">
+    <div class="card shadow-sm mb-4">
 
-                    <div class="card-header bg-primary text-white">
-                        Filtros
-                    </div>
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <div>Filtros</div>
+            <button class="btn btn-sm btn-light" type="button" id="toggleFiltros">Ocultar filtros</button>
+        </div>
 
-                    <div class="card-body">
+        <div class="card-body" id="filtrosCard">
 
-                        <div class="row">
+            <div class="row g-3 align-items-end filters">
 
-                            <div class="col-md-3">
+                <div class="col-md-3">
 
-                                <label class="form-label">
-                                    Fecha Inicio
-                                </label>
-
-                                <input
-                                    type="date"
-                                    name="fecha_inicio"
-                                    id="fechaInicio"
-                                    class="form-control"
-                                    value="{{ fecha_inicio|default:'' }}"
-                                >
-
-                            </div>
-
-                            <div class="col-md-3">
-
-                                <label class="form-label">
-                                    Fecha Fin
-                                </label>
-
-                                <input
-                                    type="date"
-                                    name="fecha_fin"
-                                    id="fechaFin"
-                                    class="form-control"
-                                    value="{{ fecha_fin|default:'' }}"
-                                >
-
-                            </div>
-
-                            <div class="col-md-3">
-
-                                <label class="form-label">
-                                    Usuario
-                                </label>
-
-                                <select
-                                    name="usuario"
-                                    id="usuario"
-                                    class="form-select"
-                                >
-
-                                    <option value="">
-                                        Todos
-                                    </option>
-
-                                    {% for u in lista_usuarios %}
-
-                                    <option
-                                        value="{{ u.username }}"
-                                        {% if usuario_seleccionado == u.username %}
-                                            selected
-                                        {% endif %}
-                                    >
-                                        {{ u.username }}
-                                    </option>
-
-                                    {% endfor %}
-
-                                </select>
-
-                            </div>
-
-                            <div class="col-md-3">
-
-                                <label class="form-label">
-                                    Resultado
-                                </label>
-
-                                <select
-                                    name="resultado"
-                                    id="resultadoFiltro"
-                                    class="form-select"
-                                >
-
-                                    <option value="">
-                                        Todos
-                                    </option>
-
-                                    <option
-                                        value="PROCEDE"
-                                        {% if resultado_seleccionado == "PROCEDE" %}
-                                            selected
-                                        {% endif %}
-                                    >
-                                        PROCEDE
-                                    </option>
-
-                                    <option
-                                        value="NO PROCEDE"
-                                        {% if resultado_seleccionado == "NO PROCEDE" %}
-                                            selected
-                                        {% endif %}
-                                    >
-                                        NO PROCEDE
-                                    </option>
-
-                                    <option
-                                        value="RECHAZADOS"
-                                        {% if resultado_seleccionado == "RECHAZADOS" %}
-                                            selected
-                                        {% endif %}
-                                    >
-                                        RECHAZADOS
-                                    </option>
-
-                                </select>
-
-                            </div>
-
-                        </div>
-
-                        <div class="row mt-3">
-
-                            <div class="col-md-4">
-
-                                <label class="form-label">
-                                    Distribuidor
-                                </label>
-
-                                <select
-                                    name="distribuidor"
-                                    id="distribuidorFiltro"
-                                    class="form-select"
-                                >
-
-                                    <option value="">
-                                        Todos
-                                    </option>
-
-                                    {% for d in lista_distribuidores %}
-
-                                    <option
-                                        value="{{ d }}"
-                                        {% if distribuidor_seleccionado == d %}
-                                            selected
-                                        {% endif %}
-                                    >
-                                        {{ d }}
-                                    </option>
-
-                                    {% endfor %}
-
-                                </select>
-
-                            </div>
-
-                            <div class="col-md-8 d-flex align-items-end justify-content-end gap-2">
-
-                                <button
-                                    type="submit"
-                                    class="btn btn-primary"
-                                >
-                                    🔍 Buscar
-                                </button>
-
-                                <a
-                                    href="{% url 'reportes' %}"
-                                    class="btn btn-secondary"
-                                >
-                                    Limpiar filtros
-                                </a>
-
-                                <a
-                                    href="{% url 'exportar_excel' %}?fecha_inicio={{ fecha_inicio|default:'' }}&fecha_fin={{ fecha_fin|default:'' }}"
-                                    class="btn btn-success"
-                                >
-                                    📥 Exportar Excel
-                                </a>
-
-                            </div>
-
-                        </div>
-
+                    <div class="input-group">
+                        <span class="input-group-text">📅</span>
+                        <input
+                            type="date"
+                            name="fecha_inicio"
+                            id="fechaInicio"
+                            class="form-control"
+                            value="{{ fecha_inicio|default:'' }}"
+                        >
+                        <input
+                            type="time"
+                            name="hora_inicio"
+                            id="horaInicio"
+                            class="form-control ms-2"
+                            value="{{ hora_inicio|default:'' }}"
+                            title="Hora inicio"
+                        >
                     </div>
 
                 </div>
 
-            </form>
+                <div class="col-md-3">
+
+                    <div class="input-group">
+                        <span class="input-group-text">📅</span>
+                        <input
+                            type="date"
+                            name="fecha_fin"
+                            id="fechaFin"
+                            class="form-control"
+                            value="{{ fecha_fin|default:'' }}"
+                        >
+                        <input
+                            type="time"
+                            name="hora_fin"
+                            id="horaFin"
+                            class="form-control ms-2"
+                            value="{{ hora_fin|default:'' }}"
+                            title="Hora fin"
+                        >
+                    </div>
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <div class="input-group">
+                        <span class="input-group-text">👤</span>
+                        <select name="usuario" id="usuario" class="form-select">
+                            <option value="">Todos</option>
+                            {% for u in lista_usuarios %}
+                            <option value="{{ u.username }}" {% if usuario_seleccionado == u.username %} selected {% endif %}>{{ u.username }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <div class="input-group">
+                        <span class="input-group-text">🔎</span>
+                        <select name="resultado" id="resultadoFiltro" class="form-select">
+                            <option value="">Todos</option>
+                            <option value="PROCEDE" {% if resultado_seleccionado == "PROCEDE" %} selected {% endif %}>PROCEDE</option>
+                            <option value="NO PROCEDE" {% if resultado_seleccionado == "NO PROCEDE" %} selected {% endif %}>NO PROCEDE</option>
+                            <option value="RECHAZADOS" {% if resultado_seleccionado == "RECHAZADOS" %} selected {% endif %}>RECHAZADOS</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="input-group">
+                        <span class="input-group-text">🏷️</span>
+                        <select name="distribuidor" id="distribuidorFiltro" class="form-select">
+                            <option value="">Todos</option>
+                            {% for d in lista_distribuidores %}
+                            <option value="{{ d }}" {% if distribuidor_seleccionado == d %} selected {% endif %}>{{ d }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="col-md-8"></div>
+
+                <div class="col-md-4 d-flex justify-content-end gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        🔍 Buscar
+                    </button>
+
+                    <a href="{% url 'reportes' %}" class="btn btn-secondary" id="limpiarBtn">
+                        Limpiar filtros
+                    </a>
+
+                    <a href="{% url 'exportar_excel' %}?fecha_inicio={{ fecha_inicio|default:'' }}&fecha_fin={{ fecha_fin|default:'' }}" class="btn btn-success">
+                        📥 Exportar Excel
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</form>
+
+<!-- Presets rápidos -->
+    <div class="reportes-presets">
+            <button class="btn btn-outline-primary btn-sm" id="presetHoyLaboral">Hoy 07:00 - 17:30</button>
+            <button class="btn btn-outline-secondary btn-sm" id="presetUltimaHora">Última hora</button>
+            <button class="btn btn-outline-info btn-sm" id="presetHoy">Hoy completo</button>
+            <div class="preset-select">
+                <select id="presetsSelect" class="form-select form-select-sm"></select>
+            </div>
+            <button class="btn btn-sm btn-success" id="savePresetBtn">Guardar preset</button>
+            <button class="btn btn-sm btn-danger" id="deletePresetBtn">Eliminar</button>
+    </div>
+</div>
+    
+    
     <div class="tab-content">
 
         <div class="tab-pane fade show active" id="dashboard">
@@ -1619,6 +1566,172 @@ function mostrarRespuestaDuplicado(respuesta) {
 
         
 
+</script>
+
+<script>
+    // Toggle filtros visibility
+    (function(){
+        try{
+            const toggle = document.getElementById('toggleFiltros');
+            const card = document.getElementById('filtrosCard');
+            const limpiar = document.getElementById('limpiarBtn');
+
+            if(toggle && card){
+                toggle.addEventListener('click', ()=>{
+                    if(card.style.display === 'none'){
+                        card.style.display = '';
+                        toggle.textContent = 'Ocultar filtros';
+                    } else {
+                        card.style.display = 'none';
+                        toggle.textContent = 'Mostrar filtros';
+                    }
+                });
+            }
+
+            if(limpiar){
+                // optional: clear inputs before following href
+                limpiar.addEventListener('click', (e)=>{
+                    // do nothing special; link already resets via URL
+                });
+            }
+        }catch(err){
+            console.warn('Filter toggle init failed', err);
+        }
+    })();
+</script>
+
+<script>
+    // Preset buttons
+    (function(){
+        try{
+            const hoyBtn = document.getElementById('presetHoyLaboral');
+            const ultimaHora = document.getElementById('presetUltimaHora');
+            const hoyCompleto = document.getElementById('presetHoy');
+
+            function setAndSubmit(fechaInicio, horaInicio, fechaFin, horaFin){
+                document.getElementById('fechaInicio').value = fechaInicio;
+                document.getElementById('horaInicio').value = horaInicio;
+                document.getElementById('fechaFin').value = fechaFin;
+                document.getElementById('horaFin').value = horaFin;
+                // submit the form
+                document.querySelector('form[method="GET"]').submit();
+            }
+
+            if(hoyBtn){
+                hoyBtn.addEventListener('click', ()=>{
+                    const d = new Date();
+                    const iso = d.toISOString().slice(0,10);
+                    setAndSubmit(iso,'07:00',iso,'17:30');
+                });
+            }
+
+            if(ultimaHora){
+                ultimaHora.addEventListener('click', ()=>{
+                    const now = new Date();
+                    const past = new Date(now.getTime() - (60*60*1000));
+                    const isoNow = now.toISOString().slice(0,16).replace('T',' ');
+                    const isoNowDate = now.toISOString().slice(0,10);
+                    const hNow = now.toTimeString().slice(0,5);
+                    const hPast = past.toTimeString().slice(0,5);
+                    setAndSubmit(isoNowDate,hPast,isoNowDate,hNow);
+                });
+            }
+
+            if(hoyCompleto){
+                hoyCompleto.addEventListener('click', ()=>{
+                    const d = new Date();
+                    const iso = d.toISOString().slice(0,10);
+                    setAndSubmit(iso,'00:00',iso,'23:59');
+                });
+            }
+
+        }catch(err){console.warn(err)}
+    })();
+</script>
+
+<script>
+    // Presets persistence via AJAX
+    (function(){
+        function csrftoken(){
+            const name='csrftoken';
+            const v=document.cookie.split(';').map(c=>c.trim()).find(c=>c.startsWith(name+'='));
+            if(!v) return '';
+            return decodeURIComponent(v.split('=')[1]);
+        }
+
+        const presetsSelect = document.getElementById('presetsSelect');
+        const saveBtn = document.getElementById('savePresetBtn');
+        const deleteBtn = document.getElementById('deletePresetBtn');
+
+        async function loadPresets(){
+            try{
+                const r = await fetch('{% url "presets_list" %}');
+                const data = await r.json();
+                presetsSelect.innerHTML = '';
+                const optEmpty = document.createElement('option'); optEmpty.value=''; optEmpty.textContent='Presets guardados';
+                presetsSelect.appendChild(optEmpty);
+                data.presets.forEach(p=>{
+                    const o=document.createElement('option');
+                    o.value = p.id;
+                    o.dataset.fi = p.fecha_inicio;
+                    o.dataset.ff = p.fecha_fin;
+                    o.dataset.hi = p.hora_inicio;
+                    o.dataset.hf = p.hora_fin;
+                    o.textContent = p.nombre;
+                    presetsSelect.appendChild(o);
+                });
+            }catch(e){console.warn(e)}
+        }
+
+        presetsSelect && presetsSelect.addEventListener('change', function(){
+            const sel = this.selectedOptions[0];
+            if(!sel || !sel.value) return;
+            document.getElementById('fechaInicio').value = sel.dataset.fi || '';
+            document.getElementById('fechaFin').value = sel.dataset.ff || '';
+            document.getElementById('horaInicio').value = sel.dataset.hi || '';
+            document.getElementById('horaFin').value = sel.dataset.hf || '';
+        });
+
+        saveBtn && saveBtn.addEventListener('click', async ()=>{
+            const nombre = prompt('Nombre del preset:');
+            if(!nombre) return;
+            const form = new FormData();
+            form.append('nombre', nombre);
+            form.append('fecha_inicio', document.getElementById('fechaInicio').value || '');
+            form.append('fecha_fin', document.getElementById('fechaFin').value || '');
+            form.append('hora_inicio', document.getElementById('horaInicio').value || '');
+            form.append('hora_fin', document.getElementById('horaFin').value || '');
+            const r = await fetch('{% url "presets_create" %}',{
+                method:'POST',
+                headers:{'X-CSRFToken': csrftoken()},
+                body: form
+            });
+            const j = await r.json();
+            if(j.success){
+                await loadPresets();
+                alert('Preset guardado');
+            }
+        });
+
+        deleteBtn && deleteBtn.addEventListener('click', async ()=>{
+            const id = presetsSelect.value;
+            if(!id) return alert('Seleccione un preset para eliminar');
+            if(!confirm('Eliminar preset seleccionado?')) return;
+            const r = await fetch(`{% url 'presets_delete' 0 %}`.replace('/0/','/'+id+'/'),{
+                method:'POST', headers:{'X-CSRFToken': csrftoken()}
+            });
+            const j = await r.json();
+            if(j.success){
+                await loadPresets();
+                alert('Preset eliminado');
+            }
+        });
+
+        // inicializar
+        document.addEventListener('DOMContentLoaded', loadPresets);
+        // también llamar ahora si el DOM ya cargó
+        if(document.readyState !== 'loading') loadPresets();
+    })();
 </script>
 
     <footer style="text-align: center;">

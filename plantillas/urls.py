@@ -22,6 +22,10 @@ path(
     name='verificar_cedula'
 ),
 
+    path('presets/list/', views.presets_list, name='presets_list'),
+    path('presets/create/', views.presets_create, name='presets_create'),
+    path('presets/delete/<int:preset_id>/', views.presets_delete, name='presets_delete'),
+
 path(
     'ultima-gestion/',
     views.ultima_gestion,
