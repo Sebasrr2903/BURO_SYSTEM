@@ -115,8 +115,8 @@ color: var(--texto);
 
 #new {
  
-  background:#198754;
-  color: white;
+  background:var(--principal);
+  color:white;
   border: none;
   padding: 12px 16px; /* más altura */
   border-radius: 10px; /* redondeado */
