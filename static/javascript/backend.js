@@ -203,7 +203,7 @@ function generarPlantilla() {
   const minutos = String(ahora.getMinutes()).padStart(2, '0');
   const periodo = horaNum >= 12 ? 'p.m.' : 'a.m.';
   horaNum = horaNum % 12;
-  horaNum = horaNum ? horaNum : 12; // 0 => 12
+  horaNum = horaNum ? horaNum : 12;
 
   const horaFormateada = `${horaNum}:${minutos} ${periodo}`;
   const fechaFormateada = `${dia}/${mes}/${anio}`;
@@ -218,89 +218,71 @@ function generarPlantilla() {
   const fecha_desactivacion = document.getElementById("fecha_desactivacion").value.trim();
   const distribuidor = document.getElementById("distribuidor").value.trim().toUpperCase();
 
+  const errorGestion = document.getElementById("errorGestion");
+  const errorNombre = document.getElementById("errorNombre");
+  const errorCedula = document.getElementById("errorCedula");
+  const errorDistribuidor = document.getElementById("errorDistribuidor");
+  const errorMonto = document.getElementById("errorMonto");
 
-  document.getElementById("errorGestion").classList.add("d-none");
-  document.getElementById("errorNombre").classList.add("d-none");
-  document.getElementById("errorCedula").classList.add("d-none");
-  document.getElementById("errorDistribuidor").classList.add("d-none");
+  [errorGestion, errorNombre, errorCedula, errorDistribuidor, errorMonto].forEach(el => el.classList.add("d-none"));
 
+  const campos = {
+    gestion: document.getElementById("gestion"),
+    nombre: document.getElementById("nombre"),
+    cedula: document.getElementById("cedula"),
+    distribuidor: document.getElementById("distribuidor"),
+    monto: document.getElementById("monto")
+  };
+
+  Object.values(campos).forEach(campo => campo.classList.remove("is-invalid"));
+
+  const requiereMonto = [
+    "Cero pagos(CON TERMINAL)",
+    "WRITTE OFF(CON TERMINAL)",
+    "TERMINAL LIGADO (Financiamiento y facturas pendientes)",
+    "NC APLICADA",
+    "Cero pagos",
+    "WRITTE OFF(SIN TERMINAL)",
+    "LIMPIEZA DE SALDOS",
+    "LIMPIEZA DE SALDOS WRITE OFF",
+    "Facturas Pendientes"
+  ].includes(plantillaKey);
+
+  const requiereDatosCliente = plantillasProcede.includes(plantillaKey) || plantillasNoProcede.includes(plantillaKey);
 
   let hayError = false;
 
-
-
- if (!distribuidor) {
-
-    document
-        .getElementById("errorDistribuidor")
-        .classList.remove("d-none");
-
-    document
-        .getElementById("distribuidor")
-        .classList.add("is-invalid");
-
+  if (!distribuidor) {
+    errorDistribuidor.classList.remove("d-none");
+    campos.distribuidor.classList.add("is-invalid");
     hayError = true;
-
-} else {
-
-   document
-        .getElementById("distribuidor")
-        .classList.remove("is-invalid");
-
-}
-
-
- if (!monto && (plantillaKey === "Cero pagos(CON TERMINAL)" || plantillaKey === "WRITTE OFF(CON TERMINAL)" || plantillaKey === "TERMINAL LIGADO (Financiamiento y facturas pendientes)" || plantillaKey === "NC APLICADA" || plantillaKey === "Cero pagos" || plantillaKey === "WRITTE OFF(SIN TERMINAL)" || plantillaKey === "LIMPIEZA DE SALDOS" || plantillaKey === "LIMPIEZA DE SALDOS WRITE OFF" || plantillaKey === "Facturas Pendientes")) {
-
-    document
-        .getElementById("errorMonto")
-        .classList.remove("d-none");
-
-    document
-        .getElementById("monto")
-        .classList.add("is-invalid");
-
-    hayError = true;
-
-} else {
-
-   document
-        .getElementById("monto")
-        .classList.remove("is-invalid");
-
-}
-  if (!gestion) {
-    document.getElementById("errorGestion").classList.remove("d-none");
-    document.getElementById("gestion").classList.add("is-invalid");
-    hayError = true;
-  } else {
-    document.getElementById("gestion").classList.remove("is-invalid");
   }
-  
 
-  if (
-    plantillasProcede.includes(plantillaKey) ||
-    plantillasNoProcede.includes(plantillaKey)
-  ) {
+  if (requiereMonto && !monto) {
+    errorMonto.classList.remove("d-none");
+    campos.monto.classList.add("is-invalid");
+    hayError = true;
+  }
 
+  if (!gestion) {
+    errorGestion.classList.remove("d-none");
+    campos.gestion.classList.add("is-invalid");
+    hayError = true;
+  }
+
+  if (requiereDatosCliente) {
     if (!nombre) {
-      document.getElementById("errorNombre").classList.remove("d-none");
-      document.getElementById("nombre").classList.add("is-invalid");
+      errorNombre.classList.remove("d-none");
+      campos.nombre.classList.add("is-invalid");
       hayError = true;
-    } else {
-      document.getElementById("nombre").classList.remove("is-invalid");
     }
 
     if (!cedula) {
-      document.getElementById("errorCedula").classList.remove("d-none");
-      document.getElementById("cedula").classList.add("is-invalid");
+      errorCedula.classList.remove("d-none");
+      campos.cedula.classList.add("is-invalid");
       hayError = true;
-    } else {
-      document.getElementById("cedula").classList.remove("is-invalid");
     }
   }
-
-  
 
   if (hayError) {
     return;
@@ -324,31 +306,26 @@ function generarPlantilla() {
   if (finaciamiento) facturasPendientesTexto += "Adicional cliente no aplica para limpieza tiene Financiamiento abierto. ";
   if (menos2750) facturasPendientesTexto += "";
 
-  let texto = plantillas[plantillaKey]
-    .replace("{nombre}", nombre)
-    .replace("{gestion}", gestion)
-    .replace("{fecha}", fechaFormateada)
-    .replace("{hora}", horaFormateada)
-    .replace("{cedula}", cedula)
-    .replace("{monto}", monto)
-    .replace("{fecha_activacion}", fecha_activacion)
-    .replace("{fecha_expiracion}", fecha_expiracion)
-    .replace("{fecha_desactivacion}", fecha_desactivacion)
-    .replace("{terminal}", terminal)
-    .replace("{fechaNC}", fecha) // si usas fecha para nota de crédito
-    .replace("{facturasPendientesTexto}", facturasPendientesTexto);
+  const plantillaBase = plantillas[plantillaKey] || "";
+  const texto = plantillaBase
+    .replace(/\{nombre\}/g, nombre)
+    .replace(/\{gestion\}/g, gestion)
+    .replace(/\{fecha\}/g, fechaFormateada)
+    .replace(/\{hora\}/g, horaFormateada)
+    .replace(/\{cedula\}/g, cedula)
+    .replace(/\{monto\}/g, monto)
+    .replace(/\{fecha_activacion\}/g, fecha_activacion)
+    .replace(/\{fecha_expiracion\}/g, fecha_expiracion)
+    .replace(/\{fecha_desactivacion\}/g, fecha_desactivacion)
+    .replace(/\{terminal\}/g, terminal)
+    .replace(/\{fechaNC\}/g, fecha)
+    .replace(/\{facturasPendientesTexto\}/g, facturasPendientesTexto);
 
   document.getElementById("resultado").value = texto || "Selecciona una plantilla válida.";
 
   let resultado = "RECHAZO";
-
-  if (plantillasProcede.includes(plantillaKey)) {
-    resultado = "PROCEDE";
-  }
-
-  if (plantillasNoProcede.includes(plantillaKey)) {
-    resultado = "NO PROCEDE";
-  }
+  if (plantillasProcede.includes(plantillaKey)) resultado = "PROCEDE";
+  if (plantillasNoProcede.includes(plantillaKey)) resultado = "NO PROCEDE";
 
   fetch("/guardar-plantilla/", {
     method: "POST",
@@ -356,22 +333,30 @@ function generarPlantilla() {
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      distribuidor: distribuidor,
-      gestion: gestion,
-      cedula: cedula,
+      distribuidor,
+      gestion,
+      cedula,
       nombre_cliente: nombre,
       nombre_plantilla: plantillaKey,
-      resultado: resultado,
+      resultado,
       respuesta: texto
     })
   })
-    .then(response => response.json())
-    .then(data => {
+    .then(async response => {
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(data.error || "No se pudo guardar la plantilla");
+      }
       console.log("Guardado correctamente", data);
     })
     .catch(error => {
-      console.error("Error:", error);
-
+      console.error("Error al guardar:", error);
+      Swal.fire({
+        icon: "warning",
+        title: "No se pudo guardar la plantilla",
+        text: error.message || "Revisa la conexión o intenta nuevamente.",
+        confirmButtonText: "Aceptar"
+      });
     });
 }
 
@@ -465,7 +450,7 @@ document.getElementById("contador").innerText =
                 class="list-group-item list-group-item-action ${index === indiceActual ? 'active' : ''}"
                 onclick="seleccionarGestion(${index})">
 
-                ${item.fecha} - ${item.resultado} - ${item.distribuidor}
+                ${item.fecha} - ${item.gestion || 'Sin gestión'} - ${item.usuario || 'Sin usuario'} - ${item.resultado} - ${item.distribuidor}
 
             </button>
         `;
@@ -595,6 +580,66 @@ function verificarCedula() {
     });
 
 }
+function generarCasoDuplicado() {
+    const gestionInput = document.getElementById("gestion");
+    const cedulaInput = document.getElementById("cedula");
+    const nombreInput = document.getElementById("nombre");
+    const distribuidorInput = document.getElementById("distribuidor");
+    const plantillaSelect = document.getElementById("plantilla");
+
+    if (cedulaInput && datosCedula.cedula) {
+        cedulaInput.value = datosCedula.cedula;
+    }
+
+    if (nombreInput && datosCedula.nombre_cliente) {
+        nombreInput.value = datosCedula.nombre_cliente;
+    }
+
+    if (distribuidorInput) {
+        const distribuidorHistorial = document.getElementById("distribuidorHistorial")?.textContent?.trim();
+        if (distribuidorHistorial) {
+            distribuidorInput.value = distribuidorHistorial.toUpperCase();
+        }
+    }
+
+    if (plantillaSelect) {
+        plantillaSelect.value = "CASO DUPLICADO";
+        plantillaSelect.dispatchEvent(new Event("change"));
+    }
+
+    bootstrap.Modal
+        .getInstance(document.getElementById("modalCedulaExiste"))
+        .hide();
+
+    const historialSeleccionado = historialActual[indiceActual] || {};
+    const distribuidorSeleccionado = historialSeleccionado.distribuidor || '';
+
+    Swal.fire({
+        title: 'Caso duplicado',
+        html: `⚠️ Recuerda: solo se puede dar la plantilla <strong>CASO DUPLICADO</strong> si es el mismo DTS.<br><br>DTS actual: <strong>${distribuidorSeleccionado || 'no disponible'}</strong>`,
+        input: 'text',
+        inputLabel: 'Escribe el número de gestión para este caso',
+        inputPlaceholder: 'Ej: 123456',
+        showCancelButton: true,
+        confirmButtonText: 'Generar',
+        cancelButtonText: 'Cancelar',
+        preConfirm: (value) => {
+            if (!value || value.trim() === '') {
+                Swal.showValidationMessage('Debes ingresar un número de gestión.');
+            }
+            return value.trim();
+        }
+    }).then((result) => {
+        if (result.isConfirmed && result.value) {
+            if (gestionInput) {
+                gestionInput.value = result.value.trim();
+            }
+            generarPlantilla();
+            copiarTexto();
+        }
+    });
+}
+
 function generarYCopiar() {
 
     bootstrap.Modal
@@ -646,6 +691,9 @@ function mostrarGestion() {
 
     document.getElementById("distribuidorHistorial").textContent =
         g.distribuidor;
+
+    document.getElementById("gestionHistorial").textContent =
+        g.gestion || 'Sin gestión';
 
     document.getElementById("respuestaAnterior").value =
         g.respuesta;

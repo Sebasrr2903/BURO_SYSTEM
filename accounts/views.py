@@ -2,6 +2,7 @@ from django.contrib.auth.models import User, Group
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
+from django.db.models import Q
 
 def login_view(request):
 
@@ -75,13 +76,23 @@ def crear_usuario(request):
 
         return redirect('/crear-usuario/')
 
-    usuarios = User.objects.all().order_by('username')
+    query = request.GET.get('q', '').strip()
+    usuarios = User.objects.all()
+
+    if query:
+        usuarios = usuarios.filter(
+            Q(username__icontains=query) |
+            Q(groups__name__icontains=query)
+        ).distinct()
+
+    usuarios = usuarios.order_by('username')
 
     return render(
         request,
         'crear_usuario.html',
         {
-            'usuarios': usuarios
+            'usuarios': usuarios,
+            'query': query
         }
     )
 

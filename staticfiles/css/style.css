@@ -115,7 +115,7 @@ color: var(--texto);
 
 #new {
  
-  background:var(--principal);
+  background:#198754;
   color: white;
   border: none;
   padding: 12px 16px; /* más altura */
@@ -125,7 +125,7 @@ color: var(--texto);
   transition: background 0.3s ease;
 }
 #ocultar{
-  background-color: #068f71;
+  background-color: #0d6efd;
   color: white;
   border: none;
    padding: 12px 16px; /* más altura */
@@ -136,6 +136,34 @@ color: var(--texto);
 #new:hover {
      filter:brightness(.9);
 
+}
+
+.modal-footer .btn-modal-cancel {
+    background: #dc3545;
+    color: #fff;
+    border-color: #dc3545;
+}
+.modal-footer .btn-modal-export {
+    background: #ffc107;
+    color: #000;
+    border-color: #ffc107;
+}
+.modal-footer .btn-modal-duplicate {
+    background: #0dcaf0;
+    color: #000;
+    border-color: #0dcaf0;
+}
+.modal-footer .btn-modal-copy {
+    background: #198754;
+    color: #fff;
+    border-color: #198754;
+}
+
+.modal-footer .btn-modal-cancel:hover,
+.modal-footer .btn-modal-export:hover,
+.modal-footer .btn-modal-duplicate:hover,
+.modal-footer .btn-modal-copy:hover {
+    filter: brightness(0.95);
 }
 
 

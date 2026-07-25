@@ -13,6 +13,76 @@ import json
 
 from .models import PlantillaGenerada
 
+
+def construir_recomendaciones_analisis(analisis_usuarios, promedio_gestiones_por_usuario, total_gestiones, total_duplicados):
+    recomendaciones = []
+
+    if not analisis_usuarios:
+        return recomendaciones
+
+    usuario_mas_activo = max(
+        analisis_usuarios,
+        key=lambda item: (item.get("gestiones") or 0, item.get("usuario__username") or "")
+    )
+
+    if usuario_mas_activo:
+        recomendaciones.append({
+            "titulo": "Usuario con más actividad",
+            "descripcion": (
+                f"{usuario_mas_activo.get('usuario__username') or 'Sin usuario'} concentra "
+                f"{usuario_mas_activo.get('gestiones', 0)} gestiones en este período."
+            ),
+        })
+
+    usuarios_sobre_promedio = [
+        u for u in analisis_usuarios
+        if (u.get("gestiones") or 0) > (promedio_gestiones_por_usuario or 0)
+    ]
+
+    if len(analisis_usuarios) > 1 and usuarios_sobre_promedio:
+        usuario_destacado = usuarios_sobre_promedio[0]
+        recomendaciones.append({
+            "titulo": "Carga desigual entre usuarios",
+            "descripcion": (
+                f"{usuario_destacado.get('usuario__username') or 'Un usuario'} está por encima del promedio "
+                f"de gestiones y podría generar sobrecarga; conviene revisar la distribución."
+            ),
+        })
+
+    usuario_mas_rechazos = None
+    if analisis_usuarios:
+        usuario_mas_rechazos = max(
+            analisis_usuarios,
+            key=lambda item: (item.get("tasa_rechazo", 0), item.get("rechazados", 0))
+        )
+
+    if usuario_mas_rechazos and (usuario_mas_rechazos.get("gestiones") or 0) and (usuario_mas_rechazos.get("tasa_rechazo", 0) or 0) >= 15:
+        recomendaciones.append({
+            "titulo": "Revisión de rechazos",
+            "descripcion": (
+                f"{usuario_mas_rechazos.get('usuario__username') or 'Sin usuario'} registra "
+                f"{usuario_mas_rechazos.get('tasa_rechazo', 0)}% de rechazos; revisar calidad y proceso ayudaría a reducirlos."
+            ),
+        })
+
+    if total_duplicados:
+        recomendaciones.append({
+            "titulo": "Seguimiento de duplicados",
+            "descripcion": (
+                f"Hay {total_duplicados} cédulas con múltiples gestiones en este filtro; revisar si corresponden "
+                "a reintentos o a casos que necesitan mejor seguimiento."
+            ),
+        })
+
+    if total_gestiones and len(analisis_usuarios) > 1:
+        recomendaciones.append({
+            "titulo": "Seguimiento de desempeño",
+            "descripcion": "Monitorea semanalmente a los usuarios con mayor volumen y a los que muestran más rechazos para mejorar la productividad.",
+        })
+
+    return recomendaciones
+
+
 @login_required
 def inicio(request):
     return render(request, 'index.html')
@@ -50,12 +120,11 @@ def verificar_cedula(request):
                     "fecha": timezone.localtime(
                         r.fecha
                     ).strftime("%d/%m/%Y %H:%M"),
-
+                    "gestion": r.gestion,
                     "usuario": r.usuario.username,
                     "resultado": r.resultado,
                     "distribuidor": r.distribuidor,
                     "respuesta": r.respuesta
-
                 }
                 for r in historial[:10]
             ]
@@ -636,32 +705,12 @@ def reportes(request):
     if analisis_usuarios:
         usuario_mas_rechazos = max(analisis_usuarios, key=lambda item: (item.get("tasa_rechazo", 0), item.get("rechazados", 0)))
 
-    recomendaciones_analisis = []
-    if usuario_mas_activo:
-        recomendaciones_analisis.append({
-            "titulo": "Usuario con más actividad",
-            "descripcion": (
-                f"{usuario_mas_activo.get('usuario__username') or 'Sin usuario'} concentra {usuario_mas_activo.get('gestiones', 0)} gestiones en este período."
-            ),
-        })
-
-    if usuario_mas_rechazos and usuario_mas_rechazos.get("gestiones"):
-        recomendaciones_analisis.append({
-            "titulo": "Revisión de rechazos",
-            "descripcion": (
-                f"{usuario_mas_rechazos.get('usuario__username') or 'Sin usuario'} tiene {usuario_mas_rechazos.get('tasa_rechazo', 0)}% de rechazos, ideal para revisar calidad o procesos."
-            ),
-        })
-
-    recomendaciones_analisis.append({
-        "titulo": "Equilibrio de carga",
-        "descripcion": "Compara la carga entre usuarios para detectar si alguno trabaja por encima de la media y repartir mejor las gestiones.",
-    })
-
-    recomendaciones_analisis.append({
-        "titulo": "Seguimiento de desempeño",
-        "descripcion": "Monitorea semanalmente los usuarios con mayor volumen y los que muestran más rechazos para mejorar la productividad.",
-    })
+    recomendaciones_analisis = construir_recomendaciones_analisis(
+        analisis_usuarios=analisis_usuarios,
+        promedio_gestiones_por_usuario=promedio_gestiones_por_usuario,
+        total_gestiones=registros.count(),
+        total_duplicados=duplicados.count() if isinstance(duplicados, list) else 0,
+    )
 
 
     # =====================================================

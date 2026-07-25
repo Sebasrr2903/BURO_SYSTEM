@@ -22,6 +22,28 @@ body{
     background-repeat: no-repeat;
     background-attachment: fixed;
 }
+.modal-content {
+    border-radius: 1rem;
+    overflow: hidden;
+}
+.modal-header,
+.modal-footer {
+    padding: 0.85rem 1rem;
+}
+.modal-title {
+    font-size: 0.95rem;
+    letter-spacing: 0.02em;
+}
+.modal-body {
+    padding: 1rem 1.25rem;
+}
+.modal .btn {
+    min-width: 110px;
+}
+.modal .form-control-sm,
+.modal .form-select-sm {
+    min-height: 36px;
+}
 </style>
 
 
@@ -175,7 +197,7 @@ body{
       <div class="container">
 
 
-        <button type="button" class="btn btn-warning" onclick="recuperarUltimaGestion()">
+        <button type="button" class="btn btn-info" onclick="recuperarUltimaGestion()">
 
           ↩️ Recuperar última gestión
 
@@ -351,7 +373,7 @@ body{
         <textarea id="resultado"></textarea>
 
         <button id="new" onclick="copiarTexto()">📋 Copiar al portapapeles</button>
-        <button id="ocultar" onclick="toggleCalculadora()">🧮 Mostrar/Ocultar Calculadora</button>
+        <button id="ocultar" class="btn btn-info" onclick="toggleCalculadora()">🧮 Mostrar/Ocultar Calculadora</button>
 
       </div>
 
@@ -407,13 +429,13 @@ body{
 
   <div class="modal fade" id="modalCedulaExiste" tabindex="-1">
 
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
 
-        <div class="modal-content">
+        <div class="modal-content border-0 shadow-sm">
 
-            <div class="modal-header bg-warning">
+            <div class="modal-header bg-white border-bottom border-warning text-dark py-2 px-3">
 
-                <h5 class="modal-title">
+                <h5 class="modal-title mb-0">
                     ⚠️ Gestión encontrada
                 </h5>
 
@@ -425,13 +447,13 @@ body{
 
             </div>
 
-            <div class="modal-body">
+            <div class="modal-body p-3">
 
-                <p>
+                <p class="mb-3 small text-secondary">
                     Se encontraron gestiones anteriores para esta cédula.
                 </p>
 
-                <hr>
+                <hr class="my-3">
 
                 <div class="row">
 
@@ -459,6 +481,11 @@ body{
                         <p>
                             <strong>📌 Resultado:</strong>
                             <span id="resultadoHistorial"></span>
+                        </p>
+
+                        <p>
+                            <strong>🔢 Gestión:</strong>
+                            <span id="gestionHistorial"></span>
                         </p>
 
                     </div>
@@ -529,38 +556,13 @@ body{
 
                 </textarea>
 
-               <button
-                    type="button"
-                    class="btn btn-warning"
-                    onclick="generarNueva()">
-
-                    📄 Extraer Datos
-                </button>
-
             </div>
 
-            <div class="modal-footer">
-
-                <button
-                    type="button"
-                    class="btn btn-secondary"
-                    data-bs-dismiss="modal">
-
-                    Cancelar
-
-                </button>
-
-              
-
-               <button
-                    type="button"
-                    class="btn btn-success"
-                    onclick="generarYCopiar()">
-
-                    📄 Generar y Copiar
-
-                </button>
-
+            <div class="modal-footer py-2 px-3">
+                <button type="button" class="btn btn-modal-cancel btn-sm" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-modal-export btn-sm" onclick="generarNueva()">📄 Extraer</button>
+                <button type="button" class="btn btn-modal-duplicate btn-sm" onclick="generarCasoDuplicado()">🔁 Caso duplicado</button>
+                <button type="button" class="btn btn-modal-copy btn-sm" onclick="generarYCopiar()">📄 Copiar</button>
             </div>
 
         </div>
@@ -569,62 +571,68 @@ body{
 
 </div>
 
-    <div class="modal fade" id="perfilModal">
+<div class="modal fade" id="modalGenerarDesdeHistorial" tabindex="-1">
 
-      <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered modal-md">
 
-        <div class="modal-content">
+        <div class="modal-content border-0 shadow-sm">
 
-          <form method="POST" action="{% url 'actualizar_perfil' %}" enctype="multipart/form-data">
+            <div class="modal-header bg-white border-bottom border-success text-dark py-2 px-3">
 
-            {% csrf_token %}
+                <h5 class="modal-title mb-0">
+                    ✅ Generar y copiar desde el historial
+                </h5>
 
-            <div class="modal-header">
-
-              <h5>
-                Mi Perfil
-              </h5>
-
-            </div>
-
-            <div class="modal-body">
-              <label class="form-label">
-                  Color del sistema
-              </label>
-
-              <select
-                  class="form-select"
-                  name="color">
-
-                  <option value="azul">🔵 Azul</option>
-
-                  <option value="verde">🟢 Verde</option>
-
-                  <option value="morado">🟣 Morado</option>
-
-                  <option value="oscuro">⚫ Oscuro</option>
-
-                  <option value="rojo">🔴 Rojo</option>
-
-                  <option value="rosado">🩷 Rosado</option>
-
-                  <option value="naranja">🟠 Naranja</option>
-
-              </select>
-
-          
-
-            <div class="modal-footer">
-
-              <button class="btn btn-primary">
-
-                Guardar
-
-              </button>
+                <button
+                    type="button"
+                    class="btn-close btn-close-white"
+                    data-bs-dismiss="modal">
+                </button>
 
             </div>
 
-          </form>
+            <div class="modal-body p-3">
+                <p class="mb-0 small text-secondary">
+                    Esta acción llenará los campos con los datos del historial y generará una nueva plantilla lista para copiar.
+                </p>
+            </div>
+            <div class="modal-footer py-2 px-3">
+                <button type="button" class="btn btn-modal-cancel btn-sm" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-modal-copy btn-sm" onclick="generarYCopiar()">📄 Generar</button>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+    <div class="modal fade" id="perfilModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-md">
+            <div class="modal-content border-0 shadow-sm">
+                <form method="POST" action="{% url 'actualizar_perfil' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-header bg-white border-bottom border-dark text-dark py-2 px-3">
+                        <h5 class="modal-title mb-0">Mi Perfil</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body p-3">
+                        <label class="form-label small text-muted mb-2 d-block">Color del sistema</label>
+                        <select class="form-select form-select-sm" name="color">
+                            <option value="azul">🔵 Azul</option>
+                            <option value="verde">🟢 Verde</option>
+                            <option value="morado">🟣 Morado</option>
+                            <option value="oscuro">⚫ Oscuro</option>
+                            <option value="rojo">🔴 Rojo</option>
+                            <option value="rosado">🩷 Rosado</option>
+                            <option value="naranja">🟠 Naranja</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer py-2 px-3">
+                        <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary btn-sm">Guardar</button>
+                    </div>
+                </form>
 
         </div>
 
