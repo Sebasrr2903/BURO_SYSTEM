@@ -3,7 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from openpyxl import Workbook
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from django.utils import timezone
 from urllib3 import request
 from .models import PlantillaGenerada
@@ -174,7 +174,7 @@ def guardar_plantilla(request):
     return JsonResponse({"success": False})
 
 
-from django.db.models import Q, Count, Max
+from django.db.models import Q, Count, Max, F
 from django.core.paginator import Paginator
 from django.views.decorators.http import require_POST
 from .models import Preset
@@ -526,6 +526,13 @@ def reportes(request):
     hora_fin = request.GET.get("hora_fin")
     busqueda = request.GET.get("q", "").strip()
 
+    # La carga inicial usa un período acotado para no procesar todo el
+    # histórico. Los filtros permiten ampliar el rango cuando se necesite.
+    if not fecha_inicio and not fecha_fin:
+        hoy = timezone.localdate()
+        fecha_fin = hoy.isoformat()
+        fecha_inicio = (hoy - timedelta(days=29)).isoformat()
+
 
     # =====================================================
     # QUERYSET BASE
@@ -606,20 +613,18 @@ def reportes(request):
     # SOLO DEL PERÍODO FILTRADO
     # =====================================================
 
-    duplicados = (
+    duplicados = list(
         registros
         .exclude(cedula="")
-        .values(
-            "cedula",
-            "nombre_cliente"
-        )
+        .exclude(cedula__isnull=True)
+        .values("cedula", "nombre_cliente")
         .annotate(
-            total=Count("id")
+            total=Count("id"),
+            ultima_fecha=Max("fecha"),
+            total_usuarios=Count("usuario", distinct=True),
         )
-        .filter(
-            total__gt=1
-        )
-        .order_by("-total")[:20]
+        .filter(total__gt=1)
+        .order_by("-total")[:50]
     )
 
 
@@ -627,20 +632,19 @@ def reportes(request):
     # ESTADOS
     # =====================================================
 
-    procede = registros.filter(
-        resultado="PROCEDE"
-    ).count()
-
-    no_procede = registros.filter(
-        resultado="NO PROCEDE"
-    ).count()
-
-    rechazados = registros.exclude(
-        resultado__in=[
-            "PROCEDE",
-            "NO PROCEDE"
-        ]
-    ).count()
+    metricas = registros.aggregate(
+        total=Count("id"),
+        procede=Count("id", filter=Q(resultado="PROCEDE")),
+        no_procede=Count("id", filter=Q(resultado="NO PROCEDE")),
+        rechazados=Count(
+            "id",
+            filter=~Q(resultado__in=["PROCEDE", "NO PROCEDE"]),
+        ),
+    )
+    registros_count = metricas["total"]
+    procede = metricas["procede"]
+    no_procede = metricas["no_procede"]
+    rechazados = metricas["rechazados"]
 
 
     estados_json = [
@@ -683,39 +687,25 @@ def reportes(request):
     # DUPLICIDAD POR DISTRIBUIDOR
     # =====================================================
 
-    duplicidad_base = (
+    datos_duplicidad_distribuidor = list(
         registros
         .exclude(distribuidor="")
         .exclude(distribuidor__isnull=True)
         .exclude(cedula="")
         .exclude(cedula__isnull=True)
-        .values("distribuidor", "cedula")
-        .annotate(total=Count("id"))
-        .filter(total__gt=1)
-    )
-    resumen_duplicidad = {}
-    for item in duplicidad_base:
-        resumen = resumen_duplicidad.setdefault(
-            item["distribuidor"],
-            {
-                "distribuidor": item["distribuidor"],
-                "cedulas_duplicadas": 0,
-                "gestiones_repetidas": 0,
-                "gestiones_involucradas": 0,
-            },
+        .values("distribuidor")
+        .annotate(
+            gestiones_involucradas=Count("id"),
+            cedulas_unicas=Count("cedula", distinct=True),
         )
-        resumen["cedulas_duplicadas"] += 1
-        resumen["gestiones_repetidas"] += item["total"] - 1
-        resumen["gestiones_involucradas"] += item["total"]
-
-    datos_duplicidad_distribuidor = sorted(
-        resumen_duplicidad.values(),
-        key=lambda item: (
-            -item["gestiones_repetidas"],
-            -item["cedulas_duplicadas"],
-            item["distribuidor"],
-        ),
-    )[:10]
+        .annotate(
+            gestiones_repetidas=(
+                F("gestiones_involucradas") - F("cedulas_unicas")
+            ),
+        )
+        .filter(gestiones_repetidas__gt=0)
+        .order_by("-gestiones_repetidas", "distribuidor")[:10]
+    )
 
 
     # =====================================================
@@ -755,7 +745,6 @@ def reportes(request):
         u["tasa_no_procede"] = round((u.get("no_procede", 0) / total) * 100, 1) if total else 0
         u["tasa_rechazo"] = round((u.get("rechazados", 0) / total) * 100, 1) if total else 0
 
-    registros_count = registros.count()
     promedio_gestiones_por_usuario = round(registros_count / len(analisis_usuarios), 1) if analisis_usuarios else 0
 
     for u in analisis_usuarios:
@@ -806,8 +795,8 @@ def reportes(request):
     recomendaciones_analisis = construir_recomendaciones_analisis(
         analisis_usuarios=analisis_usuarios,
         promedio_gestiones_por_usuario=promedio_gestiones_por_usuario,
-        total_gestiones=registros.count(),
-        total_duplicados=duplicados.count() if isinstance(duplicados, list) else 0,
+        total_gestiones=registros_count,
+        total_duplicados=len(duplicados),
     )
 
 
@@ -852,7 +841,7 @@ def reportes(request):
     # KPIs
     # =====================================================
 
-    total_gestiones = registros.count()
+    total_gestiones = registros_count
 
     total_usuarios = (
         registros
@@ -915,21 +904,6 @@ def reportes(request):
     parametros_analista.pop("usuario", None)
     parametros_analista.pop("page", None)
     query_analista = parametros_analista.urlencode()
-
-
-    duplicados = (
-    registros
-    .exclude(cedula="")
-    .exclude(cedula__isnull=True)
-    .values("cedula", "nombre_cliente")
-    .annotate(
-        total=Count("id"),
-        ultima_fecha=Max("fecha"),
-        total_usuarios=Count("usuario", distinct=True),
-    )
-    .filter(total__gt=1)
-    .order_by("-total")[:50]
-)
 
     # =====================================================
     # CENTRO DE ALERTAS

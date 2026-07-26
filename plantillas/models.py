@@ -70,6 +70,18 @@ class PlantillaGenerada(models.Model):
                 fields=["cedula_busqueda_2"],
                 name="plant_cedula_2_idx",
             ),
+            models.Index(
+                fields=["-fecha"],
+                name="plant_fecha_idx",
+            ),
+            models.Index(
+                fields=["distribuidor", "cedula"],
+                name="plant_dist_cedula_idx",
+            ),
+            models.Index(
+                fields=["resultado", "-fecha"],
+                name="plant_result_fecha_idx",
+            ),
         ]
 
     def save(self, *args, **kwargs):
