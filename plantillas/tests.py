@@ -1,6 +1,9 @@
+from io import BytesIO
+
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
+from openpyxl import load_workbook
 
 from .models import PlantillaGenerada
 from .views import construir_recomendaciones_analisis
@@ -113,3 +116,21 @@ class VerificarCedulaTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertFalse(response.json()["existe"])
+
+    def test_exporta_excel_valido_con_filtros(self):
+        self.crear_registro("111111111", "GESTION-INCLUIDA")
+        self.crear_registro("222222222", "GESTION-EXCLUIDA")
+
+        response = self.client.get(
+            reverse("exportar_excel"),
+            {"q": "GESTION-INCLUIDA"},
+        )
+        contenido = b"".join(response.streaming_content)
+        libro = load_workbook(BytesIO(contenido), read_only=True)
+        hoja = libro["Historial"]
+        filas = list(hoja.iter_rows(values_only=True))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(filas[0][2], "Gestión")
+        self.assertEqual(len(filas), 2)
+        self.assertEqual(filas[1][2], "GESTION-INCLUIDA")

@@ -1,6 +1,10 @@
 from django.shortcuts import get_object_or_404, render, redirect
-from django.http import HttpResponse, JsonResponse
+from django.http import FileResponse, HttpResponse, JsonResponse
 from openpyxl import Workbook
+from openpyxl.cell import WriteOnlyCell
+from openpyxl.cell.cell import ILLEGAL_CHARACTERS_RE
+from openpyxl.styles import Alignment, Font, PatternFill
+from openpyxl.utils import get_column_letter
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime, timedelta, timezone
@@ -10,6 +14,7 @@ from .models import PlantillaGenerada
 from django.db.models.functions import TruncDate
 from django.contrib.auth.models import User
 import json
+import tempfile
 
 from .models import PlantillaGenerada
 
@@ -354,37 +359,21 @@ def presets_delete(request, preset_id):
 
 @login_required
 def exportar_excel(request):
+    fecha_inicio = request.GET.get("fecha_inicio")
+    fecha_fin = request.GET.get("fecha_fin")
+    hora_inicio = request.GET.get("hora_inicio")
+    hora_fin = request.GET.get("hora_fin")
+    usuario = request.GET.get("usuario")
+    resultado = request.GET.get("resultado")
+    distribuidor = request.GET.get("distribuidor")
+    busqueda = request.GET.get("q", "").strip()
 
-    wb = Workbook()
-    ws = wb.active
+    registros = PlantillaGenerada.objects.all()
 
-
-
-    ws.title = "Historial"
-
-    ws.append([
-        "Fecha",
-        "Usuario",
-        "Gestión",
-        "Cliente",
-        "Cédula",
-        "Resultado",
-        "Distribuidor", 
-        "Respuesta"
-    ])
-
-    registros = PlantillaGenerada.objects.all().order_by('-fecha')
-
-    fecha_inicio = request.GET.get('fecha_inicio')
-    fecha_fin = request.GET.get('fecha_fin')
-
-    # Usar rangos datetime mantiene utilizable el índice de ``fecha``.
-    # ``fecha__date`` obliga a transformar cada fila en PostgreSQL.
     try:
         if fecha_inicio:
-            hora_desde = hora_inicio or "00:00"
             inicio_dt = datetime.strptime(
-                f"{fecha_inicio} {hora_desde}",
+                f"{fecha_inicio} {hora_inicio or '00:00'}",
                 "%Y-%m-%d %H:%M",
             )
             registros = registros.filter(
@@ -411,31 +400,117 @@ def exportar_excel(request):
     except (TypeError, ValueError):
         pass
 
-    for registro in registros:
+    if usuario:
+        registros = registros.filter(usuario__username=usuario)
+    if distribuidor:
+        registros = registros.filter(distribuidor=distribuidor)
+    if resultado == "RECHAZADOS":
+        registros = registros.exclude(
+            resultado__in=["PROCEDE", "NO PROCEDE"]
+        )
+    elif resultado:
+        registros = registros.filter(resultado=resultado)
+    if busqueda:
+        registros = registros.filter(
+            Q(gestion__icontains=busqueda)
+            | Q(cedula__icontains=busqueda)
+            | Q(nombre_cliente__icontains=busqueda)
+            | Q(distribuidor__icontains=busqueda)
+            | Q(usuario__username__icontains=busqueda)
+        )
 
-        ws.append([
-            timezone.localtime(
-            registro.fecha).strftime("%d/%m/%Y %H:%M"),
-            registro.usuario.username if registro.usuario else "",
-            registro.gestion,
-            registro.nombre_cliente,
-            registro.cedula,
-            registro.resultado,
-            registro.distribuidor,
-            registro.respuesta
-        ])
-
-    response = HttpResponse(
-        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    filas = (
+        registros
+        .order_by("-fecha")
+        .values_list(
+            "fecha",
+            "usuario__username",
+            "gestion",
+            "nombre_cliente",
+            "cedula",
+            "resultado",
+            "distribuidor",
+            "respuesta",
+        )
+        .iterator(chunk_size=2000)
     )
 
-    response[
-        'Content-Disposition'
-    ] = 'attachment; filename=historial.xlsx'
+    wb = Workbook(write_only=True)
+    ws = wb.create_sheet("Historial")
+    ws.freeze_panes = "A2"
+    encabezados = [
+        "Fecha",
+        "Usuario",
+        "Gestión",
+        "Cliente",
+        "Cédula",
+        "Resultado",
+        "Distribuidor",
+        "Respuesta",
+    ]
+    fila_encabezado = []
+    for titulo in encabezados:
+        celda = WriteOnlyCell(ws, value=titulo)
+        celda.font = Font(bold=True, color="FFFFFF")
+        celda.fill = PatternFill("solid", fgColor="0D6EFD")
+        celda.alignment = Alignment(horizontal="center")
+        fila_encabezado.append(celda)
+    ws.append(fila_encabezado)
 
-    wb.save(response)
+    for indice, ancho in enumerate(
+        [18, 20, 18, 34, 24, 18, 32, 80],
+        start=1,
+    ):
+        ws.column_dimensions[get_column_letter(indice)].width = ancho
 
-    return response
+    def texto_excel(valor):
+        texto = ILLEGAL_CHARACTERS_RE.sub("", str(valor or ""))
+        if texto.startswith(("=", "+", "-", "@")):
+            texto = f"'{texto}"
+        return texto[:32767]
+
+    total_filas = 1
+    for (
+        fecha,
+        username,
+        gestion,
+        nombre_cliente,
+        cedula,
+        estado,
+        dts,
+        respuesta,
+    ) in filas:
+        total_filas += 1
+        ws.append([
+            timezone.localtime(fecha).strftime("%d/%m/%Y %H:%M"),
+            texto_excel(username),
+            texto_excel(gestion),
+            texto_excel(nombre_cliente),
+            texto_excel(cedula),
+            texto_excel(estado),
+            texto_excel(dts),
+            texto_excel(respuesta),
+        ])
+
+    ws.auto_filter.ref = f"A1:H{total_filas}"
+
+    archivo = tempfile.SpooledTemporaryFile(
+        max_size=20 * 1024 * 1024,
+        mode="w+b",
+    )
+    wb.save(archivo)
+    archivo.seek(0)
+
+    fecha_archivo = timezone.localdate().strftime("%Y%m%d")
+    return FileResponse(
+        archivo,
+        as_attachment=True,
+        filename=f"historial_{fecha_archivo}.xlsx",
+        content_type=(
+            "application/vnd.openxmlformats-officedocument."
+            "spreadsheetml.sheet"
+        ),
+    )
 
 
 
