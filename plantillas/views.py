@@ -909,48 +909,8 @@ def reportes(request):
     # CENTRO DE ALERTAS
     # =====================================================
 
-    inconsistencias_qs = (
-        registros
-        .exclude(cedula="")
-        .exclude(cedula__isnull=True)
-        .values("cedula", "nombre_cliente")
-        .annotate(
-            total=Count("id"),
-            positivos=Count(
-                "id",
-                filter=Q(resultado="PROCEDE"),
-            ),
-            negativos=Count(
-                "id",
-                filter=~Q(resultado="PROCEDE"),
-            ),
-            ultima_fecha=Max("fecha"),
-        )
-        .filter(positivos__gt=0, negativos__gt=0)
-        .order_by("-ultima_fecha")[:25]
-    )
-
     alertas_sistema = []
 
-    for item in inconsistencias_qs:
-        alertas_sistema.append({
-            "prioridad": "CRITICA",
-            "tipo": "Resultado inconsistente",
-            "titulo": item["cedula"],
-            "detalle": (
-                f'{item["nombre_cliente"] or "Sin nombre"}: '
-                f'{item["positivos"]} procede y '
-                f'{item["negativos"]} no procede/rechazo.'
-            ),
-            "cantidad": item["total"],
-            "fecha": item["ultima_fecha"],
-            "cedula": item["cedula"],
-        })
-
-    cedulas_inconsistentes = {
-        item["cedula"]
-        for item in inconsistencias_qs
-    }
     for item in duplicados:
         prioridad = "CRITICA" if item["total"] >= 5 else "ADVERTENCIA"
         alertas_sistema.append({
@@ -965,7 +925,6 @@ def reportes(request):
             "cantidad": item["total"],
             "fecha": item["ultima_fecha"],
             "cedula": item["cedula"],
-            "relacionada": item["cedula"] in cedulas_inconsistentes,
         })
 
     for item in analisis_usuarios:
@@ -1032,7 +991,6 @@ def reportes(request):
             alerta["prioridad"] == "ADVERTENCIA"
             for alerta in alertas_sistema
         ),
-        "inconsistencias": len(cedulas_inconsistentes),
     }
 
 
