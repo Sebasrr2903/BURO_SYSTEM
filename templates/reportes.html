@@ -22,6 +22,265 @@
         background-repeat: no-repeat;
         background-attachment: fixed;
     }
+
+    .contenedor-grafico {
+        position: relative;
+        width: 100%;
+        height: 360px;
+    }
+
+    @media (max-width: 767.98px) {
+        .contenedor-grafico {
+            height: 300px;
+        }
+    }
+
+    .gestiones-card {
+        border: 0;
+        overflow: hidden;
+    }
+
+    #gestiones {
+        padding: 0 2rem 2rem;
+    }
+
+    .gestiones-toolbar {
+        background: #fff;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .gestiones-table-wrap {
+        max-height: 68vh;
+        overflow: auto;
+    }
+
+    .gestiones-table {
+        min-width: 1050px;
+        margin-bottom: 0;
+    }
+
+    .gestiones-table thead th {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        background: #f7f9fc;
+        border-bottom: 2px solid #dee2e6;
+        color: #495057;
+        font-size: .75rem;
+        letter-spacing: .04em;
+        padding: .9rem .75rem;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    .gestiones-table tbody td {
+        padding: .8rem .75rem;
+        vertical-align: middle;
+    }
+
+    .gestion-cliente {
+        display: block;
+        max-width: 220px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .gestion-id {
+        color: #0d6efd;
+        font-weight: 700;
+    }
+
+    .gestion-cedula {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: .85rem;
+    }
+
+    .gestion-fecha {
+        white-space: nowrap;
+    }
+
+    .resultado-badge {
+        min-width: 92px;
+        padding: .45rem .6rem;
+    }
+
+    .gestiones-empty {
+        padding: 4rem 1rem !important;
+    }
+
+    @media (max-width: 767.98px) {
+        #gestiones {
+            padding: 0 .75rem 1.25rem;
+        }
+    }
+
+    #duplicados {
+        padding: 0 2rem 2rem;
+    }
+
+    .duplicados-card {
+        border: 0;
+        overflow: hidden;
+    }
+
+    .duplicados-table-wrap {
+        max-height: 68vh;
+        overflow: auto;
+    }
+
+    .duplicados-table {
+        min-width: 980px;
+        margin-bottom: 0;
+    }
+
+    .duplicados-table thead th {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        background: #f7f9fc;
+        color: #495057;
+        font-size: .75rem;
+        letter-spacing: .04em;
+        padding: .9rem .75rem;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    .duplicados-table tbody td {
+        padding: .85rem .75rem;
+        vertical-align: middle;
+    }
+
+    .duplicado-alto {
+        box-shadow: inset 4px 0 #dc3545;
+    }
+
+    .duplicado-medio {
+        box-shadow: inset 4px 0 #ffc107;
+    }
+
+    .duplicado-bajo {
+        box-shadow: inset 4px 0 #0dcaf0;
+    }
+
+    .duplicado-contador {
+        align-items: center;
+        display: inline-flex;
+        font-size: .9rem;
+        height: 2rem;
+        justify-content: center;
+        min-width: 2rem;
+    }
+
+    @media (max-width: 767.98px) {
+        #duplicados {
+            padding: 0 .75rem 1.25rem;
+        }
+    }
+
+    #alertas {
+        padding: 0 2rem 2rem;
+    }
+
+    .alerta-resumen {
+        border: 0;
+        border-left: 4px solid;
+    }
+
+    .alerta-tabla-wrap {
+        max-height: 68vh;
+        overflow: auto;
+    }
+
+    .alerta-tabla {
+        min-width: 1050px;
+        margin-bottom: 0;
+    }
+
+    .alerta-tabla thead th {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        background: #f7f9fc;
+        color: #495057;
+        font-size: .75rem;
+        letter-spacing: .04em;
+        padding: .9rem .75rem;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    .alerta-tabla tbody td {
+        padding: .9rem .75rem;
+        vertical-align: middle;
+    }
+
+    .alerta-critica {
+        box-shadow: inset 4px 0 #dc3545;
+    }
+
+    .alerta-advertencia {
+        box-shadow: inset 4px 0 #ffc107;
+    }
+
+    @media (max-width: 767.98px) {
+        #alertas {
+            padding: 0 .75rem 1.25rem;
+        }
+    }
+
+    #estadisticas {
+        padding: 0 2rem 2rem;
+    }
+
+    .estadistica-kpi {
+        border: 0;
+        border-left: 4px solid var(--bs-primary);
+        height: 100%;
+    }
+
+    .estadisticas-tabla-wrap {
+        max-height: 68vh;
+        overflow: auto;
+    }
+
+    .estadisticas-tabla {
+        min-width: 1180px;
+        margin-bottom: 0;
+    }
+
+    .estadisticas-tabla thead th {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        background: #f7f9fc;
+        color: #495057;
+        font-size: .75rem;
+        letter-spacing: .04em;
+        padding: .9rem .75rem;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    .estadisticas-tabla tbody td {
+        padding: .85rem .75rem;
+        vertical-align: middle;
+    }
+
+    .barra-calidad {
+        min-width: 150px;
+    }
+
+    .barra-calidad .progress {
+        height: .55rem;
+    }
+
+    @media (max-width: 767.98px) {
+        #estadisticas {
+            padding: 0 .75rem 1.25rem;
+        }
+    }
 </style>
 
 <body class="tema-{{ request.user.perfil.color }}">
@@ -272,7 +531,22 @@
 
                 </div>
 
-                <div class="col-md-8"></div>
+                <div class="col-md-8">
+                    <label for="busquedaGestiones" class="form-label">
+                        Buscar en gestiones
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text">🔎</span>
+                        <input
+                            type="search"
+                            name="q"
+                            id="busquedaGestiones"
+                            class="form-control"
+                            value="{{ busqueda }}"
+                            placeholder="Gestión, cédula, cliente, distribuidor o usuario"
+                        >
+                    </div>
+                </div>
 
                 <div class="col-md-4 d-flex justify-content-end gap-2">
                     <button type="submit" class="btn btn-primary">
@@ -427,7 +701,7 @@
 
                     <div class="col-md-6">
 
-                        <div class="card shadow">
+                        <div class="card shadow h-100">
 
                             <div class="card-header">
 
@@ -435,7 +709,7 @@
 
                             </div>
 
-                            <div class="card-body">
+                            <div class="card-body contenedor-grafico">
 
                                 <canvas id="graficoEstados"></canvas>
 
@@ -447,7 +721,7 @@
 
                     <div class="col-md-6">
 
-                        <div class="card shadow">
+                        <div class="card shadow h-100">
 
                             <div class="card-header">
 
@@ -455,7 +729,7 @@
 
                             </div>
 
-                            <div class="card-body">
+                            <div class="card-body contenedor-grafico">
 
                                 <canvas id="graficoDia"></canvas>
 
@@ -474,157 +748,190 @@
 
         <div class="tab-pane fade" id="gestiones">
 
-            <div class="card shadow mt-4">
-
-                <div class="card-header">
-
-                    Historial de Gestiones
-
+            <div class="card shadow mt-4 gestiones-card">
+                <div class="card-header bg-primary text-white d-flex flex-wrap justify-content-between align-items-center gap-2 py-3">
+                    <div>
+                        <h5 class="mb-0">Historial de gestiones</h5>
+                        <small class="opacity-75">{{ ultimas_gestiones.paginator.count }} resultados</small>
+                    </div>
+                    <span class="badge bg-light text-primary fs-6">
+                        Página {{ ultimas_gestiones.number }} de {{ ultimas_gestiones.paginator.num_pages }}
+                    </span>
                 </div>
 
-                <div class="card-body">
+                <div class="gestiones-toolbar p-3 d-flex flex-wrap justify-content-between align-items-center gap-3">
+                    <span class="text-muted small">
+                        Mostrando <strong>{{ ultimas_gestiones.start_index }}–{{ ultimas_gestiones.end_index }}</strong>
+                        de <strong>{{ ultimas_gestiones.paginator.count }}</strong>
+                    </span>
+                    <form method="get" action="{% url 'reportes' %}#gestiones" class="d-flex align-items-center gap-2">
+                        {% for key, value in request.GET.items %}
+                            {% if key != "limite" and key != "page" %}
+                                <input type="hidden" name="{{ key }}" value="{{ value }}">
+                            {% endif %}
+                        {% endfor %}
+                        <label for="limiteGestiones" class="small text-muted">Filas:</label>
+                        <select id="limiteGestiones" name="limite" class="form-select form-select-sm" onchange="this.form.submit()">
+                            <option value="25" {% if limite_gestiones == 25 %}selected{% endif %}>25</option>
+                            <option value="50" {% if limite_gestiones == 50 %}selected{% endif %}>50</option>
+                            <option value="100" {% if limite_gestiones == 100 %}selected{% endif %}>100</option>
+                        </select>
+                    </form>
+                </div>
 
-                    <table class="table table-hover">
-
+                <div class="gestiones-table-wrap">
+                    <table class="table table-hover gestiones-table">
                         <thead>
-
                             <tr>
-
                                 <th>Fecha</th>
-
                                 <th>Gestión</th>
-
                                 <th>Cédula</th>
-
                                 <th>Cliente</th>
-
                                 <th>Usuario</th>
-
                                 <th>Distribuidor</th>
-
-                                <th>Resultado</th>
-
-                                <th>Acción</th>
-
+                                <th class="text-center">Resultado</th>
+                                <th class="text-end">Acciones</th>
                             </tr>
-
                         </thead>
-                                <tbody id="tablaReportes">
-
-                                    {% for r in ultimas_gestiones %}
-
-                                    <tr>
-                                        <td>{{ r.fecha|date:"d/m/Y H:i" }}</td>
-                                        <td>{{ r.gestion }}</td>
-                                        <td>{{ r.cedula }}</td>
-                                        <td>{{ r.nombre_cliente }}</td>
-                                        <td>
-                                            {% if r.usuario %}
-                                                {{ r.usuario.username }}
-                                            {% else %}
-                                                Sin usuario
-                                            {% endif %}
-                                        </td>
-                                        <td>{{ r.distribuidor }}</td>
-                                        <td>
-                                            {% if r.resultado == "PROCEDE" %}
-                                                <span class="badge bg-success">PROCEDE</span>
-                                            {% elif r.resultado == "NO PROCEDE" %}
-                                                <span class="badge bg-warning text-dark">NO PROCEDE</span>
-                                            {% else %}
-                                                <span class="badge bg-danger">{{ r.resultado }}</span>
-                                            {% endif %}
-                                        </td>
-                                        <td>
-                                            <button
-                                                type="button"
-                                                class="btn btn-sm btn-primary"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#respuestaModal{{ r.id }}"
-                                            >
-                                                Ver
-                                            </button>
-                                        </td>
-                                    </tr>
-
-                                    <div class="modal fade" id="respuestaModal{{ r.id }}" tabindex="-1">
-                                        <div class="modal-dialog modal-lg">
-                                            <div class="modal-content">
-
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title">
-                                                        Respuesta de la gestión {{ r.gestion }}
-                                                    </h5>
-
-                                                    <button
-                                                        type="button"
-                                                        class="btn-close"
-                                                        data-bs-dismiss="modal"
-                                                    ></button>
-                                                </div>
-
-                                                <div class="modal-body">
-                                                    <textarea
-                                                        class="form-control"
-                                                        rows="12"
-                                                        readonly
-                                                    >{{ r.respuesta }}</textarea>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {% empty %}
-
-                                    <tr>
-                                        <td colspan="8" class="text-center">
-                                            No se encontraron gestiones.
-                                        </td>
-                                    </tr>
-
-                                    {% endfor %}
-
-                                </tbody>
-
+                        <tbody id="tablaReportes">
+                            {% for r in ultimas_gestiones %}
+                                <tr>
+                                    <td class="gestion-fecha">
+                                        <div class="fw-semibold">{{ r.fecha|date:"d/m/Y" }}</div>
+                                        <small class="text-muted">{{ r.fecha|date:"H:i" }}</small>
+                                    </td>
+                                    <td><span class="gestion-id">{{ r.gestion|default:"—" }}</span></td>
+                                    <td><span class="gestion-cedula">{{ r.cedula|default:"—" }}</span></td>
+                                    <td><span class="gestion-cliente" title="{{ r.nombre_cliente }}">{{ r.nombre_cliente|default:"Sin nombre" }}</span></td>
+                                    <td>
+                                        {% if r.usuario %}
+                                            {{ r.usuario.username }}
+                                        {% else %}
+                                            <span class="text-muted">Sin usuario</span>
+                                        {% endif %}
+                                    </td>
+                                    <td><span class="gestion-cliente" title="{{ r.distribuidor }}">{{ r.distribuidor|default:"—" }}</span></td>
+                                    <td class="text-center">
+                                        {% if r.resultado == "PROCEDE" %}
+                                            <span class="badge rounded-pill bg-success resultado-badge">PROCEDE</span>
+                                        {% elif r.resultado == "NO PROCEDE" %}
+                                            <span class="badge rounded-pill bg-warning text-dark resultado-badge">NO PROCEDE</span>
+                                        {% else %}
+                                            <span class="badge rounded-pill bg-danger resultado-badge">{{ r.resultado }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-end">
+                                        <button
+                                            type="button"
+                                            class="btn btn-sm btn-outline-primary btn-ver-respuesta"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#respuestaGestionModal"
+                                            data-gestion="{{ r.gestion|escape }}"
+                                            data-respuesta="{{ r.respuesta|escape }}"
+                                        >Ver respuesta</button>
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="8" class="text-center gestiones-empty">
+                                        <div class="fs-1 mb-2">🔎</div>
+                                        <h5>No se encontraron gestiones</h5>
+                                        <p class="text-muted mb-0">Ajusta los filtros o limpia la búsqueda.</p>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
                     </table>
-
                 </div>
 
+                {% if ultimas_gestiones.paginator.num_pages > 1 %}
+                    <div class="card-footer bg-white py-3">
+                        <nav aria-label="Paginación de gestiones">
+                            <ul class="pagination pagination-sm justify-content-center mb-0">
+                                <li class="page-item {% if not ultimas_gestiones.has_previous %}disabled{% endif %}">
+                                    {% if ultimas_gestiones.has_previous %}
+                                        <a class="page-link" href="?{% if query_paginacion %}{{ query_paginacion }}&{% endif %}page={{ ultimas_gestiones.previous_page_number }}#gestiones">Anterior</a>
+                                    {% else %}<span class="page-link">Anterior</span>{% endif %}
+                                </li>
+                                {% for numero in ultimas_gestiones.paginator.page_range %}
+                                    {% if numero == ultimas_gestiones.number %}
+                                        <li class="page-item active"><span class="page-link">{{ numero }}</span></li>
+                                    {% elif numero >= ultimas_gestiones.number|add:"-2" and numero <= ultimas_gestiones.number|add:"2" %}
+                                        <li class="page-item"><a class="page-link" href="?{% if query_paginacion %}{{ query_paginacion }}&{% endif %}page={{ numero }}#gestiones">{{ numero }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+                                <li class="page-item {% if not ultimas_gestiones.has_next %}disabled{% endif %}">
+                                    {% if ultimas_gestiones.has_next %}
+                                        <a class="page-link" href="?{% if query_paginacion %}{{ query_paginacion }}&{% endif %}page={{ ultimas_gestiones.next_page_number }}#gestiones">Siguiente</a>
+                                    {% else %}<span class="page-link">Siguiente</span>{% endif %}
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="modal fade" id="respuestaGestionModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="respuestaGestionTitulo">Respuesta de la gestión</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                        </div>
+                        <div class="modal-body">
+                            <textarea id="respuestaGestionTexto" class="form-control" rows="14" readonly></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-primary" id="copiarRespuestaGestion">Copiar respuesta</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
         </div>
 
         <div class="tab-pane fade" id="duplicados">
 
-    <div class="container mt-4">
+    <div class="mt-4">
 
-        <div class="card shadow">
+        <div class="card shadow duplicados-card">
 
-            <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
+            <div class="card-header bg-danger text-white d-flex flex-wrap justify-content-between align-items-center gap-2 py-3">
 
-                <span>
-                    🔍 Detección de gestiones duplicadas
-                </span>
+                <div>
+                    <h5 class="mb-0">Gestiones duplicadas</h5>
+                    <small class="opacity-75">Cédulas con más de una gestión en el período seleccionado</small>
+                </div>
 
-                <span class="badge bg-light text-danger">
+                <span class="badge rounded-pill bg-light text-danger fs-6 px-3">
                     {{ duplicados|length }} resultados
                 </span>
 
             </div>
 
-            <div class="card-body">
+            <div class="card-body p-0">
+                <div class="p-3 border-bottom bg-white">
+                    <div class="input-group" style="max-width: 520px;">
+                        <span class="input-group-text">🔎</span>
+                        <input
+                            type="search"
+                            id="buscarDuplicados"
+                            class="form-control"
+                            placeholder="Filtrar por cédula o cliente"
+                            autocomplete="off"
+                        >
+                        <span class="input-group-text text-muted" id="contadorDuplicados">
+                            {{ duplicados|length }}
+                        </span>
+                    </div>
+                </div>
 
-                <p class="text-muted">
-                    Se muestran las cédulas que poseen más de una gestión
-                    dentro del período seleccionado.
-                </p>
+                <div class="duplicados-table-wrap">
 
-                <div class="table-responsive">
+                    <table class="table table-hover duplicados-table">
 
-                    <table class="table table-hover align-middle">
-
-                        <thead class="table-dark">
+                        <thead>
 
                             <tr>
                                 <th>Cédula</th>
@@ -638,25 +945,30 @@
 
                         </thead>
 
-                        <tbody>
+                        <tbody id="tablaDuplicados">
 
                             {% for d in duplicados %}
 
-                            <tr>
+                            <tr
+                                class="{% if d.total >= 5 %}duplicado-alto{% elif d.total >= 3 %}duplicado-medio{% else %}duplicado-bajo{% endif %}"
+                                data-duplicado="{{ d.cedula|lower }} {{ d.nombre_cliente|default:''|lower }}"
+                            >
 
                                 <td>
-                                    <strong>
+                                    <strong class="gestion-cedula text-primary">
                                         {{ d.cedula }}
                                     </strong>
                                 </td>
 
                                 <td>
-                                    {{ d.nombre_cliente|default:"SIN NOMBRE" }}
+                                    <span class="gestion-cliente" title="{{ d.nombre_cliente|default:'SIN NOMBRE' }}">
+                                        {{ d.nombre_cliente|default:"SIN NOMBRE" }}
+                                    </span>
                                 </td>
 
                                 <td>
 
-                                    <span class="badge bg-danger">
+                                    <span class="badge rounded-pill bg-danger duplicado-contador">
                                         {{ d.total }}
                                     </span>
 
@@ -664,33 +976,34 @@
 
                                 <td>
 
-                                    <span class="badge bg-primary">
+                                    <span class="badge rounded-pill bg-primary duplicado-contador">
                                         {{ d.total_usuarios }}
                                     </span>
 
                                 </td>
 
                                 <td>
-                                    {{ d.ultima_fecha|date:"d/m/Y H:i" }}
+                                    <div class="fw-semibold">{{ d.ultima_fecha|date:"d/m/Y" }}</div>
+                                    <small class="text-muted">{{ d.ultima_fecha|date:"H:i" }}</small>
                                 </td>
 
                                 <td>
 
                                     {% if d.total >= 5 %}
 
-                                        <span class="badge bg-danger">
+                                        <span class="badge rounded-pill bg-danger px-3 py-2">
                                             Alta repetición
                                         </span>
 
                                     {% elif d.total >= 3 %}
 
-                                        <span class="badge bg-warning text-dark">
+                                        <span class="badge rounded-pill bg-warning text-dark px-3 py-2">
                                             Revisar
                                         </span>
 
                                     {% else %}
 
-                                        <span class="badge bg-info text-dark">
+                                        <span class="badge rounded-pill bg-info text-dark px-3 py-2">
                                             Duplicado
                                         </span>
 
@@ -698,11 +1011,11 @@
 
                                 </td>
 
-                                <td>
+                                <td class="text-end">
 
                                     <button
                                         type="button"
-                                        class="btn btn-sm btn-primary"
+                                        class="btn btn-sm btn-outline-primary text-nowrap"
                                         onclick="verHistorialDuplicado('{{ d.cedula|escapejs }}')"
                                     >
                                         Ver historial
@@ -716,10 +1029,10 @@
 
                             <tr>
 
-                                <td colspan="7" class="text-center py-4">
-
-                                    No se encontraron cédulas duplicadas
-                                    para el período seleccionado.
+                                <td colspan="7" class="text-center gestiones-empty">
+                                    <div class="fs-1 mb-2">✅</div>
+                                    <h5>No se encontraron duplicados</h5>
+                                    <p class="text-muted mb-0">No hay cédulas repetidas para el período seleccionado.</p>
 
                                 </td>
 
@@ -733,6 +1046,12 @@
 
                 </div>
 
+                <div id="sinCoincidenciasDuplicados" class="text-center gestiones-empty d-none">
+                    <div class="fs-1 mb-2">🔎</div>
+                    <h5>Sin coincidencias</h5>
+                    <p class="text-muted mb-0">Prueba con otra cédula o nombre de cliente.</p>
+                </div>
+
             </div>
 
         </div>
@@ -744,113 +1063,184 @@
 
         <div class="tab-pane fade" id="estadisticas">
 
-            <div class="container mt-4">
-
-                <div class="card shadow mb-4">
-
-                    <div class="card-header bg-info text-white">
-                        📊 Análisis por usuario
-                    </div>
-
-                    <div class="card-body">
-
-                        <div class="row mb-4">
-
-                            <div class="col-md-3 mb-3">
-                                <div class="border rounded p-3 h-100">
-                                    <h6 class="text-muted">Usuarios con actividad</h6>
-                                    <h3 class="mb-0">{{ analisis_usuarios|length }}</h3>
-                                </div>
-                            </div>
-
-                            <div class="col-md-3 mb-3">
-                                <div class="border rounded p-3 h-100">
-                                    <h6 class="text-muted">Promedio por usuario</h6>
-                                    <h3 class="mb-0">{{ promedio_gestiones_por_usuario }}</h3>
-                                </div>
-                            </div>
-
-                            <div class="col-md-3 mb-3">
-                                <div class="border rounded p-3 h-100">
-                                    <h6 class="text-muted">Usuario más activo</h6>
-                                    <h5 class="mb-0">{{ usuario_mas_activo.usuario__username|default:"Sin usuario" }}</h5>
-                                </div>
-                            </div>
-
-                            <div class="col-md-3 mb-3">
-                                <div class="border rounded p-3 h-100">
-                                    <h6 class="text-muted">Gestiones totales</h6>
-                                    <h3 class="mb-0">{{ total_gestiones }}</h3>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div class="table-responsive">
-
-                            <table class="table table-hover align-middle">
-
-                                <thead class="table-dark">
-                                    <tr>
-                                        <th>Usuario</th>
-                                        <th>Gestiones</th>
-                                        <th>Procede</th>
-                                        <th>No procede</th>
-                                        <th>Rechazos</th>
-                                        <th>% Procede</th>
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-                                    {% for usuario in analisis_usuarios %}
-                                    <tr>
-                                        <td><strong>{{ usuario.usuario__username|default:"Sin usuario" }}</strong></td>
-                                        <td>{{ usuario.gestiones }}</td>
-                                        <td>{{ usuario.procede }}</td>
-                                        <td>{{ usuario.no_procede }}</td>
-                                        <td>{{ usuario.rechazados }}</td>
-                                        <td>{{ usuario.tasa_procede }}%</td>
-                                    </tr>
-                                    {% empty %}
-                                    <tr>
-                                        <td colspan="6" class="text-center py-4">No hay datos de usuarios para este período.</td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-
-                            </table>
-
-                        </div>
-
-                    </div>
-
+            <div class="mt-4">
+                <div class="mb-4">
+                    <h3 class="mb-1">Volumen y calidad por analista</h3>
+                    <p class="text-muted mb-0">
+                        Comparación de carga, resultados y calidad dentro del período seleccionado.
+                    </p>
                 </div>
 
-                <div class="card shadow">
-
-                    <div class="card-header bg-warning text-dark">
-                        💡 Recomendaciones de análisis
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3">
+                        <div class="card shadow-sm estadistica-kpi">
+                            <div class="card-body">
+                                <div class="text-muted">Gestiones</div>
+                                <div class="display-6 fw-bold">{{ total_gestiones }}</div>
+                                <small>{{ analisis_usuarios|length }} analistas con actividad</small>
+                            </div>
+                        </div>
                     </div>
+                    <div class="col-md-3">
+                        <div class="card shadow-sm estadistica-kpi" style="--bs-primary: #6f42c1;">
+                            <div class="card-body">
+                                <div class="text-muted">Promedio por analista</div>
+                                <div class="display-6 fw-bold">{{ promedio_gestiones_por_usuario }}</div>
+                                <small>Referencia para medir la carga</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card shadow-sm estadistica-kpi" style="--bs-primary: #198754;">
+                            <div class="card-body">
+                                <div class="text-muted">Tasa global de procede</div>
+                                <div class="display-6 fw-bold text-success">{{ tasa_procede_global }}%</div>
+                                <small>{{ procede }} resultados procede</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card shadow-sm estadistica-kpi" style="--bs-primary: #dc3545;">
+                            <div class="card-body">
+                                <div class="text-muted">Tasa global de rechazo</div>
+                                <div class="display-6 fw-bold text-danger">{{ tasa_rechazo_global }}%</div>
+                                <small>{{ rechazados }} rechazos registrados</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
+                <div class="card shadow border-0 mb-4">
+                    <div class="card-header bg-primary text-white py-3">
+                        <h5 class="mb-0">Comparativo por analista</h5>
+                    </div>
                     <div class="card-body">
-                        <div class="row">
+                        <div class="contenedor-grafico">
+                            <canvas id="graficoAnalistas"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow border-0 overflow-hidden mb-4">
+                    <div class="card-header bg-dark text-white d-flex flex-wrap justify-content-between align-items-center gap-3 py-3">
+                        <div>
+                            <h5 class="mb-0">Detalle por analista</h5>
+                            <small class="opacity-75">La calidad se evalúa desde 5 gestiones</small>
+                        </div>
+                        <input
+                            type="search"
+                            id="buscarAnalista"
+                            class="form-control form-control-sm"
+                            style="max-width: 300px;"
+                            placeholder="Buscar analista"
+                        >
+                    </div>
+                    <div class="estadisticas-tabla-wrap">
+                        <table class="table table-hover estadisticas-tabla">
+                            <thead>
+                                <tr>
+                                    <th>Analista</th>
+                                    <th class="text-center">Gestiones</th>
+                                    <th>Carga</th>
+                                    <th>Resultados</th>
+                                    <th>Calidad</th>
+                                    <th>Comparación</th>
+                                    <th class="text-end">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaEstadisticas">
+                                {% for usuario in analisis_usuarios %}
+                                    <tr data-analista="{{ usuario.usuario__username|default:'sin usuario'|lower }}">
+                                        <td>
+                                            <strong>{{ usuario.usuario__username|default:"Sin usuario" }}</strong>
+                                            {% if not usuario.muestra_suficiente %}
+                                                <div><small class="text-muted">Muestra menor a 5</small></div>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="badge rounded-pill bg-primary duplicado-contador">{{ usuario.gestiones }}</span>
+                                        </td>
+                                        <td>
+                                            <span class="badge rounded-pill bg-{{ usuario.nivel_carga_clase }} px-3 py-2">
+                                                {{ usuario.nivel_carga }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="small text-nowrap">
+                                                <span class="text-success">● {{ usuario.procede }}</span>
+                                                <span class="text-warning-emphasis ms-2">● {{ usuario.no_procede }}</span>
+                                                <span class="text-danger ms-2">● {{ usuario.rechazados }}</span>
+                                            </div>
+                                        </td>
+                                        <td class="barra-calidad">
+                                            <div class="d-flex justify-content-between small mb-1">
+                                                <span>Procede {{ usuario.tasa_procede }}%</span>
+                                                <span>Rechazo {{ usuario.tasa_rechazo }}%</span>
+                                            </div>
+                                            <div class="progress" role="progressbar">
+                                                <div class="progress-bar bg-success" style="width: {{ usuario.tasa_procede }}%"></div>
+                                                <div class="progress-bar bg-warning" style="width: {{ usuario.tasa_no_procede }}%"></div>
+                                                <div class="progress-bar bg-danger" style="width: {{ usuario.tasa_rechazo }}%"></div>
+                                            </div>
+                                            <small class="text-{{ usuario.calidad_clase }}">{{ usuario.calidad_estado }}</small>
+                                        </td>
+                                        <td>
+                                            {% if usuario.diferencia_promedio > 0 %}
+                                                <span class="text-danger fw-semibold">+{{ usuario.diferencia_promedio }}</span>
+                                            {% elif usuario.diferencia_promedio < 0 %}
+                                                <span class="text-warning-emphasis fw-semibold">{{ usuario.diferencia_promedio }}</span>
+                                            {% else %}
+                                                <span class="text-success fw-semibold">En promedio</span>
+                                            {% endif %}
+                                            <div><small class="text-muted">vs. promedio del equipo</small></div>
+                                        </td>
+                                        <td class="text-end">
+                                            {% if usuario.usuario__username %}
+                                                <a
+                                                    class="btn btn-sm btn-outline-primary text-nowrap"
+                                                    href="?{% if query_analista %}{{ query_analista }}&{% endif %}usuario={{ usuario.usuario__username|urlencode }}#gestiones"
+                                                >Ver gestiones</a>
+                                            {% else %}
+                                                <span class="text-muted">—</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="7" class="text-center gestiones-empty">
+                                            <div class="fs-1 mb-2">📊</div>
+                                            <h5>No hay datos para analizar</h5>
+                                            <p class="text-muted mb-0">Amplía el período seleccionado.</p>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="sinCoincidenciasAnalistas" class="text-center gestiones-empty d-none">
+                        <h5>No se encontró el analista</h5>
+                    </div>
+                </div>
+
+                <div class="card shadow border-0">
+                    <div class="card-header bg-warning text-dark py-3">
+                        <h5 class="mb-0">Recomendaciones basadas en los datos</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
                             {% for recomendacion in recomendaciones_analisis %}
-                            <div class="col-md-6 mb-3">
-                                <div class="border rounded p-3 h-100">
-                                    <h6>{{ recomendacion.titulo }}</h6>
-                                    <p class="mb-0 text-muted">{{ recomendacion.descripcion }}</p>
+                                <div class="col-md-6">
+                                    <div class="border rounded p-3 h-100 bg-light">
+                                        <h6>{{ recomendacion.titulo }}</h6>
+                                        <p class="mb-0 text-muted">{{ recomendacion.descripcion }}</p>
+                                    </div>
                                 </div>
-                            </div>
                             {% empty %}
-                            <div class="col-12">
-                                <p class="mb-0 text-muted">No hay recomendaciones disponibles aún.</p>
-                            </div>
+                                <div class="col-12 text-muted">No hay recomendaciones para este período.</div>
                             {% endfor %}
                         </div>
                     </div>
-
                 </div>
-
             </div>
 
         </div>
@@ -858,8 +1248,144 @@
 
         <div class="tab-pane fade" id="alertas">
 
-            <div class="container mt-4">
+            <div class="mt-4">
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+                    <div>
+                        <h3 class="mb-1">Centro de alertas</h3>
+                        <p class="text-muted mb-0">
+                            Situaciones que requieren revisión dentro del período seleccionado.
+                        </p>
+                    </div>
+                    <span class="badge rounded-pill bg-dark fs-6 px-3 py-2">
+                        {{ resumen_alertas.total }} alertas
+                    </span>
+                </div>
 
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <div class="card shadow-sm alerta-resumen border-danger h-100">
+                            <div class="card-body">
+                                <div class="text-danger fw-semibold">Críticas</div>
+                                <div class="display-6 fw-bold">{{ resumen_alertas.criticas }}</div>
+                                <small class="text-muted">Requieren atención prioritaria</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card shadow-sm alerta-resumen border-warning h-100">
+                            <div class="card-body">
+                                <div class="text-warning-emphasis fw-semibold">Advertencias</div>
+                                <div class="display-6 fw-bold">{{ resumen_alertas.advertencias }}</div>
+                                <small class="text-muted">Conviene revisarlas</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card shadow-sm alerta-resumen border-primary h-100">
+                            <div class="card-body">
+                                <div class="text-primary fw-semibold">Resultados inconsistentes</div>
+                                <div class="display-6 fw-bold">{{ resumen_alertas.inconsistencias }}</div>
+                                <small class="text-muted">Cédulas con decisiones contradictorias</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow border-0 overflow-hidden">
+                    <div class="card-header bg-dark text-white d-flex flex-wrap justify-content-between align-items-center gap-3 py-3">
+                        <div>
+                            <h5 class="mb-0">Alertas detectadas</h5>
+                            <small class="opacity-75">Ordenadas por prioridad y fecha</small>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <select id="filtroPrioridadAlertas" class="form-select form-select-sm">
+                                <option value="">Todas las prioridades</option>
+                                <option value="critica">Críticas</option>
+                                <option value="advertencia">Advertencias</option>
+                            </select>
+                            <input
+                                type="search"
+                                id="buscarAlertas"
+                                class="form-control form-control-sm"
+                                placeholder="Buscar alerta"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="alerta-tabla-wrap">
+                        <table class="table table-hover alerta-tabla">
+                            <thead>
+                                <tr>
+                                    <th>Prioridad</th>
+                                    <th>Tipo</th>
+                                    <th>Referencia</th>
+                                    <th>Motivo</th>
+                                    <th class="text-center">Casos</th>
+                                    <th>Última actividad</th>
+                                    <th class="text-end">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaAlertas">
+                                {% for alerta in alertas_sistema %}
+                                    <tr
+                                        class="{% if alerta.prioridad == 'CRITICA' %}alerta-critica{% else %}alerta-advertencia{% endif %}"
+                                        data-prioridad="{{ alerta.prioridad|lower }}"
+                                        data-alerta="{{ alerta.tipo|lower }} {{ alerta.titulo|lower }} {{ alerta.detalle|lower }}"
+                                    >
+                                        <td>
+                                            {% if alerta.prioridad == "CRITICA" %}
+                                                <span class="badge rounded-pill bg-danger px-3 py-2">Crítica</span>
+                                            {% else %}
+                                                <span class="badge rounded-pill bg-warning text-dark px-3 py-2">Advertencia</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="fw-semibold">{{ alerta.tipo }}</td>
+                                        <td><span class="gestion-cedula text-primary">{{ alerta.titulo }}</span></td>
+                                        <td style="max-width: 360px;">{{ alerta.detalle }}</td>
+                                        <td class="text-center">
+                                            <span class="badge rounded-pill bg-secondary duplicado-contador">{{ alerta.cantidad }}</span>
+                                        </td>
+                                        <td class="gestion-fecha">
+                                            {% if alerta.fecha %}
+                                                <div class="fw-semibold">{{ alerta.fecha|date:"d/m/Y" }}</div>
+                                                <small class="text-muted">{{ alerta.fecha|date:"H:i" }}</small>
+                                            {% else %}
+                                                <span class="text-muted">Período completo</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-end">
+                                            {% if alerta.cedula %}
+                                                <button
+                                                    type="button"
+                                                    class="btn btn-sm btn-outline-primary text-nowrap"
+                                                    onclick="verHistorialDuplicado('{{ alerta.cedula|escapejs }}')"
+                                                >Ver historial</button>
+                                            {% else %}
+                                                <span class="text-muted small">Sin acción directa</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="7" class="text-center gestiones-empty">
+                                            <div class="fs-1 mb-2">✅</div>
+                                            <h5>No hay alertas para este período</h5>
+                                            <p class="text-muted mb-0">Los datos no superan los umbrales configurados.</p>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div id="sinCoincidenciasAlertas" class="text-center gestiones-empty d-none">
+                        <div class="fs-1 mb-2">🔎</div>
+                        <h5>No hay coincidencias</h5>
+                        <p class="text-muted mb-0">Cambia el texto o la prioridad seleccionada.</p>
+                    </div>
+                </div>
+
+                <div class="d-none">
                 <h3 class="mb-4">
                     🚨 Alertas del Sistema
                 </h3>
@@ -1181,7 +1707,8 @@
 
                     
                 </div>
-                
+                </div>
+                 
 
             </div>
 
@@ -1325,6 +1852,7 @@
 
 {{ gestiones_dia|json_script:"datosDia" }}
 {{ estados|json_script:"datosEstados" }}
+{{ analisis_usuarios|json_script:"datosAnalistas" }}
 
 <script>
 
@@ -1377,6 +1905,7 @@
     options: {
 
         responsive: true,
+        maintainAspectRatio: false,
 
         plugins: {
 
@@ -1422,6 +1951,7 @@ new Chart(document.getElementById("graficoDia"), {
     options: {
 
         responsive: true,
+        maintainAspectRatio: false,
 
         plugins: {
 
@@ -1446,6 +1976,61 @@ new Chart(document.getElementById("graficoDia"), {
     }
 
 });
+
+const datosAnalistas = JSON.parse(
+    document.getElementById("datosAnalistas").textContent
+);
+const graficoAnalistas = document.getElementById("graficoAnalistas");
+
+if (graficoAnalistas) {
+    new Chart(graficoAnalistas, {
+        type: "bar",
+        data: {
+            labels: datosAnalistas.map(
+                item => item.usuario__username || "Sin usuario"
+            ),
+            datasets: [
+                {
+                    label: "Procede",
+                    data: datosAnalistas.map(item => item.procede),
+                    backgroundColor: "#198754"
+                },
+                {
+                    label: "No procede",
+                    data: datosAnalistas.map(item => item.no_procede),
+                    backgroundColor: "#ffc107"
+                },
+                {
+                    label: "Rechazos",
+                    data: datosAnalistas.map(item => item.rechazados),
+                    backgroundColor: "#dc3545"
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                mode: "index",
+                intersect: false
+            },
+            plugins: {
+                legend: {
+                    position: "bottom"
+                }
+            },
+            scales: {
+                x: {
+                    stacked: true
+                },
+                y: {
+                    stacked: true,
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
 
 
 
@@ -1569,6 +2154,119 @@ function mostrarRespuestaDuplicado(respuesta) {
 </script>
 
 <script>
+    document.getElementById("buscarAnalista")?.addEventListener("input", (evento) => {
+        const termino = evento.target.value.trim().toLocaleLowerCase("es");
+        const filas = document.querySelectorAll(
+            "#tablaEstadisticas tr[data-analista]"
+        );
+        let visibles = 0;
+
+        filas.forEach((fila) => {
+            const visible = fila.dataset.analista.includes(termino);
+            fila.classList.toggle("d-none", !visible);
+            if (visible) visibles += 1;
+        });
+
+        document.getElementById("sinCoincidenciasAnalistas")?.classList.toggle(
+            "d-none",
+            visibles > 0 || filas.length === 0
+        );
+    });
+
+    function filtrarAlertas() {
+        const termino = (
+            document.getElementById("buscarAlertas")?.value || ""
+        ).trim().toLocaleLowerCase("es");
+        const prioridad =
+            document.getElementById("filtroPrioridadAlertas")?.value || "";
+        const filas = document.querySelectorAll(
+            "#tablaAlertas tr[data-alerta]"
+        );
+        let visibles = 0;
+
+        filas.forEach((fila) => {
+            const coincideTexto = fila.dataset.alerta.includes(termino);
+            const coincidePrioridad =
+                !prioridad || fila.dataset.prioridad === prioridad;
+            const visible = coincideTexto && coincidePrioridad;
+            fila.classList.toggle("d-none", !visible);
+            if (visible) visibles += 1;
+        });
+
+        document.getElementById("sinCoincidenciasAlertas")?.classList.toggle(
+            "d-none",
+            visibles > 0 || filas.length === 0
+        );
+    }
+
+    document.getElementById("buscarAlertas")?.addEventListener(
+        "input",
+        filtrarAlertas
+    );
+    document.getElementById("filtroPrioridadAlertas")?.addEventListener(
+        "change",
+        filtrarAlertas
+    );
+
+    const buscarDuplicados = document.getElementById("buscarDuplicados");
+    buscarDuplicados?.addEventListener("input", () => {
+        const termino = buscarDuplicados.value.trim().toLocaleLowerCase("es");
+        const filas = document.querySelectorAll(
+            "#tablaDuplicados tr[data-duplicado]"
+        );
+        let visibles = 0;
+
+        filas.forEach((fila) => {
+            const coincide = fila.dataset.duplicado.includes(termino);
+            fila.classList.toggle("d-none", !coincide);
+            if (coincide) visibles += 1;
+        });
+
+        const contador = document.getElementById("contadorDuplicados");
+        if (contador) contador.textContent = visibles;
+
+        document.getElementById("sinCoincidenciasDuplicados")?.classList.toggle(
+            "d-none",
+            visibles > 0 || filas.length === 0
+        );
+    });
+
+    document.querySelectorAll(".btn-ver-respuesta").forEach((boton) => {
+        boton.addEventListener("click", () => {
+            document.getElementById("respuestaGestionTitulo").textContent =
+                `Respuesta de la gestión ${boton.dataset.gestion || ""}`;
+            document.getElementById("respuestaGestionTexto").value =
+                boton.dataset.respuesta || "";
+        });
+    });
+
+    document.getElementById("copiarRespuestaGestion")?.addEventListener("click", async () => {
+        const texto = document.getElementById("respuestaGestionTexto").value;
+        try {
+            await navigator.clipboard.writeText(texto);
+            Swal.fire({
+                toast: true,
+                position: "top-end",
+                icon: "success",
+                title: "Respuesta copiada",
+                showConfirmButton: false,
+                timer: 1800
+            });
+        } catch (error) {
+            document.getElementById("respuestaGestionTexto").select();
+            document.execCommand("copy");
+        }
+    });
+
+    if (window.location.hash === "#gestiones") {
+        const tabGestiones = document.querySelector(
+            '[data-bs-target="#gestiones"]'
+        );
+        if (tabGestiones) {
+            bootstrap.Tab.getOrCreateInstance(tabGestiones).show();
+        }
+    }
+
     // Toggle filtros visibility
     (function(){
         try{

@@ -483,11 +483,14 @@ function generarNueva() {
     ).focus();
 }
 
-function verificarAntesDeGenerar() {
+async function verificarAntesDeGenerar() {
 
     const cedula = document
         .getElementById("cedula")
         .value.trim();
+    const botonGenerar = document.querySelector(
+        'button[onclick="verificarAntesDeGenerar()"]'
+    );
 
     if (!cedula) {
 
@@ -496,30 +499,64 @@ function verificarAntesDeGenerar() {
         return;
     }
 
-    fetch(`/verificar-cedula/?cedula=${encodeURIComponent(cedula)}`)
-        .then(r => r.json())
-        .then(data => {
+    const controlador = new AbortController();
+    const timeout = setTimeout(() => controlador.abort(), 8000);
 
-            if (!data.existe) {
+    if (botonGenerar) {
+        botonGenerar.disabled = true;
+        botonGenerar.dataset.textoOriginal = botonGenerar.textContent;
+        botonGenerar.textContent = "Verificando cédula...";
+    }
 
-                generarPlantilla();
-                copiarTexto();
-                return;
+    try {
+        const respuesta = await fetch(
+            `/verificar-cedula/?cedula=${encodeURIComponent(cedula)}`,
+            { signal: controlador.signal }
+        );
 
-            }
+        if (!respuesta.ok) {
+            throw new Error(`Error HTTP ${respuesta.status}`);
+        }
 
-            historialActual = data.historial;
-            indiceActual = 0;
+        const data = await respuesta.json();
 
-            llenarHistorial();
-            mostrarGestion();
+        if (!data.existe) {
+            generarPlantilla();
+            copiarTexto();
+            return;
+        }
 
-            new bootstrap.Modal(
-                document.getElementById("modalCedulaExiste")
-            ).show();
+        datosCedula = data;
+        historialActual = data.historial;
+        indiceActual = 0;
 
+        llenarHistorial();
+        mostrarGestion();
+
+        new bootstrap.Modal(
+            document.getElementById("modalCedulaExiste")
+        ).show();
+    } catch (error) {
+        const mensaje = error.name === "AbortError"
+            ? "La búsqueda tardó demasiado. Intenta nuevamente."
+            : "No se pudo verificar la cédula. Revisa la conexión e intenta nuevamente.";
+
+        Swal.fire({
+            icon: "warning",
+            title: "No se pudo verificar",
+            text: mensaje,
+            confirmButtonText: "Aceptar"
         });
+    } finally {
+        clearTimeout(timeout);
 
+        if (botonGenerar) {
+            botonGenerar.disabled = false;
+            botonGenerar.textContent =
+                botonGenerar.dataset.textoOriginal || "Generar Plantilla / Copiar texto";
+            delete botonGenerar.dataset.textoOriginal;
+        }
+    }
 }
 
 

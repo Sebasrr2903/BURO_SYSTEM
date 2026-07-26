@@ -92,22 +92,32 @@ def inicio(request):
 @login_required
 def verificar_cedula(request):
 
-    cedula = request.GET.get('cedula', '').strip()
+    cedula = request.GET.get('cedula', '').strip().upper()
 
-    historial = PlantillaGenerada.objects.filter(
-            cedula__icontains=cedula
-    ).order_by('-fecha')
+    if not cedula:
+        return JsonResponse({"existe": False})
 
-    registro = historial.first()
+    historial = (
+        PlantillaGenerada.objects
+        .filter(
+            Q(cedula=cedula)
+            | Q(cedula_busqueda_1=cedula)
+            | Q(cedula_busqueda_2=cedula)
+        )
+        .select_related("usuario")
+        .order_by("-fecha")
+    )
+    registros = list(historial[:10])
 
-    if registro:
+    if registros:
+        registro = registros[0]
 
         return JsonResponse({
             "existe": True,
             "fecha": timezone.localtime(
                 registro.fecha
             ).strftime("%d/%m/%Y %H:%M"),
-            "usuario": registro.usuario.username,
+            "usuario": registro.usuario.username if registro.usuario else "",
             "cedula": registro.cedula,
             "nombre_cliente": registro.nombre_cliente,
             "resultado": registro.resultado,
@@ -121,12 +131,12 @@ def verificar_cedula(request):
                         r.fecha
                     ).strftime("%d/%m/%Y %H:%M"),
                     "gestion": r.gestion,
-                    "usuario": r.usuario.username,
+                    "usuario": r.usuario.username if r.usuario else "",
                     "resultado": r.resultado,
                     "distribuidor": r.distribuidor,
                     "respuesta": r.respuesta
                 }
-                for r in historial[:10]
+                for r in registros
             ]
         })
 
@@ -514,6 +524,7 @@ def reportes(request):
     distribuidor = request.GET.get("distribuidor")
     hora_inicio = request.GET.get("hora_inicio")
     hora_fin = request.GET.get("hora_fin")
+    busqueda = request.GET.get("q", "").strip()
 
 
     # =====================================================
@@ -561,6 +572,15 @@ def reportes(request):
     if distribuidor:
         registros = registros.filter(
             distribuidor=distribuidor
+        )
+
+    if busqueda:
+        registros = registros.filter(
+            Q(gestion__icontains=busqueda)
+            | Q(cedula__icontains=busqueda)
+            | Q(nombre_cliente__icontains=busqueda)
+            | Q(distribuidor__icontains=busqueda)
+            | Q(usuario__username__icontains=busqueda)
         )
 
     # =====================================================
@@ -694,10 +714,50 @@ def reportes(request):
     for u in analisis_usuarios:
         total = u.get("gestiones") or 0
         u["tasa_procede"] = round((u.get("procede", 0) / total) * 100, 1) if total else 0
+        u["tasa_no_procede"] = round((u.get("no_procede", 0) / total) * 100, 1) if total else 0
         u["tasa_rechazo"] = round((u.get("rechazados", 0) / total) * 100, 1) if total else 0
 
     registros_count = registros.count()
     promedio_gestiones_por_usuario = round(registros_count / len(analisis_usuarios), 1) if analisis_usuarios else 0
+
+    for u in analisis_usuarios:
+        total = u.get("gestiones") or 0
+        u["muestra_suficiente"] = total >= 5
+        u["diferencia_promedio"] = round(
+            total - promedio_gestiones_por_usuario,
+            1,
+        )
+        if not promedio_gestiones_por_usuario:
+            u["nivel_carga"] = "Sin actividad"
+            u["nivel_carga_clase"] = "secondary"
+        elif total > promedio_gestiones_por_usuario * 1.25:
+            u["nivel_carga"] = "Alta"
+            u["nivel_carga_clase"] = "danger"
+        elif total < promedio_gestiones_por_usuario * 0.75:
+            u["nivel_carga"] = "Baja"
+            u["nivel_carga_clase"] = "warning"
+        else:
+            u["nivel_carga"] = "Equilibrada"
+            u["nivel_carga_clase"] = "success"
+
+        if not u["muestra_suficiente"]:
+            u["calidad_estado"] = "Muestra insuficiente"
+            u["calidad_clase"] = "secondary"
+        elif u["tasa_rechazo"] >= 30:
+            u["calidad_estado"] = "Revisar"
+            u["calidad_clase"] = "danger"
+        else:
+            u["calidad_estado"] = "Estable"
+            u["calidad_clase"] = "success"
+
+    tasa_procede_global = round(
+        (procede / registros_count) * 100,
+        1,
+    ) if registros_count else 0
+    tasa_rechazo_global = round(
+        (rechazados / registros_count) * 100,
+        1,
+    ) if registros_count else 0
 
     usuario_mas_activo = analisis_usuarios[0] if analisis_usuarios else None
 
@@ -790,11 +850,33 @@ def reportes(request):
     )
 
 
-    ultimas_gestiones = (
+    gestiones_ordenadas = (
         registros
         .select_related("usuario")
-        .order_by("-fecha")[:20]
+        .order_by("-fecha")
     )
+    limites_validos = (25, 50, 100)
+    try:
+        limite_gestiones = int(request.GET.get("limite", 25))
+    except (TypeError, ValueError):
+        limite_gestiones = 25
+    if limite_gestiones not in limites_validos:
+        limite_gestiones = 25
+
+    paginador_gestiones = Paginator(
+        gestiones_ordenadas,
+        limite_gestiones,
+    )
+    ultimas_gestiones = paginador_gestiones.get_page(
+        request.GET.get("page")
+    )
+    parametros_paginacion = request.GET.copy()
+    parametros_paginacion.pop("page", None)
+    query_paginacion = parametros_paginacion.urlencode()
+    parametros_analista = request.GET.copy()
+    parametros_analista.pop("usuario", None)
+    parametros_analista.pop("page", None)
+    query_analista = parametros_analista.urlencode()
 
 
     duplicados = (
@@ -811,6 +893,136 @@ def reportes(request):
     .order_by("-total")[:50]
 )
 
+    # =====================================================
+    # CENTRO DE ALERTAS
+    # =====================================================
+
+    inconsistencias_qs = (
+        registros
+        .exclude(cedula="")
+        .exclude(cedula__isnull=True)
+        .values("cedula", "nombre_cliente")
+        .annotate(
+            total=Count("id"),
+            positivos=Count(
+                "id",
+                filter=Q(resultado="PROCEDE"),
+            ),
+            negativos=Count(
+                "id",
+                filter=~Q(resultado="PROCEDE"),
+            ),
+            ultima_fecha=Max("fecha"),
+        )
+        .filter(positivos__gt=0, negativos__gt=0)
+        .order_by("-ultima_fecha")[:25]
+    )
+
+    alertas_sistema = []
+
+    for item in inconsistencias_qs:
+        alertas_sistema.append({
+            "prioridad": "CRITICA",
+            "tipo": "Resultado inconsistente",
+            "titulo": item["cedula"],
+            "detalle": (
+                f'{item["nombre_cliente"] or "Sin nombre"}: '
+                f'{item["positivos"]} procede y '
+                f'{item["negativos"]} no procede/rechazo.'
+            ),
+            "cantidad": item["total"],
+            "fecha": item["ultima_fecha"],
+            "cedula": item["cedula"],
+        })
+
+    cedulas_inconsistentes = {
+        item["cedula"]
+        for item in inconsistencias_qs
+    }
+    for item in duplicados:
+        prioridad = "CRITICA" if item["total"] >= 5 else "ADVERTENCIA"
+        alertas_sistema.append({
+            "prioridad": prioridad,
+            "tipo": "Gestiones duplicadas",
+            "titulo": item["cedula"],
+            "detalle": (
+                f'{item["nombre_cliente"] or "Sin nombre"}: '
+                f'{item["total"]} gestiones realizadas por '
+                f'{item["total_usuarios"]} analista(s).'
+            ),
+            "cantidad": item["total"],
+            "fecha": item["ultima_fecha"],
+            "cedula": item["cedula"],
+            "relacionada": item["cedula"] in cedulas_inconsistentes,
+        })
+
+    for item in analisis_usuarios:
+        gestiones = item.get("gestiones") or 0
+        tasa = item.get("tasa_rechazo") or 0
+        if gestiones >= 5 and tasa >= 30:
+            alertas_sistema.append({
+                "prioridad": "CRITICA" if tasa >= 50 else "ADVERTENCIA",
+                "tipo": "Tasa de rechazo",
+                "titulo": item.get("usuario__username") or "Sin usuario",
+                "detalle": (
+                    f'{item.get("rechazados", 0)} rechazos de '
+                    f'{gestiones} gestiones ({tasa}%).'
+                ),
+                "cantidad": item.get("rechazados", 0),
+                "fecha": None,
+                "cedula": "",
+            })
+
+    distribuidores_alerta = (
+        registros
+        .exclude(distribuidor="")
+        .values("distribuidor")
+        .annotate(
+            total=Count("id"),
+            rechazos=Count(
+                "id",
+                filter=~Q(resultado__in=["PROCEDE", "NO PROCEDE"]),
+            ),
+        )
+        .filter(total__gte=5, rechazos__gt=0)
+    )
+    for item in distribuidores_alerta:
+        tasa = round((item["rechazos"] / item["total"]) * 100, 1)
+        if tasa >= 30:
+            alertas_sistema.append({
+                "prioridad": "CRITICA" if tasa >= 50 else "ADVERTENCIA",
+                "tipo": "Distribuidor con rechazos",
+                "titulo": item["distribuidor"],
+                "detalle": (
+                    f'{item["rechazos"]} rechazos de '
+                    f'{item["total"]} gestiones ({tasa}%).'
+                ),
+                "cantidad": item["rechazos"],
+                "fecha": None,
+                "cedula": "",
+            })
+
+    orden_prioridad = {"CRITICA": 0, "ADVERTENCIA": 1, "INFORMATIVA": 2}
+    alertas_sistema.sort(
+        key=lambda alerta: (
+            orden_prioridad.get(alerta["prioridad"], 9),
+            -(alerta["fecha"].timestamp() if alerta["fecha"] else 0),
+            -alerta["cantidad"],
+        )
+    )
+    resumen_alertas = {
+        "total": len(alertas_sistema),
+        "criticas": sum(
+            alerta["prioridad"] == "CRITICA"
+            for alerta in alertas_sistema
+        ),
+        "advertencias": sum(
+            alerta["prioridad"] == "ADVERTENCIA"
+            for alerta in alertas_sistema
+        ),
+        "inconsistencias": len(cedulas_inconsistentes),
+    }
+
 
 
     # =====================================================
@@ -826,10 +1038,14 @@ def reportes(request):
             "analisis_usuarios": analisis_usuarios,
             "recomendaciones_analisis": recomendaciones_analisis,
             "promedio_gestiones_por_usuario": promedio_gestiones_por_usuario,
+            "tasa_procede_global": tasa_procede_global,
+            "tasa_rechazo_global": tasa_rechazo_global,
             "usuario_mas_activo": usuario_mas_activo,
             "distribuidores": distribuidores,
             "plantillas": plantillas,
             "inconsistencias": inconsistencias,
+            "alertas_sistema": alertas_sistema,
+            "resumen_alertas": resumen_alertas,
 
             "estados": estados_json,
 
@@ -844,6 +1060,10 @@ def reportes(request):
             "total_usuarios": total_usuarios,
             "total_distribuidores": total_distribuidores,
             "total_plantillas": total_plantillas,
+            "busqueda": busqueda,
+            "limite_gestiones": limite_gestiones,
+            "query_paginacion": query_paginacion,
+            "query_analista": query_analista,
             "lista_usuarios": lista_usuarios,
             "lista_distribuidores": lista_distribuidores,
 
