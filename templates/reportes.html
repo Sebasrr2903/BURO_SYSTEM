@@ -281,6 +281,49 @@
             padding: 0 .75rem 1.25rem;
         }
     }
+
+    .reportes-filter-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .65rem;
+        justify-content: flex-end;
+    }
+
+    .reportes-filter-actions .btn {
+        align-items: center;
+        display: inline-flex;
+        justify-content: center;
+        min-height: 42px;
+        white-space: nowrap;
+    }
+
+    .filters {
+        row-gap: .75rem !important;
+    }
+
+    .filters .form-label {
+        color: #495057;
+        font-size: .84rem;
+        font-weight: 600;
+        margin-bottom: .25rem;
+    }
+
+    .filters .form-control,
+    .filters .form-select,
+    .filters .input-group-text {
+        min-height: 42px;
+    }
+
+    @media (max-width: 767.98px) {
+        .reportes-filter-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .reportes-filter-actions .btn {
+            width: 100%;
+        }
+    }
 </style>
 
 <body class="tema-{{ request.user.perfil.color }}">
@@ -441,10 +484,29 @@
 
         <div class="card-body" id="filtrosCard">
 
-            <div class="row g-3 align-items-end filters">
+            <div class="row g-2 align-items-end filters">
 
-                <div class="col-md-3">
+                <div class="col-lg-3">
+                    <label for="periodoReportes" class="form-label">
+                        Período
+                    </label>
+                    <select
+                        name="periodo"
+                        id="periodoReportes"
+                        class="form-select"
+                    >
+                        <option value="30_dias" {% if periodo_seleccionado != "todo" %}selected{% endif %}>
+                            Últimos 30 días
+                        </option>
+                        <option value="todo" {% if periodo_seleccionado == "todo" %}selected{% endif %}>
+                            Todo el historial
+                        </option>
+                    </select>
+                </div>
 
+                <div class="col-lg-4">
+
+                    <label for="fechaInicio" class="form-label">Desde</label>
                     <div class="input-group">
                         <span class="input-group-text">📅</span>
                         <input
@@ -466,8 +528,9 @@
 
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-lg-4">
 
+                    <label for="fechaFin" class="form-label">Hasta</label>
                     <div class="input-group">
                         <span class="input-group-text">📅</span>
                         <input
@@ -489,8 +552,9 @@
 
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-6 col-lg-3">
 
+                    <label for="usuario" class="form-label">Analista</label>
                     <div class="input-group">
                         <span class="input-group-text">👤</span>
                         <select name="usuario" id="usuario" class="form-select">
@@ -503,8 +567,9 @@
 
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-6 col-lg-3">
 
+                    <label for="resultadoFiltro" class="form-label">Resultado</label>
                     <div class="input-group">
                         <span class="input-group-text">🔎</span>
                         <select name="resultado" id="resultadoFiltro" class="form-select">
@@ -517,8 +582,9 @@
 
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-md-6 col-lg-3">
 
+                    <label for="distribuidorFiltro" class="form-label">DTS</label>
                     <div class="input-group">
                         <span class="input-group-text">🏷️</span>
                         <select name="distribuidor" id="distribuidorFiltro" class="form-select">
@@ -531,7 +597,7 @@
 
                 </div>
 
-                <div class="col-md-8">
+                <div class="col-12">
                     <label for="busquedaGestiones" class="form-label">
                         Buscar en gestiones
                     </label>
@@ -548,10 +614,14 @@
                     </div>
                 </div>
 
-                <div class="col-md-4 d-flex justify-content-end gap-2">
+                <div class="col-12 reportes-filter-actions">
                     <button type="submit" class="btn btn-primary">
                         🔍 Buscar
                     </button>
+
+                    <a href="{% url 'historial' %}?limite=100" class="btn btn-outline-primary text-nowrap">
+                        Ver todos los registros
+                    </a>
 
                     <a href="{% url 'reportes' %}" class="btn btn-secondary" id="limpiarBtn">
                         Limpiar filtros
@@ -742,8 +812,8 @@
                 </div>
 
                 <div class="row mt-4">
-                    <div class="col-12">
-                        <div class="card shadow">
+                    <div class="col-lg-6 mb-4">
+                        <div class="card shadow h-100">
                             <div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
                                 <div>
                                     <div class="fw-semibold">Duplicidad por distribuidor</div>
@@ -764,6 +834,34 @@
                                         <h5>Sin duplicidad por distribuidor</h5>
                                         <p class="text-muted mb-0">
                                             No se encontraron cédulas repetidas con los filtros actuales.
+                                        </p>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 mb-4">
+                        <div class="card shadow h-100">
+                            <div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
+                                <div>
+                                    <div class="fw-semibold">Gestiones por DTS</div>
+                                    <small class="text-muted">
+                                        Distribuidores con mayor volumen de gestiones
+                                    </small>
+                                </div>
+                                <span class="badge bg-primary">Top 10</span>
+                            </div>
+                            <div class="card-body">
+                                {% if distribuidores %}
+                                    <div class="contenedor-grafico" style="height: 420px;">
+                                        <canvas id="graficoGestionesDts"></canvas>
+                                    </div>
+                                {% else %}
+                                    <div class="text-center py-5">
+                                        <div class="fs-1 mb-2">📊</div>
+                                        <h5>Sin gestiones por DTS</h5>
+                                        <p class="text-muted mb-0">
+                                            No existen datos para los filtros actuales.
                                         </p>
                                     </div>
                                 {% endif %}
@@ -1876,6 +1974,7 @@
 {{ estados|json_script:"datosEstados" }}
 {{ analisis_usuarios|json_script:"datosAnalistas" }}
 {{ duplicidad_distribuidor|json_script:"datosDuplicidadDistribuidor" }}
+{{ distribuidores|json_script:"datosGestionesDts" }}
 
 <script>
 
@@ -2116,6 +2215,49 @@ if (graficoDuplicidadDistribuidor) {
     });
 }
 
+const datosGestionesDts = JSON.parse(
+    document.getElementById("datosGestionesDts").textContent
+);
+const graficoGestionesDts = document.getElementById("graficoGestionesDts");
+
+if (graficoGestionesDts) {
+    new Chart(graficoGestionesDts, {
+        type: "bar",
+        data: {
+            labels: datosGestionesDts.map(item => item.distribuidor),
+            datasets: [{
+                label: "Gestiones",
+                data: datosGestionesDts.map(item => item.total),
+                backgroundColor: "#0d6efd",
+                borderRadius: 6
+            }]
+        },
+        options: {
+            indexAxis: "y",
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: contexto => `${contexto.raw} gestiones`
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
+                }
+            }
+        }
+    });
+}
+
 
 
 async function verHistorialDuplicado(cedula) {
@@ -2238,6 +2380,20 @@ function mostrarRespuestaDuplicado(respuesta) {
 </script>
 
 <script>
+    document.getElementById("periodoReportes")?.addEventListener(
+        "change",
+        (evento) => {
+            if (evento.target.value !== "todo") return;
+
+            ["fechaInicio", "fechaFin", "horaInicio", "horaFin"].forEach(
+                (id) => {
+                    const campo = document.getElementById(id);
+                    if (campo) campo.value = "";
+                }
+            );
+        }
+    );
+
     document.getElementById("buscarAnalista")?.addEventListener("input", (evento) => {
         const termino = evento.target.value.trim().toLocaleLowerCase("es");
         const filas = document.querySelectorAll(

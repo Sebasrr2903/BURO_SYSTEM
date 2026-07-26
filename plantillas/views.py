@@ -548,10 +548,11 @@ def reportes(request):
     hora_inicio = request.GET.get("hora_inicio")
     hora_fin = request.GET.get("hora_fin")
     busqueda = request.GET.get("q", "").strip()
+    periodo = request.GET.get("periodo", "30_dias")
 
     # La carga inicial usa un período acotado para no procesar todo el
     # histórico. Los filtros permiten ampliar el rango cuando se necesite.
-    if not fecha_inicio and not fecha_fin:
+    if not fecha_inicio and not fecha_fin and periodo != "todo":
         hoy = timezone.localdate()
         fecha_fin = hoy.isoformat()
         fecha_inicio = (hoy - timedelta(days=29)).isoformat()
@@ -809,7 +810,7 @@ def reportes(request):
     # DISTRIBUIDORES CON MÁS GESTIONES
     # =====================================================
 
-    distribuidores = (
+    distribuidores = list(
         registros
         .exclude(distribuidor="")
         .values("distribuidor")
@@ -1051,6 +1052,7 @@ def reportes(request):
             "usuario_seleccionado": usuario,
             "resultado_seleccionado": resultado,
             "distribuidor_seleccionado": distribuidor,
+            "periodo_seleccionado": periodo,
         }
     )
 
