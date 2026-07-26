@@ -679,6 +679,44 @@ def reportes(request):
         for g in gestiones_dia
     ]
 
+    # =====================================================
+    # DUPLICIDAD POR DISTRIBUIDOR
+    # =====================================================
+
+    duplicidad_base = (
+        registros
+        .exclude(distribuidor="")
+        .exclude(distribuidor__isnull=True)
+        .exclude(cedula="")
+        .exclude(cedula__isnull=True)
+        .values("distribuidor", "cedula")
+        .annotate(total=Count("id"))
+        .filter(total__gt=1)
+    )
+    resumen_duplicidad = {}
+    for item in duplicidad_base:
+        resumen = resumen_duplicidad.setdefault(
+            item["distribuidor"],
+            {
+                "distribuidor": item["distribuidor"],
+                "cedulas_duplicadas": 0,
+                "gestiones_repetidas": 0,
+                "gestiones_involucradas": 0,
+            },
+        )
+        resumen["cedulas_duplicadas"] += 1
+        resumen["gestiones_repetidas"] += item["total"] - 1
+        resumen["gestiones_involucradas"] += item["total"]
+
+    datos_duplicidad_distribuidor = sorted(
+        resumen_duplicidad.values(),
+        key=lambda item: (
+            -item["gestiones_repetidas"],
+            -item["cedulas_duplicadas"],
+            item["distribuidor"],
+        ),
+    )[:10]
+
 
     # =====================================================
     # USUARIOS CON MÁS GESTIONES
@@ -1054,6 +1092,7 @@ def reportes(request):
             "rechazados": rechazados,
 
             "gestiones_dia": datos_dia,
+            "duplicidad_distribuidor": datos_duplicidad_distribuidor,
             "ultimas_gestiones": ultimas_gestiones,
 
             "total_gestiones": total_gestiones,

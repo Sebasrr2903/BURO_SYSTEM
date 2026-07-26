@@ -741,6 +741,37 @@
 
                 </div>
 
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card shadow">
+                            <div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
+                                <div>
+                                    <div class="fw-semibold">Duplicidad por distribuidor</div>
+                                    <small class="text-muted">
+                                        Gestiones adicionales de una misma cédula por distribuidor
+                                    </small>
+                                </div>
+                                <span class="badge bg-danger">Top 10</span>
+                            </div>
+                            <div class="card-body">
+                                {% if duplicidad_distribuidor %}
+                                    <div class="contenedor-grafico" style="height: 420px;">
+                                        <canvas id="graficoDuplicidadDistribuidor"></canvas>
+                                    </div>
+                                {% else %}
+                                    <div class="text-center py-5">
+                                        <div class="fs-1 mb-2">✅</div>
+                                        <h5>Sin duplicidad por distribuidor</h5>
+                                        <p class="text-muted mb-0">
+                                            No se encontraron cédulas repetidas con los filtros actuales.
+                                        </p>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 
             </div>
 
@@ -1853,6 +1884,7 @@
 {{ gestiones_dia|json_script:"datosDia" }}
 {{ estados|json_script:"datosEstados" }}
 {{ analisis_usuarios|json_script:"datosAnalistas" }}
+{{ duplicidad_distribuidor|json_script:"datosDuplicidadDistribuidor" }}
 
 <script>
 
@@ -2026,6 +2058,75 @@ if (graficoAnalistas) {
                 y: {
                     stacked: true,
                     beginAtZero: true
+                }
+            }
+        }
+    });
+}
+
+const datosDuplicidadDistribuidor = JSON.parse(
+    document.getElementById("datosDuplicidadDistribuidor").textContent
+);
+const graficoDuplicidadDistribuidor = document.getElementById(
+    "graficoDuplicidadDistribuidor"
+);
+
+if (graficoDuplicidadDistribuidor) {
+    new Chart(graficoDuplicidadDistribuidor, {
+        type: "bar",
+        data: {
+            labels: datosDuplicidadDistribuidor.map(
+                item => item.distribuidor
+            ),
+            datasets: [
+                {
+                    label: "Gestiones repetidas",
+                    data: datosDuplicidadDistribuidor.map(
+                        item => item.gestiones_repetidas
+                    ),
+                    backgroundColor: "#dc3545",
+                    borderRadius: 6
+                },
+                {
+                    label: "Cédulas duplicadas",
+                    data: datosDuplicidadDistribuidor.map(
+                        item => item.cedulas_duplicadas
+                    ),
+                    backgroundColor: "#6f42c1",
+                    borderRadius: 6
+                }
+            ]
+        },
+        options: {
+            indexAxis: "y",
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                mode: "index",
+                intersect: false
+            },
+            plugins: {
+                legend: {
+                    position: "bottom"
+                },
+                tooltip: {
+                    callbacks: {
+                        afterBody: (elementos) => {
+                            if (!elementos.length) return "";
+                            const item = datosDuplicidadDistribuidor[
+                                elementos[0].dataIndex
+                            ];
+                            return `Gestiones involucradas: ${item.gestiones_involucradas}`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
                 }
             }
         }
