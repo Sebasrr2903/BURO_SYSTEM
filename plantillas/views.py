@@ -378,15 +378,38 @@ def exportar_excel(request):
     fecha_inicio = request.GET.get('fecha_inicio')
     fecha_fin = request.GET.get('fecha_fin')
 
-    if fecha_inicio:
-        registros = registros.filter(
-            fecha__date__gte=fecha_inicio
-        )
+    # Usar rangos datetime mantiene utilizable el índice de ``fecha``.
+    # ``fecha__date`` obliga a transformar cada fila en PostgreSQL.
+    try:
+        if fecha_inicio:
+            hora_desde = hora_inicio or "00:00"
+            inicio_dt = datetime.strptime(
+                f"{fecha_inicio} {hora_desde}",
+                "%Y-%m-%d %H:%M",
+            )
+            registros = registros.filter(
+                fecha__gte=timezone.make_aware(inicio_dt)
+            )
 
-    if fecha_fin:
-        registros = registros.filter(
-            fecha__date__lte=fecha_fin
-        )
+        if fecha_fin:
+            if hora_fin:
+                fin_dt = datetime.strptime(
+                    f"{fecha_fin} {hora_fin}",
+                    "%Y-%m-%d %H:%M",
+                )
+                registros = registros.filter(
+                    fecha__lte=timezone.make_aware(fin_dt)
+                )
+            else:
+                fin_exclusivo = (
+                    datetime.strptime(fecha_fin, "%Y-%m-%d")
+                    + timedelta(days=1)
+                )
+                registros = registros.filter(
+                    fecha__lt=timezone.make_aware(fin_exclusivo)
+                )
+    except (TypeError, ValueError):
+        pass
 
     for registro in registros:
 
@@ -589,24 +612,6 @@ def reportes(request):
             | Q(distribuidor__icontains=busqueda)
             | Q(usuario__username__icontains=busqueda)
         )
-
-    # =====================================================
-    # FILTRO POR HORA (opcional)
-    # Si se proporcionan fecha + hora, filtra por rango datetime
-    # =====================================================
-
-    if fecha_inicio and fecha_fin and hora_inicio and hora_fin:
-        try:
-            # form: fecha yyyy-mm-dd, hora HH:MM
-            start_dt = datetime.strptime(f"{fecha_inicio} {hora_inicio}", "%Y-%m-%d %H:%M")
-            end_dt = datetime.strptime(f"{fecha_fin} {hora_fin}", "%Y-%m-%d %H:%M")
-            start_dt = timezone.make_aware(start_dt)
-            end_dt = timezone.make_aware(end_dt)
-            registros = registros.filter(fecha__range=[start_dt, end_dt])
-        except Exception:
-            # si hay problema parseando, ignorar y usar filtros por fecha
-            pass
-
 
     # =====================================================
     # CÉDULAS CON MÚLTIPLES GESTIONES
