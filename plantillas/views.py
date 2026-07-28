@@ -7,6 +7,8 @@ from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+from django.utils.dateparse import parse_date
 from datetime import datetime, timedelta, timezone
 from django.utils import timezone
 from urllib3 import request
@@ -556,6 +558,7 @@ def ultima_gestion(request):
 
 
 @login_required
+@require_POST
 def limpiar_por_fecha(request):
 
     if not request.user.groups.filter(
@@ -564,10 +567,10 @@ def limpiar_por_fecha(request):
 
         return redirect('historial')
 
-    fecha_inicio = request.GET.get('fecha_inicio')
-    fecha_fin = request.GET.get('fecha_fin')
+    fecha_inicio = parse_date(request.POST.get('fecha_inicio', ''))
+    fecha_fin = parse_date(request.POST.get('fecha_fin', ''))
 
-    if fecha_inicio and fecha_fin:
+    if fecha_inicio and fecha_fin and fecha_inicio <= fecha_fin:
 
         PlantillaGenerada.objects.filter(
             fecha__date__range=[

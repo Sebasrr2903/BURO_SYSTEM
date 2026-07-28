@@ -462,6 +462,92 @@ body{
     </div>
 
     </div>
+    {% if request.user.groups.all.0.name == 'Admin' %}
+    <div
+        class="modal fade"
+        id="limpiarFechaModal"
+        tabindex="-1"
+        aria-labelledby="limpiarFechaModalLabel"
+        aria-hidden="true">
+
+      <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+          <form method="POST" action="{% url 'limpiar_por_fecha' %}">
+
+            {% csrf_token %}
+
+            <div class="modal-header">
+
+              <h5 class="modal-title" id="limpiarFechaModalLabel">
+                Eliminar registros por fecha
+              </h5>
+
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+
+            </div>
+
+            <div class="modal-body">
+
+              <p class="text-danger">
+                Esta acción eliminará permanentemente los registros del rango seleccionado.
+              </p>
+
+              <div class="mb-3">
+
+                <label for="eliminarFechaInicio" class="form-label">Fecha inicial</label>
+
+                <input
+                    type="date"
+                    class="form-control"
+                    id="eliminarFechaInicio"
+                    name="fecha_inicio"
+                    value="{{ fecha_inicio|default:'' }}"
+                    required>
+
+              </div>
+
+              <div>
+
+                <label for="eliminarFechaFin" class="form-label">Fecha final</label>
+
+                <input
+                    type="date"
+                    class="form-control"
+                    id="eliminarFechaFin"
+                    name="fecha_fin"
+                    value="{{ fecha_fin|default:'' }}"
+                    required>
+
+              </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                Cancelar
+              </button>
+
+              <button
+                  type="submit"
+                  class="btn btn-danger"
+                  onclick="return confirm('¿Confirma que desea eliminar los registros de este rango de fechas?')">
+                Eliminar registros
+              </button>
+
+            </div>
+
+          </form>
+
+        </div>
+
+      </div>
+
+    </div>
+    {% endif %}
+
     <div class="modal fade" id="perfilModal">
 
       <div class="modal-dialog">
