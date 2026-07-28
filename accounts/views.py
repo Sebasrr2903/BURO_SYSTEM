@@ -3,8 +3,6 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.db.models import Q
-from django.contrib import messages
-from django.utils.http import url_has_allowed_host_and_scheme
 
 def login_view(request):
 
@@ -52,57 +50,8 @@ def actualizar_perfil(request):
                 "azul"
         )
 
-        if request.POST.get("usar_fondo_default") == "on":
-            fondo_anterior = perfil.fondo
-            perfil.fondo = None
-            perfil.save()
-            if fondo_anterior:
-                fondo_anterior.delete(save=False)
-            messages.success(
-                request,
-                "Se restauró el fondo predeterminado."
-            )
-            return _volver_a_pagina_anterior(request)
-
-        fondo = request.FILES.get("fondo")
-        if fondo:
-            tipos_permitidos = {
-                "image/jpeg",
-                "image/png",
-                "image/webp",
-            }
-            if fondo.content_type not in tipos_permitidos:
-                messages.error(
-                    request,
-                    "El fondo debe estar en formato JPG, PNG o WEBP."
-                )
-            elif fondo.size > 5 * 1024 * 1024:
-                messages.error(
-                    request,
-                    "El fondo no puede superar los 5 MB."
-                )
-            else:
-                fondo_anterior = perfil.fondo
-                perfil.fondo = fondo
-                perfil.save()
-                if fondo_anterior and fondo_anterior.name != perfil.fondo.name:
-                    fondo_anterior.delete(save=False)
-                messages.success(request, "Perfil actualizado correctamente.")
-                return _volver_a_pagina_anterior(request)
-
         perfil.save()
 
-    return _volver_a_pagina_anterior(request)
-
-
-def _volver_a_pagina_anterior(request):
-    destino = request.META.get("HTTP_REFERER", "")
-    if url_has_allowed_host_and_scheme(
-        destino,
-        allowed_hosts={request.get_host()},
-        require_https=request.is_secure(),
-    ):
-        return redirect(destino)
     return redirect("/")
 
 

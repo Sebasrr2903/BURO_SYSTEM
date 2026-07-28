@@ -51,8 +51,7 @@ body{
 
 {% load static %}
 
-<body class="tema-{{ request.user.perfil.color }}"
-      style="background-image: url('{% if request.user.perfil.fondo %}{{ request.user.perfil.fondo.url }}{% else %}{% static 'img/iconfondo.jpg' %}{% endif %}') !important;">
+<body class="tema-{{ request.user.perfil.color }}">
              
   <nav class="navbar navbar-expand-lg border-bottom shadow-sm">
 
@@ -618,27 +617,6 @@ body{
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                     </div>
                     <div class="modal-body p-3">
-                        {% if request.user.perfil.fondo %}
-                          <div class="text-center mb-3">
-                            <img src="{{ request.user.perfil.fondo.url }}"
-                                 class="img-fluid rounded"
-                                 style="max-height: 150px" alt="Fondo actual">
-                          </div>
-                        {% endif %}
-                        <label class="form-label small text-muted mb-2" for="fondoPerfil">
-                          Fondo de pantalla
-                        </label>
-                        <input class="form-control form-control-sm mb-3"
-                               type="file" id="fondoPerfil" name="fondo"
-                               accept="image/jpeg,image/png,image/webp">
-                        <div class="form-text mb-3">JPG, PNG o WEBP. Máximo 5 MB.</div>
-                        <div class="form-check mb-3">
-                          <input class="form-check-input" type="checkbox"
-                                 id="fondoDefault" name="usar_fondo_default">
-                          <label class="form-check-label" for="fondoDefault">
-                            Usar fondo predeterminado
-                          </label>
-                        </div>
                         <label class="form-label small text-muted mb-2 d-block">Color del sistema</label>
                         <select class="form-select form-select-sm" name="color">
                             <option value="azul">🔵 Azul</option>

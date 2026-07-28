@@ -13,7 +13,7 @@ from datetime import datetime, timedelta, timezone
 from django.utils import timezone
 from urllib3 import request
 from .models import PlantillaGenerada
-from django.db.models.functions import TruncDate
+from django.db.models.functions import ExtractHour, ExtractWeekDay, TruncDate
 from django.contrib.auth.models import User
 import json
 import tempfile
@@ -657,6 +657,12 @@ def reportes(request):
             fecha__date__lte=fecha_fin
         )
 
+    if hora_inicio:
+        registros = registros.filter(fecha__time__gte=hora_inicio)
+
+    if hora_fin:
+        registros = registros.filter(fecha__time__lte=hora_fin)
+
     if usuario:
         registros = registros.filter(
             usuario__username=usuario
@@ -730,6 +736,92 @@ def reportes(request):
     no_procede = metricas["no_procede"]
     rechazados = metricas["rechazados"]
 
+    # =====================================================
+    # COMPARACIÓN CON EL PERÍODO ANTERIOR
+    # =====================================================
+
+    comparacion_periodo = None
+    inicio_actual = parse_date(fecha_inicio or "")
+    fin_actual = parse_date(fecha_fin or "")
+
+    if inicio_actual and fin_actual and inicio_actual <= fin_actual:
+        duracion = (fin_actual - inicio_actual).days + 1
+        fin_anterior = inicio_actual - timedelta(days=1)
+        inicio_anterior = fin_anterior - timedelta(days=duracion - 1)
+        registros_anteriores = PlantillaGenerada.objects.filter(
+            fecha__date__range=[inicio_anterior, fin_anterior]
+        )
+
+        if hora_inicio:
+            registros_anteriores = registros_anteriores.filter(
+                fecha__time__gte=hora_inicio
+            )
+        if hora_fin:
+            registros_anteriores = registros_anteriores.filter(
+                fecha__time__lte=hora_fin
+            )
+        if usuario:
+            registros_anteriores = registros_anteriores.filter(
+                usuario__username=usuario
+            )
+        if resultado:
+            if resultado == "RECHAZADOS":
+                registros_anteriores = registros_anteriores.exclude(
+                    resultado__in=["PROCEDE", "NO PROCEDE"]
+                )
+            else:
+                registros_anteriores = registros_anteriores.filter(
+                    resultado=resultado
+                )
+        if distribuidor:
+            registros_anteriores = registros_anteriores.filter(
+                distribuidor=distribuidor
+            )
+        if busqueda:
+            registros_anteriores = registros_anteriores.filter(
+                Q(gestion__icontains=busqueda)
+                | Q(cedula__icontains=busqueda)
+                | Q(nombre_cliente__icontains=busqueda)
+                | Q(distribuidor__icontains=busqueda)
+                | Q(usuario__username__icontains=busqueda)
+            )
+
+        metricas_anteriores = registros_anteriores.aggregate(
+            total=Count("id"),
+            procede=Count("id", filter=Q(resultado="PROCEDE")),
+            no_procede=Count("id", filter=Q(resultado="NO PROCEDE")),
+            rechazados=Count(
+                "id",
+                filter=~Q(resultado__in=["PROCEDE", "NO PROCEDE"]),
+            ),
+        )
+
+        def variacion(actual, anterior):
+            if anterior:
+                return round(((actual - anterior) / anterior) * 100, 1)
+            return None if not actual else 100.0
+
+        comparacion_periodo = {
+            "inicio": inicio_anterior.strftime("%d/%m/%Y"),
+            "fin": fin_anterior.strftime("%d/%m/%Y"),
+            "total": metricas_anteriores["total"],
+            "procede": metricas_anteriores["procede"],
+            "no_procede": metricas_anteriores["no_procede"],
+            "rechazados": metricas_anteriores["rechazados"],
+            "variacion_total": variacion(
+                registros_count, metricas_anteriores["total"]
+            ),
+            "variacion_procede": variacion(
+                procede, metricas_anteriores["procede"]
+            ),
+            "variacion_no_procede": variacion(
+                no_procede, metricas_anteriores["no_procede"]
+            ),
+            "variacion_rechazos": variacion(
+                rechazados, metricas_anteriores["rechazados"]
+            ),
+        }
+
 
     estados_json = [
         procede,
@@ -765,6 +857,48 @@ def reportes(request):
             "total": g["total"]
         }
         for g in gestiones_dia
+    ]
+
+    # =====================================================
+    # ACTIVIDAD POR HORA Y DÍA DE LA SEMANA
+    # =====================================================
+
+    totales_hora = {
+        item["hora"]: item["total"]
+        for item in (
+            registros
+            .annotate(hora=ExtractHour("fecha"))
+            .values("hora")
+            .annotate(total=Count("id"))
+            .order_by("hora")
+        )
+    }
+    actividad_horas = [
+        {"hora": f"{hora:02d}:00", "total": totales_hora.get(hora, 0)}
+        for hora in range(24)
+    ]
+
+    nombres_dias = {
+        1: "Domingo",
+        2: "Lunes",
+        3: "Martes",
+        4: "Miércoles",
+        5: "Jueves",
+        6: "Viernes",
+        7: "Sábado",
+    }
+    totales_semana = {
+        item["dia_semana"]: item["total"]
+        for item in (
+            registros
+            .annotate(dia_semana=ExtractWeekDay("fecha"))
+            .values("dia_semana")
+            .annotate(total=Count("id"))
+        )
+    }
+    actividad_semana = [
+        {"dia": nombres_dias[dia], "total": totales_semana.get(dia, 0)}
+        for dia in (2, 3, 4, 5, 6, 7, 1)
     ]
 
     # =====================================================
@@ -903,14 +1037,26 @@ def reportes(request):
     # PLANTILLAS MÁS UTILIZADAS
     # =====================================================
 
-    plantillas = (
+    plantillas = list(
         registros
         .values("nombre_plantilla")
         .annotate(
-            total=Count("id")
+            total=Count("id"),
+            procede=Count("id", filter=Q(resultado="PROCEDE")),
+            no_procede=Count("id", filter=Q(resultado="NO PROCEDE")),
+            rechazados=Count(
+                "id",
+                filter=~Q(resultado__in=["PROCEDE", "NO PROCEDE"]),
+            ),
         )
         .order_by("-total")[:10]
     )
+    for plantilla in plantillas:
+        total = plantilla["total"] or 0
+        plantilla["tasa_rechazo"] = round(
+            (plantilla["rechazados"] / total) * 100,
+            1,
+        ) if total else 0
 
 
     # =====================================================
@@ -1100,6 +1246,9 @@ def reportes(request):
             "inconsistencias": inconsistencias,
             "alertas_sistema": alertas_sistema,
             "resumen_alertas": resumen_alertas,
+            "comparacion_periodo": comparacion_periodo,
+            "actividad_horas": actividad_horas,
+            "actividad_semana": actividad_semana,
 
             "estados": estados_json,
 

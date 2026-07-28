@@ -326,8 +326,7 @@
     }
 </style>
 
-<body class="tema-{{ request.user.perfil.color }}"
-      style="background-image: url('{% if request.user.perfil.fondo %}{{ request.user.perfil.fondo.url }}{% else %}{% static 'img/iconfondo.jpg' %}{% endif %}') !important;">
+<body class="tema-{{ request.user.perfil.color }}">
 
     <nav class="navbar navbar-expand-lg  border-bottom shadow-sm">
 
@@ -688,6 +687,18 @@
 
                                         {{total_gestiones}}
                                 </h2>
+                                {% if comparacion_periodo %}
+                                    <small class="{% if comparacion_periodo.variacion_total == None %}text-muted{% elif comparacion_periodo.variacion_total >= 0 %}text-success{% else %}text-danger{% endif %}">
+                                        {% if comparacion_periodo.variacion_total == None %}
+                                            Sin base anterior
+                                        {% elif comparacion_periodo.variacion_total >= 0 %}
+                                            ▲ {{ comparacion_periodo.variacion_total }}%
+                                        {% else %}
+                                            ▼ {{ comparacion_periodo.variacion_total|stringformat:"+g"|cut:"+" }}%
+                                        {% endif %}
+                                        vs. período anterior
+                                    </small>
+                                {% endif %}
 
                             </div>
 
@@ -712,6 +723,13 @@
                                     {{procede}}
 
                                 </h2>
+                                {% if comparacion_periodo %}
+                                    <small class="{% if comparacion_periodo.variacion_procede == None %}text-muted{% elif comparacion_periodo.variacion_procede >= 0 %}text-success{% else %}text-danger{% endif %}">
+                                        {% if comparacion_periodo.variacion_procede == None %}Sin base anterior
+                                        {% elif comparacion_periodo.variacion_procede >= 0 %}▲ {{ comparacion_periodo.variacion_procede }}%
+                                        {% else %}▼ {{ comparacion_periodo.variacion_procede|stringformat:"+g"|cut:"+" }}%{% endif %}
+                                    </small>
+                                {% endif %}
 
                             </div>
 
@@ -736,6 +754,13 @@
                                     {{no_procede}}
 
                                 </h2>
+                                {% if comparacion_periodo %}
+                                    <small class="{% if comparacion_periodo.variacion_no_procede == None %}text-muted{% elif comparacion_periodo.variacion_no_procede > 0 %}text-danger{% else %}text-success{% endif %}">
+                                        {% if comparacion_periodo.variacion_no_procede == None %}Sin base anterior
+                                        {% elif comparacion_periodo.variacion_no_procede >= 0 %}▲ {{ comparacion_periodo.variacion_no_procede }}%
+                                        {% else %}▼ {{ comparacion_periodo.variacion_no_procede|stringformat:"+g"|cut:"+" }}%{% endif %}
+                                    </small>
+                                {% endif %}
 
                             </div>
 
@@ -760,6 +785,13 @@
                                     {{rechazados}}
 
                                 </h2>
+                                {% if comparacion_periodo %}
+                                    <small class="{% if comparacion_periodo.variacion_rechazos == None %}text-muted{% elif comparacion_periodo.variacion_rechazos > 0 %}text-danger{% else %}text-success{% endif %}">
+                                        {% if comparacion_periodo.variacion_rechazos == None %}Sin base anterior
+                                        {% elif comparacion_periodo.variacion_rechazos >= 0 %}▲ {{ comparacion_periodo.variacion_rechazos }}%
+                                        {% else %}▼ {{ comparacion_periodo.variacion_rechazos|stringformat:"+g"|cut:"+" }}%{% endif %}
+                                    </small>
+                                {% endif %}
 
                             </div>
 
@@ -769,6 +801,14 @@
 
                 </div>
 
+                {% if comparacion_periodo %}
+                    <div class="alert alert-light border mt-3 mb-0 py-2">
+                        <small class="text-muted">
+                            Comparación automática contra {{ comparacion_periodo.inicio }}–{{ comparacion_periodo.fin }},
+                            usando los mismos filtros de analista, resultado, DTS, búsqueda y horario.
+                        </small>
+                    </div>
+                {% endif %}
 
                 <!-- GRAFICOS -->
 
@@ -814,6 +854,35 @@
 
                     </div>
 
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-lg-7 mb-4">
+                        <div class="card shadow h-100">
+                            <div class="card-header">
+                                <div class="fw-semibold">Actividad por hora</div>
+                                <small class="text-muted">Distribución de gestiones durante el día</small>
+                            </div>
+                            <div class="card-body">
+                                <div class="contenedor-grafico" style="height: 340px;">
+                                    <canvas id="graficoActividadHoras"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5 mb-4">
+                        <div class="card shadow h-100">
+                            <div class="card-header">
+                                <div class="fw-semibold">Actividad semanal</div>
+                                <small class="text-muted">Volumen acumulado por día de la semana</small>
+                            </div>
+                            <div class="card-body">
+                                <div class="contenedor-grafico" style="height: 340px;">
+                                    <canvas id="graficoActividadSemana"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="row mt-4">
@@ -875,6 +944,59 @@
                     </div>
                 </div>
 
+                <div class="card shadow mb-4">
+                    <div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
+                        <div>
+                            <div class="fw-semibold">Calidad por plantilla</div>
+                            <small class="text-muted">
+                                Plantillas más utilizadas y distribución de sus resultados
+                            </small>
+                        </div>
+                        <span class="badge bg-primary">Top 10</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Plantilla</th>
+                                    <th class="text-center">Total</th>
+                                    <th class="text-center text-success">Procede</th>
+                                    <th class="text-center text-warning-emphasis">No procede</th>
+                                    <th class="text-center text-danger">Rechazos</th>
+                                    <th style="min-width: 150px;">Tasa de rechazo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for plantilla in plantillas %}
+                                    <tr>
+                                        <td class="fw-semibold">{{ plantilla.nombre_plantilla|default:"Sin plantilla" }}</td>
+                                        <td class="text-center">{{ plantilla.total }}</td>
+                                        <td class="text-center">{{ plantilla.procede }}</td>
+                                        <td class="text-center">{{ plantilla.no_procede }}</td>
+                                        <td class="text-center">{{ plantilla.rechazados }}</td>
+                                        <td>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <div class="progress flex-grow-1" style="height: 8px;">
+                                                    <div class="progress-bar {% if plantilla.tasa_rechazo >= 30 %}bg-danger{% else %}bg-success{% endif %}"
+                                                         style="width: {{ plantilla.tasa_rechazo }}%"></div>
+                                                </div>
+                                                <span class="{% if plantilla.tasa_rechazo >= 30 %}text-danger{% else %}text-success{% endif %} fw-semibold">
+                                                    {{ plantilla.tasa_rechazo }}%
+                                                </span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="6" class="text-center text-muted py-4">
+                                            No hay datos de plantillas para los filtros actuales.
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
             </div>
 
@@ -1925,29 +2047,6 @@
                     </div>
 
                     <div class="modal-body">
-                        {% if request.user.perfil.fondo %}
-                            <div class="text-center mb-3">
-                                <img src="{{ request.user.perfil.fondo.url }}"
-                                     class="img-fluid rounded"
-                                     style="max-height: 150px" alt="Fondo actual">
-                            </div>
-                        {% endif %}
-                        <label class="form-label" for="fondoPerfilReportes">
-                            Fondo de pantalla
-                        </label>
-                        <input class="form-control mb-3"
-                               type="file"
-                               id="fondoPerfilReportes"
-                               name="fondo"
-                               accept="image/jpeg,image/png,image/webp">
-                        <div class="form-text mb-3">JPG, PNG o WEBP. Máximo 5 MB.</div>
-                        <div class="form-check mb-3">
-                            <input class="form-check-input" type="checkbox"
-                                   id="fondoDefaultReportes" name="usar_fondo_default">
-                            <label class="form-check-label" for="fondoDefaultReportes">
-                                Usar fondo predeterminado
-                            </label>
-                        </div>
                         <label class="form-label">
                             Color del sistema
                         </label>
@@ -2003,6 +2102,8 @@
 {{ analisis_usuarios|json_script:"datosAnalistas" }}
 {{ duplicidad_distribuidor|json_script:"datosDuplicidadDistribuidor" }}
 {{ distribuidores|json_script:"datosGestionesDts" }}
+{{ actividad_horas|json_script:"datosActividadHoras" }}
+{{ actividad_semana|json_script:"datosActividadSemana" }}
 
 <script>
 
@@ -2126,6 +2227,63 @@ new Chart(document.getElementById("graficoDia"), {
     }
 
 });
+
+const datosActividadHoras = JSON.parse(
+    document.getElementById("datosActividadHoras").textContent
+);
+const graficoActividadHoras = document.getElementById("graficoActividadHoras");
+
+if (graficoActividadHoras) {
+    new Chart(graficoActividadHoras, {
+        type: "bar",
+        data: {
+            labels: datosActividadHoras.map(item => item.hora),
+            datasets: [{
+                label: "Gestiones",
+                data: datosActividadHoras.map(item => item.total),
+                backgroundColor: "#0dcaf0",
+                borderRadius: 5
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { beginAtZero: true, ticks: { precision: 0 } },
+                x: { ticks: { maxRotation: 45, minRotation: 45 } }
+            }
+        }
+    });
+}
+
+const datosActividadSemana = JSON.parse(
+    document.getElementById("datosActividadSemana").textContent
+);
+const graficoActividadSemana = document.getElementById("graficoActividadSemana");
+
+if (graficoActividadSemana) {
+    new Chart(graficoActividadSemana, {
+        type: "bar",
+        data: {
+            labels: datosActividadSemana.map(item => item.dia),
+            datasets: [{
+                label: "Gestiones",
+                data: datosActividadSemana.map(item => item.total),
+                backgroundColor: "#6f42c1",
+                borderRadius: 5
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { beginAtZero: true, ticks: { precision: 0 } }
+            }
+        }
+    });
+}
 
 const datosAnalistas = JSON.parse(
     document.getElementById("datosAnalistas").textContent

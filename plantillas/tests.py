@@ -1,8 +1,10 @@
 from io import BytesIO
+from datetime import datetime
 
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
+from django.utils import timezone
 from openpyxl import load_workbook
 
 from .models import PlantillaGenerada
@@ -134,3 +136,91 @@ class VerificarCedulaTests(TestCase):
         self.assertEqual(filas[0][2], "Gestión")
         self.assertEqual(len(filas), 2)
         self.assertEqual(filas[1][2], "GESTION-INCLUIDA")
+
+
+class ReportesOperativosTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username="analista-reportes",
+            password="prueba-segura",
+        )
+        self.client.force_login(self.user)
+
+    def crear_registro(self, gestion, resultado, fecha, plantilla="PLANTILLA A"):
+        registro = PlantillaGenerada.objects.create(
+            usuario=self.user,
+            gestion=gestion,
+            cedula=f"CED-{gestion}",
+            nombre_cliente="CLIENTE",
+            nombre_plantilla=plantilla,
+            resultado=resultado,
+            distribuidor="DTS PRUEBA",
+            respuesta="Respuesta",
+        )
+        PlantillaGenerada.objects.filter(id=registro.id).update(
+            fecha=timezone.make_aware(fecha)
+        )
+        return registro
+
+    def test_compara_con_periodo_anterior_y_analiza_plantillas(self):
+        self.crear_registro(
+            "ACTUAL-1",
+            "PROCEDE",
+            datetime(2026, 7, 10, 9, 0),
+        )
+        self.crear_registro(
+            "ACTUAL-2",
+            "RECHAZO",
+            datetime(2026, 7, 11, 14, 0),
+        )
+        self.crear_registro(
+            "ANTERIOR-1",
+            "PROCEDE",
+            datetime(2026, 7, 9, 10, 0),
+        )
+
+        response = self.client.get(
+            reverse("reportes"),
+            {
+                "fecha_inicio": "2026-07-10",
+                "fecha_fin": "2026-07-11",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context["total_gestiones"], 2)
+        self.assertEqual(response.context["comparacion_periodo"]["total"], 1)
+        self.assertEqual(
+            response.context["comparacion_periodo"]["variacion_total"],
+            100.0,
+        )
+        self.assertEqual(response.context["plantillas"][0]["rechazados"], 1)
+        self.assertEqual(response.context["plantillas"][0]["tasa_rechazo"], 50.0)
+
+    def test_filtro_horario_se_aplica_a_metricas(self):
+        self.crear_registro(
+            "DENTRO-HORARIO",
+            "PROCEDE",
+            datetime(2026, 7, 10, 9, 0),
+        )
+        self.crear_registro(
+            "FUERA-HORARIO",
+            "PROCEDE",
+            datetime(2026, 7, 10, 19, 0),
+        )
+
+        response = self.client.get(
+            reverse("reportes"),
+            {
+                "fecha_inicio": "2026-07-10",
+                "fecha_fin": "2026-07-10",
+                "hora_inicio": "08:00",
+                "hora_fin": "17:00",
+            },
+        )
+
+        self.assertEqual(response.context["total_gestiones"], 1)
+        self.assertEqual(
+            sum(item["total"] for item in response.context["actividad_horas"]),
+            1,
+        )
