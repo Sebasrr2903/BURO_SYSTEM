@@ -27,7 +27,10 @@ body{
 }
 </style>
 <body
-    class="tema-{{ request.user.perfil.color }}">
+    class="tema-{{ request.user.perfil.color }}"
+    {% if request.user.perfil.fondo %}
+    style="background-image: url('{{ request.user.perfil.fondo.url }}');"
+    {% endif %}>
 
   <nav class="navbar navbar-expand-lg  border-bottom shadow-sm">
 
@@ -567,6 +570,29 @@ body{
             </div>
 
             <div class="modal-body">
+              {% if request.user.perfil.fondo %}
+                <div class="text-center mb-3">
+                  <img src="{{ request.user.perfil.fondo.url }}"
+                       class="img-fluid rounded"
+                       style="max-height: 150px" alt="Fondo actual">
+                </div>
+              {% endif %}
+              <label class="form-label" for="fondoPerfilHistorial">
+                  Fondo de pantalla
+              </label>
+              <input class="form-control mb-3"
+                     type="file"
+                     id="fondoPerfilHistorial"
+                     name="fondo"
+                     accept="image/jpeg,image/png,image/webp">
+              <div class="form-text mb-3">JPG, PNG o WEBP. Máximo 5 MB.</div>
+              <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox"
+                       id="fondoDefaultHistorial" name="usar_fondo_default">
+                <label class="form-check-label" for="fondoDefaultHistorial">
+                  Usar fondo predeterminado
+                </label>
+              </div>
               <label class="form-label">
                   Color del sistema
               </label>

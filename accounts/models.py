@@ -12,3 +12,8 @@ class Perfil(models.Model):
         max_length=20,
         default="azul"
     )
+    fondo = models.ImageField(
+        upload_to="fondos/",
+        null=True,
+        blank=True
+    )
