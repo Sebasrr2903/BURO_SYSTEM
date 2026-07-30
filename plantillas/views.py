@@ -21,6 +21,26 @@ import tempfile
 from .models import PlantillaGenerada
 
 
+def filtrar_rango_fechas(queryset, fecha_inicio=None, fecha_fin=None):
+    """Filtra sin aplicar DATE() sobre la columna, para aprovechar su índice."""
+    inicio = parse_date(fecha_inicio or "")
+    fin = parse_date(fecha_fin or "")
+
+    if inicio:
+        inicio_dt = timezone.make_aware(
+            datetime.combine(inicio, datetime.min.time())
+        )
+        queryset = queryset.filter(fecha__gte=inicio_dt)
+
+    if fin:
+        fin_exclusivo = timezone.make_aware(
+            datetime.combine(fin + timedelta(days=1), datetime.min.time())
+        )
+        queryset = queryset.filter(fecha__lt=fin_exclusivo)
+
+    return queryset
+
+
 def construir_recomendaciones_analisis(analisis_usuarios, promedio_gestiones_por_usuario, total_gestiones, total_duplicados):
     recomendaciones = []
 
@@ -647,15 +667,11 @@ def reportes(request):
     # APLICAR FILTROS
     # =====================================================
 
-    if fecha_inicio:
-        registros = registros.filter(
-            fecha__date__gte=fecha_inicio
-        )
-
-    if fecha_fin:
-        registros = registros.filter(
-            fecha__date__lte=fecha_fin
-        )
+    registros = filtrar_rango_fechas(
+        registros,
+        fecha_inicio=fecha_inicio,
+        fecha_fin=fecha_fin,
+    )
 
     if hora_inicio:
         registros = registros.filter(fecha__time__gte=hora_inicio)
@@ -730,6 +746,13 @@ def reportes(request):
             "id",
             filter=~Q(resultado__in=["PROCEDE", "NO PROCEDE"]),
         ),
+        total_usuarios=Count("usuario", distinct=True),
+        total_distribuidores=Count(
+            "distribuidor",
+            distinct=True,
+            filter=Q(distribuidor__isnull=False) & ~Q(distribuidor=""),
+        ),
+        total_plantillas=Count("nombre_plantilla", distinct=True),
     )
     registros_count = metricas["total"]
     procede = metricas["procede"]
@@ -748,8 +771,10 @@ def reportes(request):
         duracion = (fin_actual - inicio_actual).days + 1
         fin_anterior = inicio_actual - timedelta(days=1)
         inicio_anterior = fin_anterior - timedelta(days=duracion - 1)
-        registros_anteriores = PlantillaGenerada.objects.filter(
-            fecha__date__range=[inicio_anterior, fin_anterior]
+        registros_anteriores = filtrar_rango_fechas(
+            PlantillaGenerada.objects.all(),
+            fecha_inicio=inicio_anterior.isoformat(),
+            fecha_fin=fin_anterior.isoformat(),
         )
 
         if hora_inicio:
@@ -1073,27 +1098,9 @@ def reportes(request):
 
     total_gestiones = registros_count
 
-    total_usuarios = (
-        registros
-        .values("usuario")
-        .distinct()
-        .count()
-    )
-
-    total_distribuidores = (
-        registros
-        .exclude(distribuidor="")
-        .values("distribuidor")
-        .distinct()
-        .count()
-    )
-
-    total_plantillas = (
-        registros
-        .values("nombre_plantilla")
-        .distinct()
-        .count()
-    )
+    total_usuarios = metricas["total_usuarios"]
+    total_distribuidores = metricas["total_distribuidores"]
+    total_plantillas = metricas["total_plantillas"]
 
     lista_usuarios = User.objects.order_by("username")
 
@@ -1124,6 +1131,8 @@ def reportes(request):
         gestiones_ordenadas,
         limite_gestiones,
     )
+    # El total ya se calculó en las métricas; evita repetir COUNT(*) al paginar.
+    paginador_gestiones.__dict__["count"] = registros_count
     ultimas_gestiones = paginador_gestiones.get_page(
         request.GET.get("page")
     )
